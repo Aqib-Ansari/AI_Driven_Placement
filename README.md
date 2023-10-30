@@ -13,8 +13,12 @@ pip install -r requirements.txt
 pip freeze > requirements.txt
 
 #### for changes
--git add .,
--git commit -m "changes updated",
--git fetch,
--git pull,
--git push,
+-git add .
+
+-git commit -m "changes updated"
+
+-git fetch
+
+-git pull
+
+-git push
