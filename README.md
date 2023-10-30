@@ -11,3 +11,10 @@ pip install -r requirements.txt
 
 ### for freeze or update the requirements.txt code:
 pip freeze > requirements.txt
+
+#### for changes
+-git add .
+-git commit -m "changes updated"
+-git fetch
+-git pull
+-git push
