@@ -1,0 +1,48 @@
+body {
+    font-family: Cormorant Garamond;
+    font-style: italic;
+    font-size: 16px ;
+    margin: 0;
+    padding: 0;
+}
+
+header { 
+    background-color: #080908;
+    color: wheat;
+    padding: 10px 0;
+    font-size: 20px;
+}
+
+nav ul {
+    list-style: none;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+}
+
+.about-us {
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+    font-size: larger;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+footer {
+    background-color: #080908;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}

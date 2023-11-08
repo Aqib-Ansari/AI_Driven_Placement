@@ -1,0 +1,62 @@
+ /* CSS styles for the navigation bar */
+ .navbar_Aqib {
+    background-color: rgba(174, 172, 172, 0.5);
+    overflow: hidden;
+    margin-bottom: 0px;
+  }
+
+  .navbar_Aqib a {
+    float: left;
+    color: #060606;
+    text-align: center;
+    padding: 8px 12px;
+    text-decoration: none;
+    font-size: 17px;
+    text-decoration:solid ;
+    margin: 4px 2px;
+  }
+
+  .navbar_Aqib{
+    background-color: #e8cd89;
+    color: rgb(0, 0, 0);
+    text-emphasis-color: white;
+    font-family: 'Cormorant Garamond';
+    font-style: 'italic';
+  }
+
+  .navbar_Aqib a:hover {
+      margin: 4px 2px;
+      color: #287271;
+   
+  }
+
+  /* CSS styles for the login and sign-up buttons */
+  .button-container {
+    text-align: center;
+    margin-top: 200px;
+    font-family: 'Cormorant Garamond';
+  }
+
+  .button-container button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond';
+  }
+  .button-container button:hover {
+    opacity: 0.8;
+    font-family: 'Cormorant Garamond';
+  }
+  body {
+    /* background-image: url('img/landingpagevideo1.mp4'); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+  }
+  
+  
+ 
