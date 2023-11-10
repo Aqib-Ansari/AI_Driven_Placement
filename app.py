@@ -9,10 +9,20 @@ def registration():
     return render_template('landing.html')
 
 # Route to handle the form submission
-@app.route('/register')
-def register():
+@app.route('/register_student')
+def register_student():
     
-    return render_template('Registration.html')
+    return render_template('student_registration.html')
+
+@app.route('/register_admin')
+def register_admin():
+    
+    return render_template('admin_registration.html')
+
+@app.route('/register_company')
+def register_company():
+    
+    return render_template('company_registration.html')
 
 @app.route('/register_data', methods=['POST'])
 def register_data():
@@ -46,11 +56,11 @@ def register_data():
 def redirect_to_page():
     selected_page = request.form['register_dropdown']
     if selected_page == 'Student':
-        return redirect(url_for('register'))
+        return redirect(url_for('register_student'))
     elif selected_page == 'Admin':
-        return redirect(url_for('register'))
+        return redirect(url_for('register_admin'))
     elif selected_page == 'Company':
-        return redirect(url_for('register'))
+        return redirect(url_for('register_company'))
     else:
         return redirect(url_for('home'))
 
