@@ -4,3 +4,7 @@ change : updated info about environment'
 
 filename : requirements.txt
 change : added this file
+
+Date : 14-11-23
+filename : Landing and registration
+change : added three buttons for different registration
