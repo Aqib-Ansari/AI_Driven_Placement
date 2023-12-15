@@ -3,12 +3,15 @@ import json
 
 app = Flask(__name__)
 
+# ----------------------------------------------------------- Landing page ---------------------------------------------------
 
 @app.route('/')
 def registration():
     return render_template('landing.html')
 
-# Route to handle the form submission
+#  ----------------------------------------- REgistration --------------------------------------------------------------
+
+ # Route to handle the form submission
 @app.route('/register_student')
 def register_student():
     
@@ -63,6 +66,14 @@ def redirect_to_page():
         return redirect(url_for('register_company'))
     else:
         return redirect(url_for('home'))
+ 
+# ----------------------------------------------------------------Student Login --------------------------------------- 
+
+@app.route('/login')
+def redirect_to_login():
+    return render_template('login.html')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
