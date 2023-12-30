@@ -4,14 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #notifications {
+            top: 10px;
+            left: 10px;
+            background-color: #ffcc00;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            float: right;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .action-button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #3498db;
+            transition: background-color 0.3s;
+        }
+
+        .action-button:hover {
+            background-color: #2980b9;
+        }
+
+        #upload-resume {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+    
     Student Dashboard
+    <h1>Welcome</h1>
     <ul>
         <p>User Input: {{ course }}</p>
         {% for item in student_list %}
             <li>{{ item }}</li>
         {% endfor %}
     </ul>
+
+   
+    <div id="notifications">Notifications</div>
+
+    <div class="button-container">
+        <a href="#" class="action-button">Update Details</a>
+        <a href="/quiz" class="action-button">Give Mock Test</a>
+        <a href="#" class="action-button">View Jobs</a>
+        <a href="#" class="action-button">Contact Alumni</a>
+
+        <!-- File upload button -->
+        <label for="upload-resume" class="action-button">Upload Resume</label>
+        <input type="file" id="upload-resume">
+
+        <a href="#" class="action-button">View Details</a>
+    </div>
+
+
 </body>
 </html>

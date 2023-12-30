@@ -110,5 +110,70 @@ def student_dashboard():
 def redirect_to_student_dashboard():
     return render_template("dashboard_student.html" )
 
+# --------------------------------------------- Quiz ------------------------------------------------------
+questions = [
+    {
+        'id': 1,
+        'question': 'What is the capital of France?',
+        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
+        'correct_answer': 'Paris'
+    },
+    {
+        'id': 2,
+        'question': 'What is the capital of France?',
+        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
+        'correct_answer': 'Madrid'
+    },
+    {
+        'id': 3,
+        'question': 'What is the capital of France?',
+        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
+        'correct_answer': 'Rome'
+    },
+    {
+        'id': 4,
+        'question': 'What is the capital of France?',
+        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
+        'correct_answer': 'Berlin'
+    }
+    # Add more questions as needed
+]
+
+# Keep track of user's score
+user_score = 0
+current_question_index = 0
+len_questions = len(questions)
+
+@app.route('/quiz')
+def quiz():
+    global current_question_index
+
+    if current_question_index < len(questions):
+        current_question = questions[current_question_index]
+        return render_template('quiz.html', question=current_question)
+    else:
+        return redirect(url_for('results'))
+
+@app.route('/submit_answer', methods=['POST'])
+def submit_answer():
+    global current_question_index, user_score
+
+    user_answer = request.form.get('answer')
+    current_question = questions[current_question_index]
+
+    if user_answer == current_question['correct_answer']:
+        user_score += 1
+
+    current_question_index += 1
+
+    return redirect(url_for('quiz'))
+
+@app.route('/results')
+def results():
+    global user_score
+    global len_questions
+    Percentage = (user_score*100)/len_questions
+    return render_template('results.html', score=user_score,len = len_questions,Percentage = Percentage)
+
 if __name__ == '__main__':
     app.run(debug=True)
