@@ -54,7 +54,7 @@ def register_data():
         name = "not found"
         
     
-    return render_template('student_dashboard.html',student_list=student_register_Data_list)
+    return render_template('dashboard_student.html',student_list=student_register_Data_list)
 
 @app.route('/redirect', methods=['POST'])
 def redirect_to_page():
@@ -76,18 +76,6 @@ def login():
     
     return render_template('login.html')
 
-@app.route('/redirect_to_Dashboard',  methods=['POST'])
-def redirect_to_dashboard():
-    selected_page = request.form['Login_dropdown']
-    if selected_page == 'Student':
-        return redirect(url_for('student_dashboard'))
-    elif selected_page == 'Admin':
-        return redirect(url_for('student_dashboard'))
-    elif selected_page == 'Company':
-        return redirect(url_for('student_dashboard'))
-    else:
-        return redirect(url_for('home'))
-    return render_template("student_dashboard.html" )
     
 @app.route('/student_dashboard', methods=['POST'])
 def student_dashboard():
@@ -95,16 +83,32 @@ def student_dashboard():
         username = request.form['username']
         password = request.form['password']
         login_as = request.form['Login_dropdown']
-        student_register_Data_list = []
-        student_register_Data_list.append(username)
-        student_register_Data_list.append(password)
-        student_register_Data_list.append(login_as)
-    return render_template("student_dashboard.html",student_list=student_register_Data_list)
+
+        if login_as=="Student":
+            student_register_Data_list = []
+            student_register_Data_list.append(username)
+            student_register_Data_list.append(password)
+            return render_template("dashboard_student.html",student_list=student_register_Data_list)
+        
+        elif login_as=="Admin":
+            student_register_Data_list = []
+            student_register_Data_list.append(username)
+            student_register_Data_list.append(password)
+            return render_template("dashboard_Admin.html",student_list=student_register_Data_list)
+
+        elif login_as=="Company":
+            student_register_Data_list = []
+            student_register_Data_list.append(username)
+            student_register_Data_list.append(password)
+            return render_template("dashboard_company.html",student_list=student_register_Data_list)
+        
+        else:
+            return redirect(url_for('login'))
 
 
 @app.route('/student_dashboard1')
 def redirect_to_student_dashboard():
-    return render_template("student_dashboard.html" )
+    return render_template("dashboard_student.html" )
 
 if __name__ == '__main__':
     app.run(debug=True)
