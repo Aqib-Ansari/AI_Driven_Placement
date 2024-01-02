@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .error {
+            color: red;
+        }
+
+        object {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        <label for="file">Choose a PDF file:</label>
+        <input type="file" name="file" accept=".pdf">
+        <input type="submit" value="Upload">
+    </form>
+
+    {% if pdf_path %}
+        <h2>PDF Viewer</h2>
+        <object data="{{ pdf_path }}" type="application/pdf">
+            <p>Your browser does not support viewing PDFs. Please download the PDF to view it.</p>
+        </object>
+    {% endif %}
+</body>
+</html>

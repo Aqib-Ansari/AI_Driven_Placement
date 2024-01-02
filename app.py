@@ -1,14 +1,25 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify , send_file
 import json
+import os
+
+import pymysql
+import pymysql.cursors
+import sql_functions
+
+connection = sql_functions.make_sql_connection()
+
 
 app = Flask(__name__)
-
+cursor = connection.cursor()
+# ----------------------------------------------------------- Landing page ---------------------------------------------------
 
 @app.route('/')
 def registration():
     return render_template('landing.html')
 
-# Route to handle the form submission
+#  ----------------------------------------- REgistration --------------------------------------------------------------
+
+ # Route to handle the form submission
 @app.route('/register_student')
 def register_student():
     
@@ -45,24 +56,178 @@ def register_data():
         student_register_Data_list.append(course)
         student_register_Data_list.append(year)
         student_register_Data_list.append(rollno)
-
+        
+        
+        sql_functions.insert_register_student(username=name,email=email,password=pass2,enrollment_num=Enrolno,college=college,course=course,year=year,rollno=rollno)
     else:
         name = "not found"
         
     
-    return render_template('student_dashboard.html',student_list=student_register_Data_list)
+    return render_template('dashboard_student.html',student_list=student_register_Data_list)
 
 @app.route('/redirect', methods=['POST'])
 def redirect_to_page():
-    selected_page = request.form['register_dropdown']
-    if selected_page == 'Student':
-        return redirect(url_for('register_student'))
-    elif selected_page == 'Admin':
-        return redirect(url_for('register_admin'))
-    elif selected_page == 'Company':
-        return redirect(url_for('register_company'))
+    if request.method == "POST":
+        selected_page = request.form['register_dropdown']
+        if selected_page == 'Student':
+            return redirect(url_for('register_student'))
+        elif selected_page == 'Admin':
+            return redirect(url_for('register_admin'))
+        elif selected_page == 'Company':
+            return redirect(url_for('register_company'))
+        else:
+            return redirect(url_for('home'))
+ 
+# ----------------------------------------------------------------Student Login --------------------------------------- 
+
+@app.route('/login')
+def login():
+    
+    return render_template('login.html')
+
+    
+@app.route('/student_dashboard', methods=['POST'])
+def student_dashboard():
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+        login_as = request.form['Login_dropdown']
+
+        if login_as=="Student":
+            student_register_Data_list = []
+            student_register_Data_list.append(username)
+            student_register_Data_list.append(password)
+            return render_template("dashboard_student.html",student_list=student_register_Data_list)
+        
+        elif login_as=="Admin":
+            student_register_Data_list = []
+            student_register_Data_list.append(username)
+            student_register_Data_list.append(password)
+            return render_template("dashboard_Admin.html",student_list=student_register_Data_list)
+
+        elif login_as=="Company":
+            student_register_Data_list = []
+            student_register_Data_list.append(username)
+            student_register_Data_list.append(password)
+            return render_template("dashboard_company.html",student_list=student_register_Data_list)
+        
+        else:
+            return redirect(url_for('login'))
+
+
+@app.route('/student_dashboard1')
+def redirect_to_student_dashboard():
+    return render_template("dashboard_student.html" )
+
+# --------------------------------------------- Quiz ------------------------------------------------------
+questions = [
+    {
+        'id': 1,
+        'question': 'What is the capital of France?',
+        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
+        'correct_answer': 'Paris'
+    },
+    {
+        'id': 2,
+        'question': 'What is the capital of France?',
+        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
+        'correct_answer': 'Madrid'
+    },
+    {
+        'id': 3,
+        'question': 'What is the capital of France?',
+        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
+        'correct_answer': 'Rome'
+    },
+    {
+        'id': 4,
+        'question': 'What is the capital of France?',
+        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
+        'correct_answer': 'Berlin'
+    }
+    # Add more questions as needed
+]
+
+# Keep track of user's score
+user_score = 0
+current_question_index = 0
+len_questions = len(questions)
+
+@app.route('/quiz')
+def quiz():
+    global current_question_index
+
+    if current_question_index < len(questions):
+        current_question = questions[current_question_index]
+        return render_template('quiz.html', question=current_question)
     else:
-        return redirect(url_for('home'))
+        return redirect(url_for('results'))
+
+@app.route('/submit_answer', methods=['POST'])
+def submit_answer():
+    global current_question_index, user_score
+
+    user_answer = request.form.get('answer')
+    current_question = questions[current_question_index]
+
+    if user_answer == current_question['correct_answer']:
+        user_score += 1
+
+    current_question_index += 1
+
+    return redirect(url_for('quiz'))
+
+@app.route('/results')
+def results():
+    global user_score
+    global len_questions
+    Percentage = (user_score*100)/len_questions
+    return render_template('results.html', score=user_score,len = len_questions,Percentage = Percentage)
+
+# ------------------------------------------------ Details ----------------------------------------------------------
+
+@app.route('/update_details')
+
+
+
+
+# ------------------------------------------------ REsume Upload -----------------------------------------------------
+@app.route('/upload_resume', methods=['GET', 'POST'])
+def upload_resume():
+    pdf_path = None
+
+    if request.method == 'POST':
+        # Check if the POST request has the file part
+        if 'file' not in request.files:
+            return render_template('upload_resume.html', error='No file part', pdf_path=pdf_path)
+
+        file = request.files['file']
+
+        # If the user does not select a file, browser will submit an empty part
+        if file.filename == '':
+            return render_template('upload_resume.html', error='No selected file', pdf_path=pdf_path)
+
+        # Check if the file is a PDF
+        if file and file.filename.lower().endswith('.pdf'):
+            # Save the PDF file
+            file_path = 'static/' + file.filename
+            file.save(file_path)
+
+            # Set the PDF path for display
+            pdf_path = f'/view_pdf?file={file_path}'
+
+            # Render the template with the PDF path
+            return render_template('upload_resume.html', pdf_path=pdf_path)
+        else:
+            return render_template('upload_resume.html', error='Invalid file format. Please upload a PDF file', pdf_path=pdf_path)
+
+    return render_template('upload_resume.html', pdf_path=pdf_path)
+
+@app.route('/view_pdf', methods=['GET'])
+def view_pdf():
+    file_path = request.args.get('file', '')
+    return send_file(file_path, as_attachment=False)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
