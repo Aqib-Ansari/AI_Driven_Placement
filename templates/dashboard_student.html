@@ -51,7 +51,22 @@
 <body>
     
     Student Dashboard
+
+    <div id="notifications">Notifications</div>
+
+    <div class="button-container">
+        <a href="#" class="action-button">Update Details</a>
+        <a href="/quiz" class="action-button">Give Mock Test</a>
+        <a href="#" class="action-button">View Jobs</a>
+        <a href="#" class="action-button">Contact Alumni</a>
+        <a href="/upload_resume" class="action-button">upload resume</a>
+        
+
+        <a href="#" class="action-button">View Details</a>
+    </div>
+
     <h1>Welcome</h1>
+
     <ul>
         <p>User Input: {{ course }}</p>
         {% for item in student_list %}
@@ -60,20 +75,6 @@
     </ul>
 
    
-    <div id="notifications">Notifications</div>
-
-    <div class="button-container">
-        <a href="#" class="action-button">Update Details</a>
-        <a href="/quiz" class="action-button">Give Mock Test</a>
-        <a href="#" class="action-button">View Jobs</a>
-        <a href="#" class="action-button">Contact Alumni</a>
-
-        <!-- File upload button -->
-        <label for="upload-resume" class="action-button">Upload Resume</label>
-        <input type="file" id="upload-resume">
-
-        <a href="#" class="action-button">View Details</a>
-    </div>
 
 
 </body>

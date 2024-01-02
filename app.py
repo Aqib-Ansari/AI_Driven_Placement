@@ -1,8 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify , send_file
 import json
+import os
+
+import pymysql
+import pymysql.cursors
+import sql_functions
+
+connection = sql_functions.make_sql_connection()
+
 
 app = Flask(__name__)
-
+cursor = connection.cursor()
 # ----------------------------------------------------------- Landing page ---------------------------------------------------
 
 @app.route('/')
@@ -49,7 +57,8 @@ def register_data():
         student_register_Data_list.append(year)
         student_register_Data_list.append(rollno)
         
-
+        
+        sql_functions.insert_register_student(username=name,email=email,password=pass2,enrollment_num=Enrolno,college=college,course=course,year=year,rollno=rollno)
     else:
         name = "not found"
         
@@ -174,6 +183,51 @@ def results():
     global len_questions
     Percentage = (user_score*100)/len_questions
     return render_template('results.html', score=user_score,len = len_questions,Percentage = Percentage)
+
+# ------------------------------------------------ Details ----------------------------------------------------------
+
+@app.route('/update_details')
+
+
+
+
+# ------------------------------------------------ REsume Upload -----------------------------------------------------
+@app.route('/upload_resume', methods=['GET', 'POST'])
+def upload_resume():
+    pdf_path = None
+
+    if request.method == 'POST':
+        # Check if the POST request has the file part
+        if 'file' not in request.files:
+            return render_template('upload_resume.html', error='No file part', pdf_path=pdf_path)
+
+        file = request.files['file']
+
+        # If the user does not select a file, browser will submit an empty part
+        if file.filename == '':
+            return render_template('upload_resume.html', error='No selected file', pdf_path=pdf_path)
+
+        # Check if the file is a PDF
+        if file and file.filename.lower().endswith('.pdf'):
+            # Save the PDF file
+            file_path = 'static/' + file.filename
+            file.save(file_path)
+
+            # Set the PDF path for display
+            pdf_path = f'/view_pdf?file={file_path}'
+
+            # Render the template with the PDF path
+            return render_template('upload_resume.html', pdf_path=pdf_path)
+        else:
+            return render_template('upload_resume.html', error='Invalid file format. Please upload a PDF file', pdf_path=pdf_path)
+
+    return render_template('upload_resume.html', pdf_path=pdf_path)
+
+@app.route('/view_pdf', methods=['GET'])
+def view_pdf():
+    file_path = request.args.get('file', '')
+    return send_file(file_path, as_attachment=False)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

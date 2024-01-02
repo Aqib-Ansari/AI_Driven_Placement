@@ -8,3 +8,36 @@ change : added this file
 Date : 14-11-23
 filename : Landing and registration
 change : added three buttons for different registration
+
+Date : 1-1-24
+change : SQL tables:
+            1) student_register
+                CREATE TABLE student_register (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        username VARCHAR(255),
+                        email VARCHAR(255) UNIQUE,
+                        password VARCHAR(255),
+                        enrollment_num VARCHAR(255) UNIQUE,
+                        college VARCHAR(255),
+                        course VARCHAR(255),
+                        year VARCHAR(4),
+                        rollno INT
+                    );
+
+            2) resume 
+                CREATE TABLE IF NOT EXISTS resume (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    pdf_data LONGBLOB
+                )
+
+            3) quiz_questions
+                CREATE TABLE quiz_questions (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    qType VARCHAR(255),
+                    question TEXT,
+                    option1 VARCHAR(255),
+                    option2 VARCHAR(255),
+                    option3 VARCHAR(255),
+                    option4 VARCHAR(255),
+                    correct VARCHAR(255)
+                );
