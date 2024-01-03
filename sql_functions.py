@@ -51,17 +51,36 @@ def insert_register_student(username,email,password,enrollment_num,college,cours
 
 # def select_register_student()
 
-def upload_resume(resume_path):
-    with open(resume_path, 'rb') as pdf_file:
-        pdf_data = pdf_file.read()
-    sql = "INSERT INTO resume (id,pdf_data) VALUES ( %s,%s)"
-    cursor.execute(sql, (15,pdf_data))
-    connection.commit()
-   
+# def upload_resume():
+    # with open('static/AQIB resume kc college.pdf', 'rb') as file:
+    #     file_data = file.read()
+    # # Insert the file into the database
+    # query = "INSERT INTO resume (filename, pdf_data) VALUES (%s, %s)"
+    # values = ('AQIB resume kc college.pdf', file_data)
+    # cursor.execute(query, values)
+
+    # # Commit the transaction
+    # connection.commit()
+
+    # Retrieve the file from the database
+    # file_id = 1  # Replace with the ID of the file you want to retrieve
+    # query = "SELECT filename, pdf_data FROM resume WHERE id = %s"
+    # cursor.execute(query, (file_id,))
+    # result = cursor.fetchone()
+
+    # if result:
+    #     filename, file_data = result
+
+    #     # Write the file to the disk
+    #     with open(filename, 'wb') as file:
+    #         file.write((file_data.encode('utf-8')))
+
+    # # Close the cursor and connection
+    # cursor.close()
+
+
 
 def insert_question(q):
-    
-
 # Connect to MySQL
     # cursor = connection.cursor()
 
@@ -84,9 +103,24 @@ def insert_question(q):
     # Commit the changes and close the connection
     connection.commit()
 
+def login_student_val(email,password):
+    try:
+        sql  = "SELECT  `id`,`password` FROM `student_register` WHERE `email`=%s"
+        cursor.execute(sql,(email))
+        
+        result = cursor.fetchone()
+        if result["password"] == password:
+            print("Login successfull")
+            return True,"correct_password"
+        else:
+            print("Incorrect password")
+            return False,"Incorrect password"
+    except:
+            return False,"Incorrect email"
+
 
 if __name__ == "__main__":
-    insert_register_student(username='aqin',email='aqib@gamil.com',password="asdfasfdasdf",enrollment_num="aa3330909",college="KC college",course="BSC CS",year="FY",rollno=4)
-    print("\n\n\n\n\nhello\n\n\n\n\n")
-    upload_resume("./static/MH01AT 7102 AKBAR.pdf")
-#    insert_question()
+    # insert_register_student(username='aqin',email='aqib@gamil.com',password="asdfasfdasdf",enrollment_num="aa3330909",college="KC college",course="BSC CS",year="FY",rollno=4)
+    # print("\n\n\n\n\nhello\n\n\n\n\n")
+    # upload_resume()
+    print(login_student_val("aqiban22298@gmail.com",123123123)[1])

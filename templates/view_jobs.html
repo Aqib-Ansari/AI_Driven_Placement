@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Layout</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <style>
+        /* Add any CSS styling for the grid layout here */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
+        }
+
+        .grid-item {
+            border: 1px solid #ddd;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Grid Layout</h1>
+    <div class="grid-container">
+        <div class="grid-item">{{ row }}</div>
+            {% for item in row %}
+                <div class="grid-item">{{ item }}</div>
+            {% endfor %}
+            <div class="grid-item">{{ row }}</div>
+    </div>
+</body>
+</html>
+

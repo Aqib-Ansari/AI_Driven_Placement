@@ -27,6 +27,7 @@ change : SQL tables:
             2) resume 
                 CREATE TABLE IF NOT EXISTS resume (
                     id INT AUTO_INCREMENT PRIMARY KEY,
+                    filename VARCHAR(255),
                     pdf_data LONGBLOB
                 )
 

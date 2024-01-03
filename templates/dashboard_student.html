@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,7 +59,7 @@
     <div class="button-container">
         <a href="#" class="action-button">Update Details</a>
         <a href="/quiz" class="action-button">Give Mock Test</a>
-        <a href="#" class="action-button">View Jobs</a>
+        <a href="/view_jobs" class="action-button">View Jobs</a>
         <a href="#" class="action-button">Contact Alumni</a>
         <a href="/upload_resume" class="action-button">upload resume</a>
         

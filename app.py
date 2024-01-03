@@ -1,15 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify , send_file
-import json
-import os
-
-import pymysql
-import pymysql.cursors
+from flask import Flask, render_template, request, redirect, url_for, jsonify , send_file,g,session
 import sql_functions
+
 
 connection = sql_functions.make_sql_connection()
 
 
 app = Flask(__name__)
+#  SEcretkey : 
+app.secret_key = "aidriven"
+
+
 cursor = connection.cursor()
 # ----------------------------------------------------------- Landing page ---------------------------------------------------
 
@@ -80,7 +80,7 @@ def redirect_to_page():
  
 # ----------------------------------------------------------------Student Login --------------------------------------- 
 
-@app.route('/login')
+@app.route('/login',methods=["POST","GET"])
 def login():
     
     return render_template('login.html')
@@ -88,36 +88,51 @@ def login():
     
 @app.route('/student_dashboard', methods=['POST'])
 def student_dashboard():
+    # if "user" in session:
+    #     return redirect(url_for(redirect_to_student_dashboard(),student_list = [session['user']]))
+    
     if request.method == "POST":
-        username = request.form['username']
+        session.clear()
+        
+        email = request.form['email']
         password = request.form['password']
         login_as = request.form['Login_dropdown']
-
+        # session["user"] = email
         if login_as=="Student":
             student_register_Data_list = []
-            student_register_Data_list.append(username)
+            student_register_Data_list.append(email)
             student_register_Data_list.append(password)
-            return render_template("dashboard_student.html",student_list=student_register_Data_list)
+            validatiaon = sql_functions.login_student_val(email,password)
+            if validatiaon[0]:
+                session["user"] = email
+                session["password"] = password
+                return redirect(url_for("redirect_to_student_dashboard",student_list = [session["user"]]))
+            else:
+                return render_template("login.html",error_msg=validatiaon[1])
         
         elif login_as=="Admin":
             student_register_Data_list = []
-            student_register_Data_list.append(username)
+            student_register_Data_list.append(email)
             student_register_Data_list.append(password)
-            return render_template("dashboard_Admin.html",student_list=student_register_Data_list)
+            return redirect(url_for("redirect_to_student_dashboard",student_list = [session["user"]]))
 
         elif login_as=="Company":
             student_register_Data_list = []
-            student_register_Data_list.append(username)
+            student_register_Data_list.append(email)
             student_register_Data_list.append(password)
-            return render_template("dashboard_company.html",student_list=student_register_Data_list)
+            return redirect(url_for("redirect_to_student_dashboard",student_list = [session["user"]]))
         
         else:
             return redirect(url_for('login'))
+        
 
 
 @app.route('/student_dashboard1')
 def redirect_to_student_dashboard():
-    return render_template("dashboard_student.html" )
+    if "user" in session:
+        
+        return render_template("dashboard_student.html",student_list = [session["user"]] )
+    return redirect(url_for("login"))
 
 # --------------------------------------------- Quiz ------------------------------------------------------
 questions = [
@@ -155,79 +170,108 @@ len_questions = len(questions)
 
 @app.route('/quiz')
 def quiz():
-    global current_question_index
+    if "user" in session:
+        
+        global current_question_index
 
-    if current_question_index < len(questions):
-        current_question = questions[current_question_index]
-        return render_template('quiz.html', question=current_question)
+        if current_question_index < len(questions):
+            current_question = questions[current_question_index]
+            return render_template('quiz.html', question=current_question)
+        else:
+            return redirect(url_for('results'))
     else:
-        return redirect(url_for('results'))
+        return redirect(url_for("login"))
 
 @app.route('/submit_answer', methods=['POST'])
 def submit_answer():
-    global current_question_index, user_score
+    if "user" in session:
+    
+        global current_question_index, user_score
 
-    user_answer = request.form.get('answer')
-    current_question = questions[current_question_index]
+        user_answer = request.form.get('answer')
+        current_question = questions[current_question_index]
 
-    if user_answer == current_question['correct_answer']:
-        user_score += 1
+        if user_answer == current_question['correct_answer']:
+            user_score += 1
 
-    current_question_index += 1
+        current_question_index += 1
 
-    return redirect(url_for('quiz'))
+        return redirect(url_for('quiz'))
+    else: 
+        return redirect(url_for("login"))
 
 @app.route('/results')
 def results():
-    global user_score
-    global len_questions
-    Percentage = (user_score*100)/len_questions
-    return render_template('results.html', score=user_score,len = len_questions,Percentage = Percentage)
+    if "user" in session:
+        
+        global user_score
+        global len_questions
+        Percentage = (user_score*100)/len_questions
+        return render_template('results.html', score=user_score,len = len_questions,Percentage = Percentage)
+    else:
+        return redirect(url_for("login"))
 
 # ------------------------------------------------ Details ----------------------------------------------------------
 
 @app.route('/update_details')
-
+def update_details():
+    # if "user" not in session:
+    #     return redirect(url_for("login"))
+    pass
 
 
 
 # ------------------------------------------------ REsume Upload -----------------------------------------------------
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume():
-    pdf_path = None
+    if "user" not in session:
+        return redirect(url_for("login"))
+    else:
+        pdf_path = None
 
-    if request.method == 'POST':
-        # Check if the POST request has the file part
-        if 'file' not in request.files:
-            return render_template('upload_resume.html', error='No file part', pdf_path=pdf_path)
+        if request.method == 'POST':
+            # Check if the POST request has the file part
+            if 'file' not in request.files:
+                return render_template('upload_resume.html', error='No file part', pdf_path=pdf_path)
 
-        file = request.files['file']
+            file = request.files['file']
 
-        # If the user does not select a file, browser will submit an empty part
-        if file.filename == '':
-            return render_template('upload_resume.html', error='No selected file', pdf_path=pdf_path)
+            # If the user does not select a file, browser will submit an empty part
+            if file.filename == '':
+                return render_template('upload_resume.html', error='No selected file', pdf_path=pdf_path)
 
-        # Check if the file is a PDF
-        if file and file.filename.lower().endswith('.pdf'):
-            # Save the PDF file
-            file_path = 'static/' + file.filename
-            file.save(file_path)
+            # Check if the file is a PDF
+            if file and file.filename.lower().endswith('.pdf'):
+                # Save the PDF file
+                file_path = 'static/' + file.filename
+                file.save(file_path)
 
-            # Set the PDF path for display
-            pdf_path = f'/view_pdf?file={file_path}'
+                # Set the PDF path for display
+                pdf_path = f'/view_pdf?file={file_path}'
 
-            # Render the template with the PDF path
-            return render_template('upload_resume.html', pdf_path=pdf_path)
-        else:
-            return render_template('upload_resume.html', error='Invalid file format. Please upload a PDF file', pdf_path=pdf_path)
+                # Render the template with the PDF path
+                return render_template('upload_resume.html', pdf_path=pdf_path)
+            else:
+                return render_template('upload_resume.html', error='Invalid file format. Please upload a PDF file', pdf_path=pdf_path)
 
-    return render_template('upload_resume.html', pdf_path=pdf_path)
+        return render_template('upload_resume.html', pdf_path=pdf_path)
+   
+        
+
 
 @app.route('/view_pdf', methods=['GET'])
 def view_pdf():
     file_path = request.args.get('file', '')
     return send_file(file_path, as_attachment=False)
 
+# --------------------------------------------------------- view jobs ---------------------------------------
+@app.route('/view_jobs')
+def view_jobs():
+    # if "user" not in session:
+    #     return redirect(url_for("login"))
+    row = [1, 2, 3]*20
+
+    return render_template('view_jobs.html', row=row)
 
 if __name__ == '__main__':
     app.run(debug=True)
