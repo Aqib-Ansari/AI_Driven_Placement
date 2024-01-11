@@ -1,6 +1,7 @@
 import pymysql
 import pymysql.cursors
 import os
+import csv
 import data_class_aidriven
 def make_sql_connection():
     connection = pymysql.connect(host='localhost',
@@ -117,10 +118,87 @@ def login_student_val(email,password):
             return False,"Incorrect password"
     except:
             return False,"Incorrect email"
+    
+# ----------------------------------------------- insert quiz questions -------------------------------------
+    
+def insert_data(connection, data):
+    # cursor = connection.cursor()
+    insert_query = '''
+    INSERT INTO quiz_questions (qtype, question, option1, option2, option3, option4, correct)
+    VALUES (%s, %s, %s, %s, %s, %s, %s);
+    '''
+    with connection.cursor() as cursor:
+        cursor.executemany(insert_query, data)
+    connection.commit()
+
+def read_data_from_tsv(file_path):
+    with open(file_path, 'r', newline='', encoding='utf-8') as tsv_file:
+        tsv_reader = csv.reader(tsv_file, delimiter='\t')
+        next(tsv_reader)  # Skip header
+        data = [tuple(row) for row in tsv_reader]
+    return data
+
+def insert_quiz_question(tsv_file_path):
+    try:
+        # Connect to MySQL
+        # connection = make_sql_connection()
+        
+        # Create table if not exists
+        
+
+        # Read data from TSV file
+        data_to_insert = read_data_from_tsv(tsv_file_path)
+
+        # Insert data into MySQL
+        insert_data(connection, data_to_insert)
+
+        print("Data inserted successfully!")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+    finally:
+        # Close the connection
+        if connection:
+            connection.close()
+
+# ---------------------------------------------------- selecting quiz questions ---------------------------------------------
+def fetch_quiz_question(qtype):     
+    try:
+        # Connect to the MySQL server
+
+        # Define the SQL query to select all data from the quiz_questions table
+        select_query = "SELECT * FROM quiz_questions where qtype = %s;"
+
+        # Execute the query
+        cursor.execute(select_query,qtype)
+
+        # Fetch all the rows
+        rows = cursor.fetchall()
+
+        # Display the retrieved data
+        # for row in rows:
+        #     print(row)
+
+        return rows
+
+    except pymysql.connector.Error as err:
+        print(f"Error: {err}")
+
+    finally:
+        # Close the cursor and connection
+        if 'cursor' in locals():
+            cursor.close()
+        if 'connection' in locals() and connection.is_connected():
+            connection.close()
 
 
 if __name__ == "__main__":
     # insert_register_student(username='aqin',email='aqib@gamil.com',password="asdfasfdasdf",enrollment_num="aa3330909",college="KC college",course="BSC CS",year="FY",rollno=4)
     # print("\n\n\n\n\nhello\n\n\n\n\n")
     # upload_resume()
-    print(login_student_val("aqiban22298@gmail.com",123123123)[1])
+    # print(login_student_val("aqib11@gmail.com","Aqib@22298")[1])
+    # # insert_quiz_question("webdev_question.tsv")
+    # fetch_quiz_question("mysql")
+    connection = make_sql_connection()
+    cursor = connection.cursor()

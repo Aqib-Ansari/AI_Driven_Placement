@@ -12,5 +12,7 @@
     <h1>Quiz Results</h1>
     <p>Your score is: {{ score }}/{{ len }}</p>
     <p>Percentage: {{ Percentage }}</p>
+
+    <a href="{{ url_for('redirect_to_student_dashboard',student_list = [session['user']])}}"><button>back</button></a>
 </body>
 </html>

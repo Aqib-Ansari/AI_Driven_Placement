@@ -59,11 +59,13 @@ def register_data():
         
         
         sql_functions.insert_register_student(username=name,email=email,password=pass2,enrollment_num=Enrolno,college=college,course=course,year=year,rollno=rollno)
+        session["user"] = email
+        session["password"] = pass2
     else:
         name = "not found"
         
     
-    return render_template('dashboard_student.html',student_list=student_register_Data_list)
+    return redirect(url_for("redirect_to_student_dashboard"))
 
 @app.route('/redirect', methods=['POST'])
 def redirect_to_page():
@@ -92,7 +94,7 @@ def student_dashboard():
     #     return redirect(url_for(redirect_to_student_dashboard(),student_list = [session['user']]))
     
     if request.method == "POST":
-        session.clear()
+        # session.clear()
         
         email = request.form['email']
         password = request.form['password']
@@ -163,10 +165,22 @@ questions = [
     # Add more questions as needed
 ]
 
+# questions = sql_functions.fetch_quiz_question("mysql")
+
 # Keep track of user's score
+
+questions = sql_functions.fetch_quiz_question("mysql")
+# ids = reough.get_id_questions(questions)
+ids = [i for i in range(10)]
+current_question_index= ids[0]
 user_score = 0
-current_question_index = 0
-len_questions = len(questions)
+len_question = len(ids)
+
+questions_id = 0
+
+@app.route('/quiz_details')
+def quiz_details():
+    return render_template("quiz_details.html")
 
 @app.route('/quiz')
 def quiz():
@@ -174,9 +188,9 @@ def quiz():
         
         global current_question_index
 
-        if current_question_index < len(questions):
-            current_question = questions[current_question_index]
-            return render_template('quiz.html', question=current_question)
+        if questions_id < len(ids):
+            current_question = questions[questions_id]
+            return render_template('quiz.html', questions=current_question)
         else:
             return redirect(url_for('results'))
     else:
@@ -186,15 +200,16 @@ def quiz():
 def submit_answer():
     if "user" in session:
     
-        global current_question_index, user_score
+        global current_question_index, user_score, questions_id
 
         user_answer = request.form.get('answer')
-        current_question = questions[current_question_index]
-
-        if user_answer == current_question['correct_answer']:
+        current_question = questions[questions_id]
+        print(user_answer,type(user_answer))
+        print(current_question['correct'],type(current_question["correct"]))
+        if str(user_answer) == str(current_question['correct']):
             user_score += 1
 
-        current_question_index += 1
+        questions_id += 1
 
         return redirect(url_for('quiz'))
     else: 
@@ -205,9 +220,9 @@ def results():
     if "user" in session:
         
         global user_score
-        global len_questions
-        Percentage = (user_score*100)/len_questions
-        return render_template('results.html', score=user_score,len = len_questions,Percentage = Percentage)
+        global len_question
+        Percentage = (user_score*100)/len_question
+        return render_template('results.html', score=user_score,len = len_question,Percentage = Percentage)
     else:
         return redirect(url_for("login"))
 

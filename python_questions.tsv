@@ -1,0 +1,21 @@
+qtype   Question	                                        Option1             Option2             Option3             Option4             Correct
+python	What is the purpose of the 'if' statement in Python?	Conditional execution	Loop iteration	    Function definition	Exception handling	1
+python	How to comment out multiple lines in Python?	        # Comment	        // Comment	        /* Comment */	    ''' Comment '''	    1
+python	Which built-in function is used to get the length of a list in Python?	count()	len()	size()	length()	        2
+python	What is the difference between '==' and 'is' in Python?	Value comparison	Identity comparison	Object comparison	Type comparison	    2
+python	How to open a file in Python for reading and writing?	open('file.txt', 'r+')	open('file.txt', 'rw')	open('file.txt', 'w+')	open('file.txt', 'a+')	1
+python	What is the purpose of the 'range()' function in Python?	Generate a sequence of numbers	Create a range object	Perform iteration	Determine the length of a list	1
+python	How to define a function in Python?	                func myFunction():	def myFunction():	function myFunction():	define myFunction():	2
+python	What is the result of the expression '3 + 5 * 2' in Python?	16	13	11	18	4
+python	Which data type is immutable in Python?	            List	Dictionary	    Tuple	Set	                3
+python	What does the 'pass' statement do in Python?	    Terminates the program	Skips the current block of code	Represents a null operation	Breaks out of a loop	3
+python	How to concatenate two lists in Python?	            list1 + list2	    list1 .concat(list2)	concatenate(list1, list2)	join(list1, list2)	1
+python	What is the purpose of the 'lambda' function in Python?	Define anonymous functions	Implement recursion	Handle exceptions	Perform type conversion	1
+python	How to remove an item from a list in Python?	    list.remove(item)	list.delete(item)	del list[item]	list.pop(item)	    1
+python	What is the use of '__init__' method in Python classes?	Initialize class attributes	Define class methods	Create a new instance of the class	Handle exceptions	1
+python	How to check if a key exists in a dictionary in Python?	key.exists()	key.in(dictionary)	key in dictionary	dictionary.hasKey(key)	3
+python	What is the purpose of 'pip' in Python?	            Package installer for Python	Virtual environment manager	Python interpreter	Code editor for Python	1
+python	How to format a string in Python using placeholders?	'{} {}'.format(value1, value2)	'%s %s' % (value1, value2)	'$1 $2'.replace(['1', '2'], [value1, value2])	' '.join([value1, value2])	2
+python	What is the correct way to create an empty set in Python?	set()	{}	new Set()	emptySet()	1
+python	What is the purpose of '__main__' in Python?	        Main method of a program	Represents the current module	Indicates the start of the program	Entry point for execution	4
+python	How to handle exceptions in Python?	            try/except block	catch/throw block	if/else statement	switch/case statement	1

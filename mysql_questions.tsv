@@ -1,0 +1,21 @@
+qtype   Question	                                    Option1	            Option2	            Option3	            Option4	            Correct
+mysql	What is the primary key in MySQL?	            Auto_increment	    Primary_key()	    Index_key	        Unique_key	        1
+mysql	In MySQL, what does the term 'ACID' stand for?	Atomicity	        Autonomy	        Availability	    Aggregation	        1
+mysql	Which statement is used to insert data in MySQL?	INSERT INTO	    ADD DATA	        IMPORT DATA	        UPDATE DATA	        1
+mysql	What is the purpose of the 'GROUP BY' clause in MySQL?	Grouping rows	Sorting rows	        Filtering rows	    Joining rows	        1
+mysql	What does the 'EXPLAIN' statement do in MySQL?	Show execution plan	Explain query	Display table info	Explain optimization	1
+mysql	What is the default port for MySQL?	            3306	            5432	            1521	            27017	            1
+mysql	How to delete all records from a table in MySQL?	DELETE FROM	    DROP TABLE	        TRUNCATE TABLE	    REMOVE RECORDS	    3
+mysql	What is the purpose of the 'HAVING' clause in MySQL?	Filtering results after grouping	Filtering results before grouping	Sorting results	Limiting results	1
+mysql	Which MySQL data type is used for storing a date?	DATE	            TIME	            TIMESTAMP	        DATETIME	        1
+mysql	How to update data in a MySQL table?	            MODIFY	            CHANGE	            SET	                UPDATE	            4
+mysql	What does the 'ORDER BY' clause do in MySQL?	Sorting the result set	Grouping the result set	Filtering the result set	Joining the result set	1
+mysql	Which MySQL command is used to show the structure of a table?	DESCRIBE	SHOW TABLE	        DISPLAY STRUCTURE	TABLE STRUCTURE	    1
+mysql	What is the purpose of the 'UNION' operator in MySQL?	Combining result sets	Joining tables	Filtering results	Grouping results	    1
+mysql	How to count the number of rows in a table in MySQL?	SELECT COUNT(*)	COUNT TABLE	        ROWS COUNT	        NUM_ROWS	        1
+mysql	Which statement is used to change the value of an existing record in MySQL?	UPDATE	MODIFY	        ALTER	            CHANGE	            1
+mysql	What is the purpose of the 'LIMIT' clause in MySQL?	Limiting the number of records	Setting a maximum value	Controlling the result set size	Specifying the column limit	1
+mysql	How to create a new database in MySQL?	        NEW DATABASE	    CREATE DATABASE	    ADD DATABASE	        MAKE DATABASE	    2
+mysql	What is the role of the 'DISTINCT' keyword in MySQL?	Selecting unique values	Sorting values	    Filtering values	Grouping values	    1
+mysql	Which MySQL function is used to find the length of a string?	LENGTH	CHAR_LENGTH	    STR_LENGTH	        STRING_LENGTH	    2
+mysql	How to remove a table in MySQL?	                DROP TABLE	    DELETE TABLE	    REMOVE TABLE	    TRUNCATE TABLE	    1

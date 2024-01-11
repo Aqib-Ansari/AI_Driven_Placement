@@ -9,15 +9,28 @@
 
 </head>
 <body>
-    <h1>{{ question['question'] }}</h1>
+    <h1>{{ questions['question'] }}</h1>
 
     <form action="{{ url_for('submit_answer') }}" method="post">
-        {% for option in question['options'] %}
-            <input type="radio" name="answer" value="{{ option }}"> {{ option }}<br>
-        {% endfor %}
+        
+        <label>
+            <input type="radio" name="answer" value="1"> {{ questions["option1"] }}
+        </label>
+        <br>
+        <label>
+            <input type="radio" name="answer" value="2"> {{ questions["option2"] }}
+        </label>
+        <br>
+        <label>
+            <input type="radio" name="answer" value="3"> {{ questions["option3"] }}
+        </label>
+        <br>
+        <label>
+            <input type="radio" name="answer" value="4"> {{ questions["option4"] }}
+        </label>
 
         <br>
-        <input type="submit" value="Next">
+        <button type="submit" value="Next">Next</button>
     </form>
 </body>
 </html>
