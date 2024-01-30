@@ -4,9 +4,9 @@ import os
 import csv
 import data_class_aidriven
 def make_sql_connection():
-    connection = pymysql.connect(host='localhost',
-                                user='root',
-                                password='Aqib@22298',
+    connection = pymysql.connect(host='aidriven.cdhiotv5c9su.us-east-1.rds.amazonaws.com',
+                                user='admin',
+                                password='aidriven',
                                 database='aidriven',
                                 charset='utf8mb4',
                                 cursorclass=pymysql.cursors.DictCursor)
@@ -144,7 +144,19 @@ def insert_quiz_question(tsv_file_path):
         # connection = make_sql_connection()
         
         # Create table if not exists
-        
+        # sql  = '''CREATE TABLE quiz_questions (
+        #             id INT AUTO_INCREMENT PRIMARY KEY,
+        #             qType VARCHAR(255),
+        #             question TEXT,
+        #             option1 VARCHAR(255),
+        #             option2 VARCHAR(255),
+        #             option3 VARCHAR(255),
+        #             option4 VARCHAR(255),
+        #             correct VARCHAR(255)
+        #         );'''
+        # with connection.cursor() as cursor:
+        #     cursor.execute(sql)
+        # connection.commit()
 
         # Read data from TSV file
         data_to_insert = read_data_from_tsv(tsv_file_path)
@@ -182,8 +194,8 @@ def fetch_quiz_question(qtype):
 
         return rows
 
-    except pymysql.connector.Error as err:
-        print(f"Error: {err}")
+    except Exception as e:
+        print(f"Error: {e}")
 
     finally:
         # Close the cursor and connection
@@ -192,13 +204,124 @@ def fetch_quiz_question(qtype):
         if 'connection' in locals() and connection.is_connected():
             connection.close()
 
+def get_student_details(email):
+    try:
+        global connection 
+        global cursor
+
+        # Replace with your actual table schema
+        
+        cursor.execute("select id from student_register where email = %s;",email)
+        id = cursor.fetchall()
+        print(id)
+        cursor.execute("SELECT * FROM student_details where id = %s;",id[0]['id'])
+        
+        student_details = cursor.fetchall()
+        print(student_details)
+        return student_details
+
+    except Exception as err:
+        print(f"Error: {err}")
+        return err
+
+def update_student_details(email, field,value):
+    try:
+        global connection 
+        global cursor
+
+        
+        
+        cursor.execute("select id from student_register where email = %s;",email)
+        id = cursor.fetchall()
+        print(id)
+        id= id[0]["id"]
+
+        student_details = get_student_details(email=email)
+       
+        if student_details != ():
+            cursor.execute(f"update student_details set {field} ='{value}' where id = {id}")
+            connection.commit()
+            student_details = cursor.fetchall()
+            print(student_details)
+            return student_details
+        else:
+            sql_query = f"INSERT INTO student_details (id,{field}) VALUES ( {id}, '{value}');"
+
+            cursor.execute(sql_query)
+            connection.commit()
+            return student_details
+
+    except Exception as err:
+        print(f"Error: {err}")
+        return err
+
+# ------------------------------------------------------------- student_details --------------------------------------
+
 
 if __name__ == "__main__":
-    # insert_register_student(username='aqin',email='aqib@gamil.com',password="asdfasfdasdf",enrollment_num="aa3330909",college="KC college",course="BSC CS",year="FY",rollno=4)
+    # insert_register_student(username='aqib',email='aqib@gamil.com',password="asdfasfdasdf",enrollment_num="aa3330909",college="KC college",course="BSC CS",year="FY",rollno=4)
     # print("\n\n\n\n\nhello\n\n\n\n\n")
     # upload_resume()
     # print(login_student_val("aqib11@gmail.com","Aqib@22298")[1])
-    # # insert_quiz_question("webdev_question.tsv")
-    # fetch_quiz_question("mysql")
-    connection = make_sql_connection()
-    cursor = connection.cursor()
+    # insert_quiz_question("webdev_question.tsv")
+    # print(fetch_quiz_question("webdev")[0])
+    # connection = make_sql_connection()
+    # cursor = connection.cursor()
+    # connection.close()
+#     # get_student_details('aqib@gamil.com')
+# #     cursor.execute('''INSERT INTO student_details (
+# #     id,
+# #     firstname,
+# #     lastname,
+# #     middlename,
+# #     college,
+# #     rollno,
+# #     program,
+# #     stream,
+# #     year,
+# #     backlog,
+# #     currentcgpa,
+# #     email,
+# #     phoneno,
+# #     gender,
+# #     dob,
+# #     nationality,
+# #     address
+# # ) VALUES (
+# #     14,
+# #     'John',
+# #     'Doe',
+# #     'M',
+# #     'Example College',
+# #     'tycs003',
+# #     'Computer Science',
+# #     'AI',
+# #     3,
+# #     0,
+# #     3.75,
+# #     'john.doe@example.com',
+# #     '+1234567890',
+# #     'Male',
+# #     '1995-05-15',
+# #     'USA',
+# #     '123 Main St, City'
+# # )
+# #  ''')
+# # #     cursor.execute('''ALTER TABLE student_details
+# # # ADD CONSTRAINT unique_id_rollno
+# # # UNIQUE (id, rollno);
+# # # ''')
+# #     cursor.execute("select * from student_details")
+# #     student_details = cursor.fetchall()
+# #     print(student_details)
+# #     connection.commit()
+#     get_student_details('aqibansari22298@gmail.com')
+#     # update_student_details(email='student1@gmail.com',field='lastname',value='Ansari')
+#     # cursor.execute('update student_details set firstname  = "Aqib" where id = 14')
+#     # sql = cursor.fetchone()
+#     sql=update_student_details(email='aqibansari22298@gmail.com',field="lastname",value="Aqib")
+#     get_student_details('aqibansari22298@gmail.com')
+#     print(sql)
+    cursor.execute('select * from quiz_questions')
+    questions = cursor.fetchall()
+    print(questions[-1]['qType'])

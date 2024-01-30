@@ -1,0 +1,21 @@
+qtype   Question	                                                        Option1	                 Option2	                 Option3	                 Option4	                 Correct
+webdev	What is the purpose of the CSS box model?       	To handle mouse events	To define document type	To manage layout	        To create variables    	3
+webdev	Explain the role of AJAX in web development.   	Asynchronous JavaScript	Advanced XML           	Auto Justified XHTML	Animated JavaScript   	1
+webdev	How can you optimize website performance?       	Minify CSS              	Use only inline styles  	Embed large images     	Implement heavy scripts	1
+webdev	Describe the benefits of responsive design.    	Fixed layout           	Adapts to various screens	Dynamic typography     	Limited color choices	2
+webdev	What is the purpose of the HTML <canvas> tag?  	Create 3D graphics      	Embed audio files       	Draw graphics dynamically	Define document structure	4
+webdev	Explain the difference between HTTP and HTTPS.	Hypertext Transfer       	HyperText Transfer       	Hypertext Transfer       	HyperText Transfer       	2
+webdev	How does a CDN contribute to faster websites?  	Caches website content  	Defines website structure	Increases server load   	Encrypts user data     	1
+webdev	What is the role of the viewport in CSS?       	Displays page content  	Manages page transitions	Set document background	Defines document width 	4
+webdev	What is the purpose of the JavaScript event loop?	Synchronous execution	Asynchronous execution  	Parallel execution      	Sequential execution    	2
+webdev	Explain the difference between cookies and local storage.	Session-based storage  	Persistent storage      	Temporary storage        	Secure storage          	2
+webdev	How can you optimize a website for mobile devices?	Use fixed-width layout  	Optimize for touch input 	Ignore mobile users     	Utilize media queries  	4
+webdev	Describe the purpose of the CSS "flexbox" property.	Image alignment        	Text justification      	Layout in one dimension 	3D transformations    	3
+webdev	What is the purpose of the "meta" tag in HTML?  	Define character set   	Embed external scripts  	Create navigation links 	Set document language  	1
+webdev	Explain the significance of the "viewport" meta tag.	Set font size         	Control the browser view 	Limit image resolutions	Manage document styles  	2
+webdev	How does CSS specificity affect style application?	Determines font size  	Resolves style conflicts 	Influences color choices 	Sets background images  	2
+webdev	What is the purpose of the HTML5 "figure" element?	Grouping of content    	Container for media      	Semantic inline text     	Sectioning of content   	4
+webdev	Describe the advantages of using a CSS preprocessor.	Simplifies syntax      	Enhances browser support 	Improves code organization	Streamlines compilation	3
+webdev	Explain the role of the "viewport" in responsive design.	Sets document width	Controls user interactions	Adjusts layout to screen 	Defines document height  	3
+webdev	How can you secure a web application against SQL injection?	Use prepared statements	Encrypt database content 	Rely on client-side validation	Disable server logs   	1
+webdev	Describe the purpose of the "localStorage" API in JavaScript.	Session-based storage	Persistent storage       	Temporary storage        	Secure storage          	2

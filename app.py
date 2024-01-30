@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify , send_file,g,session
 import sql_functions
+import data_class_aidriven
 
 
 connection = sql_functions.make_sql_connection()
@@ -38,29 +39,20 @@ def register_company():
 @app.route('/register_data', methods=['POST'])
 def register_data():
     if request.method=="POST":
-        name = request.form['username']
-        email = request.form['email']
-        pass2 = request.form['pass2']
-        Enrolno = request.form['Enrolno']
-        college = request.form['college']
-        course = request.form['course']
-        year = request.form['year']
-        rollno = request.form['rollno']
-        
-        student_register_Data_list = []
-        student_register_Data_list.append(name)
-        student_register_Data_list.append(email)
-        student_register_Data_list.append(pass2)
-        student_register_Data_list.append(Enrolno)
-        student_register_Data_list.append(college)
-        student_register_Data_list.append(course)
-        student_register_Data_list.append(year)
-        student_register_Data_list.append(rollno)
+        student = {
+        "name" : request.form['username'],
+        "email" : request.form['email'],
+        "pass2" : request.form['pass2'],
+        "Enrolno" : request.form['Enrolno'],
+        "college" : request.form['college'],
+        "course" : request.form['course'],
+        "year" : request.form['year'],
+        "rollno" : request.form['rollno']}
         
         
-        sql_functions.insert_register_student(username=name,email=email,password=pass2,enrollment_num=Enrolno,college=college,course=course,year=year,rollno=rollno)
-        session["user"] = email
-        session["password"] = pass2
+        sql_functions.insert_register_student(username=student['name'],email=student['email'],password=student['pass2'],enrollment_num=student['Enrolno'],college=student['college'],course=student['course'],year=student['year'],rollno=student['rollno'])
+        session["user"] = student["email"]
+        
     else:
         name = "not found"
         
@@ -137,39 +129,25 @@ def redirect_to_student_dashboard():
     return redirect(url_for("login"))
 
 # --------------------------------------------- Quiz ------------------------------------------------------
-questions = [
-    {
-        'id': 1,
-        'question': 'What is the capital of France?',
-        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
-        'correct_answer': 'Paris'
-    },
-    {
-        'id': 2,
-        'question': 'What is the capital of France?',
-        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
-        'correct_answer': 'Madrid'
-    },
-    {
-        'id': 3,
-        'question': 'What is the capital of France?',
-        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
-        'correct_answer': 'Rome'
-    },
-    {
-        'id': 4,
-        'question': 'What is the capital of France?',
-        'options': ['Berlin', 'Paris', 'Rome', 'Madrid'],
-        'correct_answer': 'Berlin'
-    }
-    # Add more questions as needed
-]
 
 # questions = sql_functions.fetch_quiz_question("mysql")
+@app.route('/quiz_details')
+def quiz_details():
+    return render_template("quiz_details.html")
+
+@app.route('/quiz_details_form',methods = ["POST"])
+def quiz_details_form():
+    global qtype1
+    if request.method == "POST":
+        
+        qtype1 = 'mysql'
+        # qtype = request.form["qtype"]
+        print(qtype1)
+        return redirect(url_for("quiz"))
 
 # Keep track of user's score
-
-questions = sql_functions.fetch_quiz_question("mysql")
+# global qtype
+questions = sql_functions.fetch_quiz_question('mysql')
 # ids = reough.get_id_questions(questions)
 ids = [i for i in range(10)]
 current_question_index= ids[0]
@@ -178,9 +156,9 @@ len_question = len(ids)
 
 questions_id = 0
 
-@app.route('/quiz_details')
-def quiz_details():
-    return render_template("quiz_details.html")
+
+
+
 
 @app.route('/quiz')
 def quiz():
@@ -204,8 +182,8 @@ def submit_answer():
 
         user_answer = request.form.get('answer')
         current_question = questions[questions_id]
-        print(user_answer,type(user_answer))
-        print(current_question['correct'],type(current_question["correct"]))
+        # print(user_answer,type(user_answer))
+        # print(current_question['correct'],type(current_question["correct"]))
         if str(user_answer) == str(current_question['correct']):
             user_score += 1
 
@@ -228,14 +206,36 @@ def results():
 
 # ------------------------------------------------ Details ----------------------------------------------------------
 
-@app.route('/update_details')
-def update_details():
-    # if "user" not in session:
-    #     return redirect(url_for("login"))
-    pass
+@app.route('/student_details')
+def student_details():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    else:
+        
+        student_details = sql_functions.get_student_details(email=session['user'])
+        print(student_details)
+        if student_details != ():
+            return render_template('update_student_details.html',student_details = student_details )
+        else:
+            student_details = [{ 'firstname': 'firstname', 'lastname': 'lastname', 'middlename': 'middlename', 'college': 'college', 'rollno': 'rollno', 'program': 'Computer Science', 'stream': 'AI', 'year': 0, 'backlog': 0, 'currentcgpa': '9.', 'email': 'john.doe@example.com', 'phoneno': '+919999999999', 'gender': 'Male/Female', 'dob': '2000, 1, 11', 'nationality': 'Indian', 'address': '123 road Area, City'}]
+            return render_template('update_student_details.html',student_details = student_details)
+        
 
 
+    
+@app.route('/edit_student_field/<field>')
+def edit_student_field(field):
+    return render_template("student_field_update.html",field=field)
 
+@app.route('/update_field/<field>',methods=["POST"])
+def update_field(field):
+    if request.method == "POST":
+        value = request.form["value"]
+
+        sql_functions.update_student_details(email=session["user"],field=field,value=value)
+        return redirect(url_for("student_details"))
+    else:
+        return redirect(url_for("edit_student_details"))
 # ------------------------------------------------ REsume Upload -----------------------------------------------------
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume():
@@ -288,5 +288,16 @@ def view_jobs():
 
     return render_template('view_jobs.html', row=row)
 
+# -------------------------------------------- view student details by company
+
+@app.route('/fetch_student_details')
+def fetch_student_details():
+    students = sql_functions.get_student_details()
+    print(students)
+
+# --------------------------------------------- company dashboard -------------------------------------
+    
+
+# ------------------------------------------------------- Company Section job posting -----------------------
 if __name__ == '__main__':
     app.run(debug=True)
