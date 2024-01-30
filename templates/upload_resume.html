@@ -4,14 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Viewer</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        header {
+            background-color: #1e1e1e;
+            padding: 15px;
+            text-align: center;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         .error {
             color: red;
+            margin-top: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 2px solid #1e1e1e;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #1e1e1e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #333;
+        }
+
+        h2 {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #1e1e1e;
         }
 
         object {
@@ -21,21 +79,27 @@
     </style>
 </head>
 <body>
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
+    <header>
+        <h1>Upload Your Resume</h1>
+    </header>
 
-    <form method="post" enctype="multipart/form-data">
-        <label for="file">Choose a PDF file:</label>
-        <input type="file" name="file" accept=".pdf">
-        <input type="submit" value="Upload">
-    </form>
+    <div class="container">
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
 
-    {% if pdf_path %}
-        <h2>PDF Viewer</h2>
-        <object data="{{ pdf_path }}" type="application/pdf">
-            <p>Your browser does not support viewing PDFs. Please download the PDF to view it.</p>
-        </object>
-    {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            <label for="file">Choose a PDF file:</label>
+            <input type="file" name="file" accept=".pdf">
+            <input type="submit" value="Upload">
+        </form>
+
+        {% if pdf_path %}
+            <h2>PDF Viewer</h2>
+            <object data="{{ pdf_path }}" type="application/pdf">
+                <p>Your browser does not support viewing PDFs. Please download the PDF to view it.</p>
+            </object>
+        {% endif %}
+    </div>
 </body>
 </html>

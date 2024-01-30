@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            
         }
 
         #notifications {
@@ -21,26 +23,33 @@
         }
 
         .button-container {
-            margin-top: 20px;
+            margin: 0px;
         }
 
         .action-button {
             padding: 10px;
-            margin: 5px;
+            margin-top: 20px;
+            margin-left: 15px;
+            margin-right: 0px;
             font-size: 16px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             cursor: pointer;
-            border: 1px solid #3498db;
+            
             border-radius: 5px;
-            color: #fff;
-            background-color: #3498db;
+            color: #222222;
+            background-color: #79c8fc;
+            
             transition: background-color 0.3s;
         }
 
         .action-button:hover {
-            background-color: #2980b9;
+            color: rgb(0, 107, 184);
+            background-color: #b8e3ff;
+            border-radius: 0%;
+            box-shadow: 2px 2px 2px rgb(193, 192, 192);
+            transition: 0.4s;
         }
 
         #upload-resume {
@@ -48,30 +57,32 @@
         }
     </style>
 </head>
-<body>
+<body style="margin: 0px; padding: 0px;">
     
-    Student Dashboard
+   
 
-    <div id="notifications">Notifications</div>
+   
 
-    <div class="button-container">
-        <a href="#" class="action-button">Update Details</a>
-        <a href="/quiz" class="action-button">Give Mock Test</a>
-        <a href="#" class="action-button">View Jobs</a>
-        <a href="#" class="action-button">Contact Alumni</a>
-        <a href="/upload_resume" class="action-button">upload resume</a>
-        
-
-        <a href="#" class="action-button">View Details</a>
+    <div class="button-container" style="width: 100%; height: 80px; background-color: rgb(20, 127, 208);">
+        <div style="margin-top: 0px; padding-top: 0px; margin-left: 20px; margin-right: 20px; ">
+        <a href="/student_details" class="action-button"><b>Update Details</b></a>
+        <a href="/quiz_details" class="action-button"><b>Give Mock Test</b></a>
+        <a href="/view_jobs" class="action-button"><b>View Jobs</b></a>
+        <a href="https://kccollege.edu.in/alumni/" class="action-button"><b>Contact Alumni</b></a>
+        <a href="/upload_resume" class="action-button"><b>upload resume</b></a>
+        <a href="#" class="action-button"><b>Give Mock Interview</b></a>
+    
+        <a href="/notifications" class="action-button" style="float: right; margin-right: 20px; background-color: #ffcc00; color: black;height: 30px; padding: 4px; "><h3 style="margin: 0px; padding: 0px;"><img src="static/bell.png" alt="Description of the image" style="height: 30px ; width: auto; margin: 0px; padding: 0%;" ></h3></a>
+    </div>
     </div>
 
-    <h1>Welcome</h1>
+    <h1 style="display: flex; "> Student Dashboard</h1>
 
     <ul>
-        <p>User Input: {{ course }}</p>
-        {% for item in student_list %}
-            <li>{{ item }}</li>
-        {% endfor %}
+        <p>User : {% for item in student_list %}
+            {{ item }}
+        {% endfor %}</p>
+        
     </ul>
 
    

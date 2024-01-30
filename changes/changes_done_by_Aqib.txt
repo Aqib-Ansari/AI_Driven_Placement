@@ -27,6 +27,7 @@ change : SQL tables:
             2) resume 
                 CREATE TABLE IF NOT EXISTS resume (
                     id INT AUTO_INCREMENT PRIMARY KEY,
+                    filename VARCHAR(255),
                     pdf_data LONGBLOB
                 )
 
@@ -41,3 +42,24 @@ change : SQL tables:
                     option4 VARCHAR(255),
                     correct VARCHAR(255)
                 );
+
+            4) student_details
+                CREATE TABLE student_details (
+                    id INT,
+                    firstname VARCHAR(50),
+                    lastname VARCHAR(50),
+                    middlename VARCHAR(50),
+                    college VARCHAR(100),
+                    rollno VARCHAR(20),
+                    program VARCHAR(50),
+                    stream VARCHAR(50),
+                    year INT,
+                    backlog INT,
+                    currentcgpa DECIMAL(3,2),
+                    email VARCHAR(100),
+                    phoneno VARCHAR(15),
+                    gender VARCHAR(10),
+                    dob DATE,
+                    nationality VARCHAR(50),
+                    address VARCHAR(255),
+                    FOREIGN KEY (id) REFERENCES student_register(id));
