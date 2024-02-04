@@ -2,7 +2,7 @@ import pymysql
 import pymysql.cursors
 import os
 import csv
-import data_class_aidriven
+# import data_class_aidriven
 def make_sql_connection():
     connection = pymysql.connect(host='aidriven.cdhiotv5c9su.us-east-1.rds.amazonaws.com',
                                 user='admin',
@@ -43,7 +43,7 @@ cursor = connection.cursor()
 
 
 def insert_register_student(username,email,password,enrollment_num,college,course,year,rollno):
-    # cursor = connection.cursor()
+    cursor = connection.cursor()
     sql = f"INSERT INTO student_register (username, email, password, enrollment_num, college, course, year, rollno) VALUES ('{username}', '{email}', '{password}', '{enrollment_num}', '{college}', '{course}','{year}', {rollno});"
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -255,73 +255,203 @@ def update_student_details(email, field,value):
         print(f"Error: {err}")
         return err
 
-# ------------------------------------------------------------- student_details --------------------------------------
+# ------------------------------------------------------------- resume --------------------------------------
+def insert_resume(email,filename):
+    global connection 
+    global cursor
+
+    
+    cursor.execute("select id from student_register where email = %s;",email)
+    id = cursor.fetchall()
+    print(id)
+    id= id[0]["id"]
+
+    if if_resume_present(email=email) == True:
+        cursor.execute(f"insert into student_resume (id, file_name) values ({id} ,'{filename}' )")
+        success = cursor.fetchall()
+        connection.commit()
+        return success
+    
+    
+    
+
+def if_resume_present(email):
+    global connection 
+    global cursor
+
+    cursor.execute("select id from student_register where email = %s;",email)
+    id = cursor.fetchall()
+    print(id)
+    id= id[0]["id"]
+
+    cursor.execute(f"select file_name from student_resume where id = {id}")
+    result = cursor.fetchall()
+    print(result)
+      
+    if result == ():
+        return False
+    else:
+        return result[0]['file_name']
 
 
+
+def insert_company_data(username, password1, password2, company_name, registration_number, address,
+                        phone_number, email, industry_type, company_description, logo_upload_filename,
+                        company_size):
+   
+        # Create a cursor object to interact with the database
+        # global connection
+        # global cursor
+
+        # SQL query to insert data into the table
+        sql = """INSERT INTO company_registration 
+                 (username, password1, password2, company_name, registration_number, address,
+                  phone_number, email, industry_type, company_description, logo_upload_filename,
+                  company_size) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+
+        # Data to be inserted into the table
+        data = (username, password1, password2, company_name, registration_number, address,
+                phone_number, email, industry_type, company_description, logo_upload_filename,
+                company_size)
+
+        # Execute the SQL query
+        cursor.execute(sql, data)
+
+        # Commit the changes to the database
+        connection.commit()
+
+        # Close the cursor and connection
+        # cursor.close()
+        # connection.close()
+
+      
+
+
+def validate_company_login(email, password):
+    # try:
+        
+        global connection
+        global cursor
+        
+
+        # SQL query to check if the provided email and password match any record
+        sql = """SELECT * FROM company_registration
+                 WHERE email = %s AND password1 = %s"""
+
+        # Data to be used in the query
+        data = (email, password)
+
+        # Execute the SQL query
+        cursor.execute(sql, data)
+
+        # Fetch the result
+        result = cursor.fetchone()
+
+        # Close the cursor and connection
+
+        # Check if a matching record was found
+        if result:
+            return True  # Login successful
+        else:
+            return False  # Login failed
+
+    # except Exception as e:
+    #     print(f"Error: {e}")
+    #     return False  # Return False in case of an error
+
+# Example usage
+
+
+
+def insert_job_posting(job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities):
+    try:
+        # Establish a connection to the MySQL database
+        global connection,cursor
+
+        # SQL query to insert data into the table
+        sql = '''
+        INSERT INTO job_postings (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        '''
+
+        # Data to be inserted into the table
+        data = (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
+
+        # Execute the SQL query
+        cursor.execute(sql, data)
+
+        # Commit the changes to the database
+        connection.commit()
+
+        print("Data inserted successfully!")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+   
+
+# Example usage
+
+def insert_applied_student_data(student_id, company_id, job_id):
+    try:
+        # Establish a connection to the MySQL database
+        global connection,cursor
+
+        # SQL query to insert data into the applied_student table
+        sql = '''
+        INSERT INTO applied_student (student_id, company_id, job_id)
+        VALUES (%s, %s, %s)
+        '''
+
+        # Data to be inserted into the table
+        data = (student_id, company_id, job_id)
+
+        # Execute the SQL query
+        cursor.execute(sql, data)
+
+        # Commit the changes to the database
+        connection.commit()
+
+        print("Data inserted into applied_student successfully!")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+def select_applied_student(company_id):
+    global connection,cursor
+
+    sql = f'''select * from applied_student where company_id = {company_id}'''
+
+    cursor.execute(sql)
+    applied_students = cursor.fetchall()
+    return applied_students
+
+
+   
+connection.commit()
 if __name__ == "__main__":
-    # insert_register_student(username='aqib',email='aqib@gamil.com',password="asdfasfdasdf",enrollment_num="aa3330909",college="KC college",course="BSC CS",year="FY",rollno=4)
-    # print("\n\n\n\n\nhello\n\n\n\n\n")
-    # upload_resume()
-    # print(login_student_val("aqib11@gmail.com","Aqib@22298")[1])
-    # insert_quiz_question("webdev_question.tsv")
-    # print(fetch_quiz_question("webdev")[0])
-    # connection = make_sql_connection()
-    # cursor = connection.cursor()
-    # connection.close()
-#     # get_student_details('aqib@gamil.com')
-# #     cursor.execute('''INSERT INTO student_details (
-# #     id,
-# #     firstname,
-# #     lastname,
-# #     middlename,
-# #     college,
-# #     rollno,
-# #     program,
-# #     stream,
-# #     year,
-# #     backlog,
-# #     currentcgpa,
-# #     email,
-# #     phoneno,
-# #     gender,
-# #     dob,
-# #     nationality,
-# #     address
-# # ) VALUES (
-# #     14,
-# #     'John',
-# #     'Doe',
-# #     'M',
-# #     'Example College',
-# #     'tycs003',
-# #     'Computer Science',
-# #     'AI',
-# #     3,
-# #     0,
-# #     3.75,
-# #     'john.doe@example.com',
-# #     '+1234567890',
-# #     'Male',
-# #     '1995-05-15',
-# #     'USA',
-# #     '123 Main St, City'
-# # )
-# #  ''')
-# # #     cursor.execute('''ALTER TABLE student_details
-# # # ADD CONSTRAINT unique_id_rollno
-# # # UNIQUE (id, rollno);
-# # # ''')
-# #     cursor.execute("select * from student_details")
-# #     student_details = cursor.fetchall()
-# #     print(student_details)
-# #     connection.commit()
-#     get_student_details('aqibansari22298@gmail.com')
-#     # update_student_details(email='student1@gmail.com',field='lastname',value='Ansari')
-#     # cursor.execute('update student_details set firstname  = "Aqib" where id = 14')
-#     # sql = cursor.fetchone()
-#     sql=update_student_details(email='aqibansari22298@gmail.com',field="lastname",value="Aqib")
-#     get_student_details('aqibansari22298@gmail.com')
-#     print(sql)
-    cursor.execute('select * from quiz_questions')
-    questions = cursor.fetchall()
-    print(questions[-1]['qType'])
+   
+    # insert_job_posting('Software Engineer', 'Full Time', 'Java, Python, SQL', 50, 5, 'A leading tech company', 'Develop and maintain software applications')
+    # insert_job_posting('Marketing Specialist', 'Part Time', 'Digital Marketing, Social Media', 20, 3, 'A creative marketing agency', 'Plan and execute marketing campaigns')
+#     cursor.execute('''CREATE TABLE interviews (
+#     id INT AUTO_INCREMENT PRIMARY KEY,
+#     student_id INT,
+#     date DATE,
+#     time VARCHAR(20),
+#     location VARCHAR(255),
+#     FOREIGN KEY (student_id) REFERENCES student_details(id)
+# );''')
+    cursor.execute("desc interviews")
+    # print(validate_company_login(email='company2@gmail.com',password="password"))
+    # insert_applied_student_data(3, 1, 1)
+    output = cursor.fetchall()
+    for i in output:
+        print('\n')
+        print(i)
+        print('____'*20)
+        print('\n')
+    # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
+   
+    connection.commit()
