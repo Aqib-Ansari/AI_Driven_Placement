@@ -63,3 +63,46 @@ change : SQL tables:
                     nationality VARCHAR(50),
                     address VARCHAR(255),
                     FOREIGN KEY (id) REFERENCES student_register(id));
+
+            5) student resume
+                CREATE TABLE student_resume (
+                    id INT PRIMARY KEY NOT NULL,
+                    file_name VARCHAR(255) NOT NULL,
+                    FOREIGN KEY (id) REFERENCES student_register(id));
+
+            6) job posting
+                CREATE TABLE job_postings (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    job_role VARCHAR(255) NOT NULL,
+                    job_type VARCHAR(50) NOT NULL,
+                    skills_required TEXT NOT NULL,
+                    num_employees INT NOT NULL,
+                    num_openings INT NOT NULL,
+                    company_description TEXT NOT NULL,
+                    responsibilities TEXT NOT NULL);
+
+            7) company registration
+                CREATE TABLE company_registration (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    username VARCHAR(255) NOT NULL,
+                    password1 VARCHAR(255) NOT NULL,
+                    password2 VARCHAR(255) NOT NULL,
+                    company_name VARCHAR(255) NOT NULL,
+                    registration_number VARCHAR(255) NOT NULL,
+                    address TEXT NOT NULL,
+                    phone_number VARCHAR(20) NOT NULL,
+                    email VARCHAR(255) NOT NULL,
+                    industry_type VARCHAR(50) NOT NULL,
+                    company_description TEXT NOT NULL,
+                    logo_upload_filename VARCHAR(255) NOT NULL,
+                    company_size INT NOT NULL);
+                    
+            8) applied student
+                CREATE TABLE applied_student (
+                    student_id INT,
+                    company_id INT,
+                    job_id INT,
+                    FOREIGN KEY (student_id) REFERENCES student_details(id),
+                    FOREIGN KEY (company_id) REFERENCES company_registration(id),
+                    FOREIGN KEY (job_id) REFERENCES job_postings(id),
+                    PRIMARY KEY (student_id, company_id, job_id));
