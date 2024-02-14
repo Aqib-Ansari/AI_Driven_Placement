@@ -4,10 +4,10 @@ import os
 import csv
 # import data_class_aidriven
 def make_sql_connection():
-    connection = pymysql.connect(host='aidriven.cdhiotv5c9su.us-east-1.rds.amazonaws.com',
-                                user='admin',
-                                password='aidriven',
-                                database='aidriven',
+    connection = pymysql.connect(host='sql6.freesqldatabase.com',
+                                user='sql6682320',
+                                password='zGRcDLE2gC',
+                                database='sql6682320',
                                 charset='utf8mb4',
                                 cursorclass=pymysql.cursors.DictCursor)
     return connection
@@ -347,6 +347,7 @@ def validate_company_login(email, password):
 
         # Fetch the result
         result = cursor.fetchone()
+        print(result)
 
         # Close the cursor and connection
 
@@ -364,19 +365,19 @@ def validate_company_login(email, password):
 
 
 
-def insert_job_posting(job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities):
+def insert_job_posting(company_id,job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities):
     try:
         # Establish a connection to the MySQL database
         global connection,cursor
 
         # SQL query to insert data into the table
         sql = '''
-        INSERT INTO job_postings (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO job_posting (company_id,job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         '''
 
         # Data to be inserted into the table
-        data = (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
+        data = (company_id, job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
 
         # Execute the SQL query
         cursor.execute(sql, data)
@@ -429,23 +430,70 @@ def select_applied_student(company_id):
     return applied_students
 
 
+
+def insert_interview_data( student_id, job_id, date, time, location):
+    try:
+        # Create a cursor object to interact with the database
+        global connection,cursor
+
+        # SQL query to insert data into the interviews table
+        sql = '''
+        INSERT INTO interviews (student_id, job_id, date, time, location)
+        VALUES (%s, %s, %s, %s, %s)
+        '''
+
+        # Data to be inserted into the table
+        data = (student_id, job_id, date, time, location)
+
+        # Execute the SQL query
+        cursor.execute(sql, data)
+
+        # Commit the changes to the database
+        connection.commit()
+
+        print("Data inserted into interviews successfully!")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+
    
 connection.commit()
 if __name__ == "__main__":
    
     # insert_job_posting('Software Engineer', 'Full Time', 'Java, Python, SQL', 50, 5, 'A leading tech company', 'Develop and maintain software applications')
     # insert_job_posting('Marketing Specialist', 'Part Time', 'Digital Marketing, Social Media', 20, 3, 'A creative marketing agency', 'Plan and execute marketing campaigns')
-#     cursor.execute('''CREATE TABLE interviews (
-#     id INT AUTO_INCREMENT PRIMARY KEY,
-#     student_id INT,
-#     date DATE,
-#     time VARCHAR(20),
-#     location VARCHAR(255),
-#     FOREIGN KEY (student_id) REFERENCES student_details(id)
-# );''')
-    cursor.execute("desc interviews")
+    # insert_quiz_question('data/java_questions.tsv')
+#     cursor.execute('''
+# CREATE TABLE interviews (
+#                     interview_id INT AUTO_INCREMENT PRIMARY KEY,
+#                     student_id INT,
+#                     job_id INT,
+#                     date DATE,
+#                     time TIME,
+#                     location VARCHAR(255),
+#                     UNIQUE (interview_id),
+#                     FOREIGN KEY (student_id) REFERENCES student_details(id),
+#                     FOREIGN KEY (job_id) REFERENCES job_postings(id))
+# ''')
     # print(validate_company_login(email='company2@gmail.com',password="password"))
     # insert_applied_student_data(3, 1, 1)
+    # print(insert_interview_data( 1, 2, '2024-02-10', '15:30:00', 'Company HQ'))
+#     cursor.execute('''
+# CREATE TABLE job_posting (
+#                     id INT AUTO_INCREMENT PRIMARY KEY,
+#                     company_id int,
+#                     job_role VARCHAR(255) NOT NULL,
+#                     job_type VARCHAR(50) NOT NULL,
+#                     skills_required TEXT NOT NULL,
+#                     num_employees INT NOT NULL,
+#                     num_openings INT NOT NULL,
+#                     company_description TEXT NOT NULL,
+#                     responsibilities TEXT NOT NULL,
+#                    FOREIGN KEY (company_id) REFERENCES company_registration(id))''')
+    # print(insert_job_posting(company_id=1,job_role="a",job_type="b",skills_required="c",num_employees=500,num_openings=4,company_description="abc",responsibilities="response"))
+    cursor.execute(f"select * from student_details where id = 1")
     output = cursor.fetchall()
     for i in output:
         print('\n')
@@ -454,4 +502,4 @@ if __name__ == "__main__":
         print('\n')
     # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
    
-    connection.commit()
+    # connection.commit()

@@ -106,3 +106,14 @@ change : SQL tables:
                     FOREIGN KEY (company_id) REFERENCES company_registration(id),
                     FOREIGN KEY (job_id) REFERENCES job_postings(id),
                     PRIMARY KEY (student_id, company_id, job_id));
+            9) interviews
+                CREATE TABLE interviews (
+                    interview_id INT AUTO_INCREMENT PRIMARY KEY,
+                    student_id INT,
+                    job_id INT,
+                    date DATE,
+                    time TIME,
+                    location VARCHAR(255),
+                    UNIQUE (interview_id),
+                    FOREIGN KEY (student_id) REFERENCES student_details(id),
+                    FOREIGN KEY (job_id) REFERENCES job_postings(id));
