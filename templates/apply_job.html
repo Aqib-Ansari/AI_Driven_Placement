@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Job</title>
+</head>
+<body>
+    <div class="card w-75 mb-3" style="margin-left: 40px; ">
+        <div class="card-body">
+          <h2 class="card-title">{{ jobs[0]['job_role'] }}</h2>
+          <h3 class="card-text">{{ jobs[0]['job_type'] }}.</h3>
+          <h3 class="card-text"> Required Skill : {{ jobs[0]['skills_required'] }}.</h3>
+          <h3 class="card-text">Number of openings : {{ jobs[0]['num_openings'] }}.</h3>
+          <h3 class="card-text">Number of employees : {{ jobs[0]['num_employees'] }}.</h3>
+          <h3 class="card-text">company description : {{ jobs[0]['company_description'] }}.</h3>
+          <h3 class="card-text">responsibilities : {{ jobs[0]['responsibilities'] }}.</h3>
+
+
+        </div>
+      </div>
+
+      <form action="/job_applied/{{jobs[0]['id']}}" method="post">
+
+        
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked required>
+  <label class="form-check-label" for="flexCheckChecked">
+    Your data will be used by company for further recriutment
+  </label>
+  <br>
+        <button type="s">Apply</button>
+      </form>
+</body>
+</html>

@@ -268,10 +268,42 @@ def view_pdf():
 def view_jobs():
     # if "user" not in session:
     #     return redirect(url_for("login"))
-    row = [1, 2, 3]*20
+    try:
 
-    return render_template('view_jobs.html', row=row)
+        cursor.execute("select * from job_posting")
+        jobs = cursor.fetchall()
 
+        print(jobs)
+    except Exception as e:
+        print(e)
+        # jobs = [1, 2, 3]*20
+
+    return render_template('view_jobs.html', jobs=jobs)
+@app.route('/apply_job/<job_id>')
+def apply_job(job_id):
+    try:
+        cursor.execute(f'select * from job_posting where id = {job_id}')
+        job = cursor.fetchall()
+        print(job)
+    except Exception as e:
+        print(e)
+    return render_template("apply_job.html",jobs = job)
+
+@app.route("/job_applied/<job_id>",methods=["POST"])
+def job_applied(job_id):
+    try:
+        if request.method == "POST":
+            student_details = sql_functions.get_student_details(session['user'])
+            student_id = student_details[0]['id']
+            cursor.execute(f'select company_id from job_posting where job_id = {job_id}')
+            company_id = cursor.fetchall()
+
+            sql_functions.insert_applied_student_data(company_id=company_id[0]['id'],job_id=int(job_id),student_id=student_id)
+            flash("applied successfully")
+    except Exception as e:
+        pass
+
+    return redirect(url_for("view_jobs"))
 # -------------------------------------------- view student details by company
 
 @app.route('/fetch_student_details')
@@ -342,11 +374,12 @@ def post_job():
         responsibilities = request.form['responsibilities']
 
         try:
-            with connection.cursor() as cursor:
                 # SQL query to insert data into the job_postings table
-                sql = "INSERT INTO job_postings (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(sql, (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities))
-                connection.commit()
+                cursor.execute(f"select id from company_registration where email = '{session['company']}'")
+                company_id = cursor.fetchall()
+                print(company_id)
+
+                sql_functions.insert_job_posting(company_id=company_id[0]['id'],job_role=job_role,job_type=job_type,skills_required=skills_required,num_employees=num_employees,num_openings=num_openings,company_description=company_description,responsibilities=responsibilities)
 
                 # Notify all students about the new job posting
                 notify_students_about_job_posting(job_role)
@@ -364,7 +397,7 @@ def notify_students_about_job_posting(job_role):
     try:
         with connection.cursor() as cursor:
             # Fetch all student emails from the database
-            sql = "SELECT email FROM students"
+            sql = "SELECT email FROM student_register"
             cursor.execute(sql)
             student_emails = [student['email'] for student in cursor.fetchall()]
 
@@ -402,17 +435,36 @@ def send_email(subject, body, recipients):
 @app.route('/view_students')
 def view_students():
     # Fetch all records of students from the database
+    
     try:
-        with connection.cursor() as cursor:
+        
             # Replace this query with your actual query to fetch all students
-            sql = "SELECT id, first_name , email FROM student_details"
-            cursor.execute(sql)
-            fetched_students = cursor.fetchall()
+            cursor.execute(f"select id from company_registration where email = '{session['company']}'")
+            company_id = cursor.fetchall()
+            # print(company_id)
+            student = sql_functions.select_applied_student(company_id=company_id[0]['id'])
+            # print(student)
+            student_ids = [x["student_id"] for x in student]
+            job_ids = [x["job_id"] for x in student]
+            print(job_ids)
+            # print(student_ids)
+            fetched_students = []
+            
+            for i,id in zip(student_ids,job_ids):
+                cursor.execute(f"select * from student_details where id = {i}")
+                fetched_student = cursor.fetchall()
+                print(fetched_student)
+                fetched_student[0]["job_id"]=id
+                fetched_students.append(fetched_student[0])
+            # print(fetched_students)
+            session["fetched_students"] = fetched_students
+
     except Exception as e:
         flash(f'Error fetching students: {e}', 'danger')
-        fetched_students = []
+        fetched_students = [{"firstname":"student not selected"}]
+        
 
-    return render_template('view_students.html', students=fetched_students)
+    return render_template('view_students.html', students=fetched_students,job_ids = job_ids)
 
 @app.route('/placement_analytics')
 def placement_analytics():
@@ -447,11 +499,25 @@ interviews = []
 def schedule_interview():
     # Fetch the list of students from the database
     try:
-        with connection.cursor() as cursor:
             # Replace this query with your actual query to fetch students
-            sql = "SELECT id, username, email FROM student_register where id = select * from "
-            cursor.execute(sql)
-            fetched_students = cursor.fetchall()
+            cursor.execute(f"select id from company_registration where email = '{session['company']}'")
+            company_id = cursor.fetchall()
+            # print(company_id)
+            student = sql_functions.select_applied_student(company_id=company_id[0]['id'])
+            print(student)
+            # print(student)
+            student_ids = [x["student_id"] for x in student]
+            job_ids = [x["job_id"] for x in student]
+            print(job_ids)
+            # print(student_ids)
+            fetched_students = []
+            for i,id in zip(student_ids,job_ids):
+                cursor.execute(f"select * from student_details where id = {i}")
+                fetched_student = cursor.fetchall()
+                print(fetched_student)
+                fetched_student[0]["job_id"]=id
+                fetched_students.append(fetched_student[0])
+            print(fetched_students)
     except Exception as e:
         flash(f'Error fetching students: {e}', 'danger')
         fetched_students = []
@@ -555,7 +621,7 @@ def job_listings():
     # Fetch all job postings from the database
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT id, job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities FROM job_postings"
+            sql = "SELECT id, job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities FROM job_posting"
             cursor.execute(sql)
             job_postings = cursor.fetchall()
     except Exception as e:
