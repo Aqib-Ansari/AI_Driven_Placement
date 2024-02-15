@@ -449,6 +449,7 @@ def view_students():
             print(job_ids)
             # print(student_ids)
             fetched_students = []
+            
             for i,id in zip(student_ids,job_ids):
                 cursor.execute(f"select * from student_details where id = {i}")
                 fetched_student = cursor.fetchall()
@@ -456,6 +457,7 @@ def view_students():
                 fetched_student[0]["job_id"]=id
                 fetched_students.append(fetched_student[0])
             # print(fetched_students)
+            session["fetched_students"] = fetched_students
 
     except Exception as e:
         flash(f'Error fetching students: {e}', 'danger')
@@ -502,6 +504,7 @@ def schedule_interview():
             company_id = cursor.fetchall()
             # print(company_id)
             student = sql_functions.select_applied_student(company_id=company_id[0]['id'])
+            print(student)
             # print(student)
             student_ids = [x["student_id"] for x in student]
             job_ids = [x["job_id"] for x in student]
@@ -514,7 +517,7 @@ def schedule_interview():
                 print(fetched_student)
                 fetched_student[0]["job_id"]=id
                 fetched_students.append(fetched_student[0])
-            # print(fetched_students)
+            print(fetched_students)
     except Exception as e:
         flash(f'Error fetching students: {e}', 'danger')
         fetched_students = []

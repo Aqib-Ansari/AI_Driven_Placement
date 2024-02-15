@@ -23,7 +23,7 @@ def start_interview():
 def interview_process():
     for i in range(3):
         
-        question_query =chat.send_message("Ask me only 1 python interview question")
+        question_query =chat.send_message("Ask me only 1 easy python interview question")
         print(question_query.text)
         answer = input("\n Enter Answer : \n")
         answer_query = chat.send_message(answer)
