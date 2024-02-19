@@ -1,50 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Post a Job</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS for visual enhancements */
+        body {
+            background-color: #c1d2e3;
+            /* Light gray background */
+        }
+
+        .container {
+            background-color: #f0f0f0;
+            /* Light gray background for the container */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Box shadow for depth */
+            padding: 30px;
+            /* Increased padding for better spacing */
+            max-width: 800px;
+            /* Increase container width */
+            margin: auto;
+            /* Center the container horizontally */
+            animation: fadeIn 1s ease-in-out;
+            /* Add fade-in animation with 1 second duration */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            color: #007bff;
+            /* Blue heading */
+            margin-bottom: 30px;
+            /* Increased margin bottom for better separation */
+        }
+
+        label {
+            color: #495057;
+            /* Dark gray label text */
+            margin-bottom: 0.5rem;
+            /* Add some bottom margin to labels */
+        }
+
+        .form-control {
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            /* Smooth transition for input focus */
+        }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            /* Change border color on focus */
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            /* Add box shadow on focus */
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            /* Red color for error messages */
+            display: none;
+            /* Initially hide error messages */
+            margin-top: 0.25rem;
+            /* Add some top margin to error messages */
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            /* Blue button */
+            border-color: #007bff;
+            /* Blue border for button */
+            width: 100%;
+            /* Make button width 100% for better mobile responsiveness */
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            /* Smooth transition for button hover */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            /* Darker blue on hover */
+            border-color: #0056b3;
+        }
+
+        /* Custom CSS for responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                /* Decreased padding for smaller screens */
+            }
+
+            h2 {
+                font-size: 26px;
+                /* Slightly increased font size for better readability */
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="container mt-5">
-    <h2>Post a Job</h2>
-    <form method="post" action="{{ url_for('post_job') }}">
-        <div class="form-group">
-            <label for="job_role">Job Role:</label>
-            <input type="text" class="form-control" id="job_role" name="job_role" required>
-        </div>
-        <div class="form-group">
-            <label for="job_type">Job Type:</label>
-            <select class="form-control" id="job_type" name="job_type" required>
-                <option value="Full Time">Full Time</option>
-                <option value="Part Time">Part Time</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="skills_required">Skills Required:</label>
-            <textarea class="form-control" id="skills_required" name="skills_required" rows="4" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="num_employees">Number of Employees:</label>
-            <input type="number" class="form-control" id="num_employees" name="num_employees" required>
-        </div>
-        <div class="form-group">
-            <label for="num_openings">Number of Job Openings:</label>
-            <input type="number" class="form-control" id="num_openings" name="num_openings" required>
-        </div>
-        <div class="form-group">
-            <label for="company_description">About the Company:</label>
-            <textarea class="form-control" id="company_description" name="company_description" rows="4" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="responsibilities">Responsibilities:</label>
-            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="4" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-</div>
+    <div class="container mt-5">
+        <h2 class="text-center">Post a Job</h2>
+        <form id="jobForm" method="post" action="{{ url_for('post_job') }}">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="job_role">Job Role:</label>
+                    <input type="text" class="form-control" id="job_role" name="job_role" required>
+                    <div class="invalid-feedback" id="job_role_error">Please provide a job role.</div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="job_type">Job Type:</label>
+                    <select class="form-control" id="job_type" name="job_type" required>
+                        <option value="">Select Job Type</option>
+                        <option value="Full Time">Full Time</option>
+                        <option value="Part Time">Part Time</option>
+                    </select>
+                    <div class="invalid-feedback" id="job_type_error">Please select a job type.</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="skills_required">Skills Required:</label>
+                <textarea class="form-control" id="skills_required" name="skills_required" rows="4" required></textarea>
+                <div class="invalid-feedback" id="skills_required_error">Please provide required skills.</div>
+            </div>
+            <div class="form-group">
+                <label for="num_employees">Number of Employees:</label>
+                <input type="number" class="form-control" id="num_employees" name="num_employees" required>
+                <div class="invalid-feedback" id="num_employees_error">Please provide the number of employees.</div>
+            </div>
+            <div class="form-group">
+                <label for="num_openings">Number of Job Openings:</label>
+                <input type="number" class="form-control" id="num_openings" name="num_openings" required>
+                <div class="invalid-feedback" id="num_openings_error">Please provide the number of job openings.</div>
+            </div>
+            <div class="form-group">
+                <label for="company_description">About the Company:</label>
+                <textarea class="form-control" id="company_description" name="company_description" rows="4"
+                    required></textarea>
+                <div class="invalid-feedback" id="company_description_error">Please provide information about the
+                    company.</div>
+            </div>
+            <div class="form-group">
+                <label for="responsibilities">Responsibilities:</label>
+                <textarea class="form-control" id="responsibilities" name="responsibilities" rows="4"
+                    required></textarea>
+                <div class="invalid-feedback" id="responsibilities_error">Please provide job responsibilities.</div>
+            </div>
+            <!-- Add other form fields here if needed -->
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Hide error messages when input fields are changed
+        document.querySelectorAll('.form-control').forEach(function (input) {
+            input.addEventListener('input', function () {
+                var errorDiv = input.nextElementSibling;
+                if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+                    errorDiv.style.display = input.value.trim() === '' ? 'block' : 'none';
+                }
+            });
+        });
+    </script>
 
 </body>
+
 </html>
