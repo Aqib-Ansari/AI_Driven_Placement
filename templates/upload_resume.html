@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Viewer</title>
+    <title>Upload Resume</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
 
     <style>
@@ -97,7 +97,8 @@
         {% if pdf_path %}
             <h2>PDF Viewer</h2>
             <object data="{{ pdf_path }}" type="application/pdf">
-                <p>Your browser does not support viewing PDFs. Please download the PDF to view it.</p>
+                <p>Please Upload your resume to View here.</p>
+                
             </object>
         {% endif %}
     </div>

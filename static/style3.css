@@ -1,0 +1,44 @@
+body {
+    background-color: #111; /* Dark background */
+    color: #fff; /* White text */
+    font-family: 'Arial', sans-serif;
+}
+
+.card {
+    background-color: #222; /* Darker card background */
+    color: #fff; /* White text in card */
+    border: 1px solid #444; /* Border color for the card */
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    color: #fc3; /* Highlight color for card title */
+}
+
+.card-text {
+    color: #ccc; /* Subdued color for card text */
+}
+
+form {
+    margin-top: 20px;
+}
+
+.form-check-label {
+    color: #ccc; /* Color for form checkbox label */
+}
+
+button {
+    background-color: #fc3; /* Apply button background color */
+    color: #111; /* Apply button text color */
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #e0ac00; /* Hover color for the button */
+}

@@ -263,14 +263,16 @@ def insert_resume(email,filename):
     
     cursor.execute("select id from student_register where email = %s;",email)
     id = cursor.fetchall()
-    print(id)
+    # print(id)
     id= id[0]["id"]
 
-    if if_resume_present(email=email) == True:
+    if if_resume_present(email=email) == False:
         cursor.execute(f"insert into student_resume (id, file_name) values ({id} ,'{filename}' )")
         success = cursor.fetchall()
         connection.commit()
         return success
+    else:
+        cursor.execute(f"UPDATE student_resume SET file_name = '{filename}' WHERE id = {id};")
     
     
     
@@ -281,7 +283,7 @@ def if_resume_present(email):
 
     cursor.execute("select id from student_register where email = %s;",email)
     id = cursor.fetchall()
-    print(id)
+    # print(id)
     id= id[0]["id"]
 
     cursor.execute(f"select file_name from student_resume where id = {id}")
@@ -458,7 +460,67 @@ def insert_interview_data( student_id, job_id, date, time, location):
 
 
 
+
+#  ------------------------- admin -------------------------------------
+        
+def insert_admin(name,email,password,college_name,college_Address,college_id):
+    cursor.execute(f"insert into admin ( admin_name,admin_email,password,college_name,college_address,college_id) values ('{name}',  '{email}','{password}','{college_name}','{college_Address}',{college_id})")
+    output = cursor.fetchall()
+    connection.commit()
+    return output
+def validate_admin_login(email, password):
+    # try:
+        
+        global connection
+        global cursor
+        
+
+        # SQL query to check if the provided email and password match any record
+        sql = f"""SELECT * FROM admin
+                 WHERE admin_email = '{email}' AND password = '{password}'"""
+
+        # Data to be used in the query
+        
+
+        # Execute the SQL query
+        cursor.execute(sql)
+
+        # Fetch the result
+        result = cursor.fetchone()
+        print(result)
+
+        # Close the cursor and connection
+
+        # Check if a matching record was found
+        if result:
+            return True  # Login successful
+        else:
+            return False  # Login failed
+        
+
+# --------------------------------------------- View students in admin Panel -------------------------------
    
+
+# ------------------------------------------------------------------------ View Company ----------------------------------------------------------
+        
+def admin_sql_query():
+        global connection,cursor
+
+        with connection.cursor() as cursor:
+            # Execute the SQL query
+            sql_company_registration = "SELECT * FROM company_registration"
+            sql_interviews = "SELECT * FROM interviews"
+            sql_job_posting = "SELECT * FROM job_posting"
+            # Fetch all the data
+            cursor.execute(sql_company_registration)
+            company_registration_data = cursor.fetchall()
+            cursor.execute(sql_interviews)
+            interviews_data = cursor.fetchall()
+            cursor.execute(sql_job_posting)
+            job_posting_data = cursor.fetchall()
+
+        return company_registration_data, interviews_data, job_posting_data 
+
 connection.commit()
 if __name__ == "__main__":
    
@@ -493,8 +555,10 @@ if __name__ == "__main__":
 #                     responsibilities TEXT NOT NULL,
 #                    FOREIGN KEY (company_id) REFERENCES company_registration(id))''')
     # print(insert_job_posting(company_id=1,job_role="a",job_type="b",skills_required="c",num_employees=500,num_openings=4,company_description="abc",responsibilities="response"))
-    cursor.execute(f"select * from student_details where id = 1")
+    # insert_resume(email="aqib@gmail.com",filename="aqib.pdf")
+    cursor.execute("desc job_posting")
     output = cursor.fetchall()
+    print(output)
     for i in output:
         print('\n')
         print(i)
@@ -502,4 +566,4 @@ if __name__ == "__main__":
         print('\n')
     # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
    
-    # connection.commit()
+    connection.commit()
