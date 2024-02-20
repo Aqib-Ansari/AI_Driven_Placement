@@ -117,3 +117,13 @@ change : SQL tables:
                     UNIQUE (interview_id),
                     FOREIGN KEY (student_id) REFERENCES student_details(id),
                     FOREIGN KEY (job_id) REFERENCES job_postings(id));
+
+            10) admin
+                CREATE TABLE admin (
+                    admin_id INT PRIMARY KEY AUTO_INCREMENT,
+                    admin_name VARCHAR(255) NOT NULL,
+                    admin_email VARCHAR(255) NOT NULL UNIQUE,
+                    password VARCHAR(255) NOT NULL,
+                    college_name VARCHAR(255) NOT NULL,
+                    college_address VARCHAR(255) NOT NULL,
+                    college_id INT UNIQUE);

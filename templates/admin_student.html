@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+    <!-- Include CSS styles -->
+    <style>
+        /* CSS styles for navigation and student list */
+        /* CSS styles for navigation */
+        header {
+            background-color: #333;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
+        
+        /* CSS styles for student list */
+        .student-section {
+            margin-bottom: 30px;
+        }
+
+        .student {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/students">Students</a></li>
+                <li><a href="/companies">Companies</a></li>
+                <li><a href="/training_resources">Training Resources</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Student List</h1>
+    <!-- Display applied student data -->
+    <div class="student-section">
+        <h2>Applied Students</h2>
+        <div id="applied_students">
+            {% for student in applied_students %}
+                <div class="student">
+                    <h3>{{ student.student_id }}</h3>
+                    
+                    <!-- Add other fields as needed -->
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Display student details data -->
+    <div class="student-section">
+        <h2>Student Details</h2>
+        <div id="student_details">
+            {% for student in student_details %}
+                <div class="student">
+                    <h3>{{ student.name }}</h3>
+                    <p>Email: {{ student.email }}</p>
+                    <p>firstname: {{ student.firstname }}</p>
+                    <p>lastname: {{ student.lastname }}</p>
+                    <p>middlename: {{ student.middlename }}</p>
+                    
+                    <!-- Add other fields as needed -->
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Display student resume data -->
+    <div class="student-section">
+        <h2>Student Resumes</h2>
+        <div id="student_resume">
+            {% for student in student_resume %}
+                <div class="student">
+                    <h3>{{ student.name }}</h3>
+                    <p>filename: {{ student.file_name }}</p>
+                    <!-- Add other fields as needed -->
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Display student register data -->
+    <div class="student-section">
+        <h2>Student Register</h2>
+        <div id="student_register">
+            {% for student in student_register %}
+                <div class="student">
+                    <h3>{{ student.name }}</h3>
+                    <p>Email: {{ student.email }}</p>
+                    <p>ID: {{ student.id }}</p>
+                    <p>username: {{ student.username }}</p>
+                    <p>Enrollment number: {{ student.enrollment_num }}</p>
+                    <p>course: {{ student.course }}</p>
+                    
+                    <!-- Add other fields as needed -->
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        /* CSS styles for navigation */
+header {
+    background-color: #333;
+    padding: 10px 0; /* Add padding for better spacing */
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    background: none; /* Set background to none */
+    transition: background-color 0.3s; /* Add transition for smoother hover effect */
+}
+
+nav ul li a:hover {
+    background-color: #555;
+}
+
+/* Media query for responsiveness */
+@media (max-width: 600px) {
+    nav ul li {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    nav ul li a {
+        display: block;
+        padding: 10px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin_students">Students</a></li>
+                <li><a href="/companies">Companies</a></li>
+                <li><a href="/training_resources">Training Resources</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Welcome to Admin Dashboard</h1>
+    <!-- Other content goes here -->
+    <img src="/static/admin.jpg" alt="Dashboard Image" style="width: 400px; margin-left: 40%;">
+</body>
+</html>

@@ -5,6 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Post a Job</title>
+    <style>
+        /* Custom CSS for visual enhancements */
+        body {
+            background-color: #c1d2e3;
+            /* Light gray background */
+        }
+
+        .container {
+            background-color: #f0f0f0;
+            /* Light gray background for the container */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Box shadow for depth */
+            padding: 30px;
+            /* Increased padding for better spacing */
+            max-width: 800px;
+            /* Increase container width */
+            margin: auto;
+            /* Center the container horizontally */
+            animation: fadeIn 1s ease-in-out;
+            /* Add fade-in animation with 1 second duration */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            color: #007bff;
+            /* Blue heading */
+            margin-bottom: 30px;
+            /* Increased margin bottom for better separation */
+        }
+
+        label {
+            color: #495057;
+            /* Dark gray label text */
+            margin-bottom: 0.5rem;
+            /* Add some bottom margin to labels */
+        }
+
+        .form-control {
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            /* Smooth transition for input focus */
+        }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            /* Change border color on focus */
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            /* Add box shadow on focus */
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            /* Red color for error messages */
+            display: none;
+            /* Initially hide error messages */
+            margin-top: 0.25rem;
+            /* Add some top margin to error messages */
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            /* Blue button */
+            border-color: #007bff;
+            /* Blue border for button */
+            width: 100%;
+            /* Make button width 100% for better mobile responsiveness */
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            /* Smooth transition for button hover */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            /* Darker blue on hover */
+            border-color: #0056b3;
+        }
+
+        /* Custom CSS for responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                /* Decreased padding for smaller screens */
+            }
+
+            h2 {
+                font-size: 26px;
+                /* Slightly increased font size for better readability */
+            }
+        }
+    </style>
 </head>
 <body>
 
