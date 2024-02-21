@@ -127,3 +127,12 @@ change : SQL tables:
                     college_name VARCHAR(255) NOT NULL,
                     college_address VARCHAR(255) NOT NULL,
                     college_id INT UNIQUE);
+            11) notifications
+                CREATE TABLE notification (
+                        noti_id INT PRIMARY KEY AUTO_INCREMENT,
+                        student_id INT,
+                        date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        msg VARCHAR(255),
+                        link VARCHAR(255),
+                        FOREIGN KEY (student_id) REFERENCES student_details(id)
+                    )

@@ -4,15 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Single Input Form</title>
+    <title>Update field</title>
 </head>
 <body>
 
 <div class="container mt-5">
     <form method="POST" action="/update_field/{{field}}">
         <div class="form-group" >
+            {% if field in ["year","backlog","currentcgpa","phoneno"] %}
+            <label for="inputValue">{{field}}:</label>
+            <input type="number" class="form-control" id="inputValue" placeholder="Type something" name="value" step="0.01" required>
+            {% elif field == "email" %}
+            <label for="inputValue">{{field}}:</label>
+            <input type="email" class="form-control" id="inputValue" placeholder="Type something" name="value" required>
+            {% elif field == "dob" %}
+            <label for="inputValue">{{field}}:</label>
+            <input type="date" class="form-control" id="inputValue" placeholder="Type something" name="value" required>
+            {% else %}
             <label for="inputValue">{{field}}:</label>
             <input type="text" class="form-control" id="inputValue" placeholder="Type something" name="value" required>
+            {% endif %}
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

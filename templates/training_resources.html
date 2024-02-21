@@ -6,26 +6,50 @@
     <title>Add/Edit Training Resource</title>
     <style>
         /* Basic styling for the form */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #B8D8E3;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
         form {
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 500px;
+            margin: 20px auto;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0a0101;
         }
         label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
         input[type="text"],
         input[type="number"],
-        select {
+        input[type="url"],
+        select,
+        textarea {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 3px;
             box-sizing: border-box;
+            font-size: 16px;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        select {
+            width: 100%;
         }
         button {
             background-color: #007bff;
@@ -34,11 +58,13 @@
             border: none;
             border-radius: 3px;
             cursor: pointer;
+            font-size: 16px;
         }
         button:hover {
             background-color: #0056b3;
         }
     </style>
+
 </head>
 <body>
     <h2>Add/Edit Training Resource</h2>

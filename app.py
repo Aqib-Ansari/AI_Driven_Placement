@@ -4,6 +4,8 @@ import data_class_aidriven
 import smtplib
 from email.mime.text import MIMEText
 import ai_interviewer
+from datetime import datetime
+
 connection = sql_functions.make_sql_connection()
 
 
@@ -131,6 +133,18 @@ def redirect_to_student_dashboard():
         return render_template("dashboard_student.html",student_list = [session["user"]] )
     return redirect(url_for("login"))
 
+# ----------------------------------------- Profile -------------------------------------------
+@app.route('/profile')
+def profile():
+    return render_template("profile.html")
+
+@app.route('/notifications')
+def notifications():
+    student_details = sql_functions.get_student_details(session['user'])
+    student_id = student_details[0]['id']
+    notifications = sql_functions.select_notification(student_id=student_id)
+    print(notifications)
+    return render_template('notifications.html',notifications=notifications)
 # --------------------------------------------- Quiz ------------------------------------------------------
 
 # questions = sql_functions.fetch_quiz_question("mysql")
@@ -194,11 +208,26 @@ def student_details():
     else:
         
         student_details = sql_functions.get_student_details(email=session['user'])
-        print(student_details)
+        # print(student_details)
         if student_details != ():
             return render_template('update_student_details.html',student_details = student_details )
         else:
-            student_details = [{ 'firstname': 'firstname', 'lastname': 'lastname', 'middlename': 'middlename', 'college': 'college', 'rollno': 'rollno', 'program': 'Computer Science', 'stream': 'AI', 'year': 0, 'backlog': 0, 'currentcgpa': '9.', 'email': 'john.doe@example.com', 'phoneno': '+919999999999', 'gender': 'Male/Female', 'dob': '2000, 1, 11', 'nationality': 'Indian', 'address': '123 road Area, City'}]
+            student_details = [{'firstname': 'firstname',
+                                 'lastname': 'lastname',
+                                   'middlename': 'middlename',
+                                     'college': 'college',
+                                       'rollno': 'rollno',
+                                         'program': 'Computer Science',
+                                           'stream': 'AI',
+                                             'year': 0,
+                                               'backlog': 0,
+                                                 'currentcgpa': '9.',
+                                                   'email': 'john.doe@example.com',
+                                                     'phoneno': '+919999999999',
+                                                       'gender': 'Male/Female',
+                                                         'dob': '2000, 1, 11',
+                                                           'nationality': 'Indian',
+                                                             'address': '123 road Area, City'}]
             return render_template('update_student_details.html',student_details = student_details)
         
 
@@ -212,6 +241,11 @@ def edit_student_field(field):
 def update_field(field):
     if request.method == "POST":
         value = request.form["value"]
+        print(value)
+        if field == "dob":
+            value = datetime.strptime(value,f"%Y-%m-%d")
+            print(value)
+        # print(value)
 
         sql_functions.update_student_details(email=session["user"],field=field,value=value)
         return redirect(url_for("student_details"))
@@ -335,6 +369,15 @@ def interview_process():
     else:
         question = ai_interviewer.chat.send_message("Ask me only 1 easy python interview question")
         return render_template('interviewer.html', result=session["last_answer"], question = question.text, inter_pro = True)
+
+# -------------------------------------------- training resources --------------------------------------------------
+
+@app.route('/training')
+def training():
+    sql_functions.select_training()
+    
+    return render_template("training.html")
+
 
 
 # -------------------------------------------- view student details by company -------------------------------------
@@ -641,36 +684,6 @@ def send_interview_notification(student_email, interview_details):
         flash(f'Error sending email notification: {e}', 'danger')
 
 
-@app.route('/admin_all_records')
-def admin_all_records():
-    # Fetch all records of students, interviews, and job postings from the database
-    try:
-        with connection.cursor() as cursor:
-            # Fetch students
-            sql_students = "SELECT id, name, email FROM students"
-            cursor.execute(sql_students)
-            fetched_students = cursor.fetchall()
-
-            # Fetch interviews
-            sql_interviews = "SELECT id, student_id, date, time, location FROM interviews"
-            cursor.execute(sql_interviews)
-            fetched_interviews = cursor.fetchall()
-
-            # Fetch job postings
-            sql_job_postings = "SELECT id, job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities FROM job_postings"
-            cursor.execute(sql_job_postings)
-            fetched_job_postings = cursor.fetchall()
-
-    except Exception as e:
-        flash(f'Error fetching records: {e}', 'danger')
-        fetched_students = []
-        fetched_interviews = []
-        fetched_job_postings = []
-
-    return render_template('all_records.html', students=fetched_students, interviews=fetched_interviews, job_postings=fetched_job_postings)
-
-
-
 @app.route('/job_listings')
 def job_listings():
     # Fetch all job postings from the database
@@ -699,6 +712,34 @@ def scheduled_interviews():
     return render_template('scheduled_interviews.html')
 
 # ------------------------------------------------------- admin Dashboard ---------------------------------------
+
+@app.route('/admin_all_records')
+def admin_all_records():
+    # Fetch all records of students, interviews, and job postings from the database
+    try:
+        with connection.cursor() as cursor:
+            # Fetch students
+            sql_students = "SELECT id, name, email FROM students"
+            cursor.execute(sql_students)
+            fetched_students = cursor.fetchall()
+
+            # Fetch interviews
+            sql_interviews = "SELECT id, student_id, date, time, location FROM interviews"
+            cursor.execute(sql_interviews)
+            fetched_interviews = cursor.fetchall()
+
+            # Fetch job postings
+            sql_job_postings = "SELECT id, job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities FROM job_postings"
+            cursor.execute(sql_job_postings)
+            fetched_job_postings = cursor.fetchall()
+
+    except Exception as e:
+        flash(f'Error fetching records: {e}', 'danger')
+        fetched_students = []
+        fetched_interviews = []
+        fetched_job_postings = []
+
+    return render_template('all_records.html', students=fetched_students, interviews=fetched_interviews, job_postings=fetched_job_postings)
 
 @app.route('/register_admin1',methods = ["POST","GET"])
 def register_admin1():

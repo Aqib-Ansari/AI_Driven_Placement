@@ -14,6 +14,7 @@ def make_sql_connection():
 
 connection = make_sql_connection()
 cursor = connection.cursor()
+cursor.execute("SET SESSION time_zone = '+5:30';")
 # with connection:
 #     # with connection.cursor() as cursor:
 #         # Create a new record
@@ -213,7 +214,7 @@ def get_student_details(email):
         
         cursor.execute("select id from student_register where email = %s;",email)
         id = cursor.fetchall()
-        print(id)
+        # print(id)
         cursor.execute("SELECT * FROM student_details where id = %s;",id[0]['id'])
         
         student_details = cursor.fetchall()
@@ -233,18 +234,26 @@ def update_student_details(email, field,value):
         
         cursor.execute("select id from student_register where email = %s;",email)
         id = cursor.fetchall()
-        print(id)
+        # print(id)
         id= id[0]["id"]
-
+        print("field : : : : : : : : " ,field)
         student_details = get_student_details(email=email)
        
         if student_details != ():
-            cursor.execute(f"update student_details set {field} ='{value}' where id = {id}")
-            connection.commit()
-            student_details = cursor.fetchall()
-            print(student_details)
+            # print(field)
+            if field in ["year","phoneno","backlog","currentcgpa"]:
+                cursor.execute(f"update student_details set {field} ={value} where id = {id}")
+                student_details = cursor.fetchall()
+                connection.commit()
+            else:
+                cursor.execute(f"update student_details set {field} ='{value}' where id = {id}")
+                student_details = cursor.fetchall()
+                connection.commit()
+
+            # print(student_details)
             return student_details
         else:
+            # print(field)
             sql_query = f"INSERT INTO student_details (id,{field}) VALUES ( {id}, '{value}');"
 
             cursor.execute(sql_query)
@@ -521,6 +530,30 @@ def admin_sql_query():
 
         return company_registration_data, interviews_data, job_posting_data 
 
+#  --------------------------------------- notification ----------------------------------------------
+
+def insert_notification(student_id,msg,link):
+    global connection
+    global cursor
+    insert_query = """
+        INSERT INTO notification (student_id, msg, link) 
+        VALUES (%s, %s, %s)
+        """
+    data_to_insert = (student_id, msg, link)
+    cursor.execute(insert_query, data_to_insert)
+    output = cursor.fetchall()
+        # Commit the changes
+    connection.commit()
+    return output
+
+def select_notification(student_id):
+    global connection
+    global cursor
+
+    cursor.execute(f"select * from notification where student_id = {student_id}")
+    notifications = cursor.fetchall()
+    return notifications
+
 connection.commit()
 if __name__ == "__main__":
    
@@ -543,27 +576,29 @@ if __name__ == "__main__":
     # insert_applied_student_data(3, 1, 1)
     # print(insert_interview_data( 1, 2, '2024-02-10', '15:30:00', 'Company HQ'))
 #     cursor.execute('''
-# CREATE TABLE job_posting (
-#                     id INT AUTO_INCREMENT PRIMARY KEY,
-#                     company_id int,
-#                     job_role VARCHAR(255) NOT NULL,
-#                     job_type VARCHAR(50) NOT NULL,
-#                     skills_required TEXT NOT NULL,
-#                     num_employees INT NOT NULL,
-#                     num_openings INT NOT NULL,
-#                     company_description TEXT NOT NULL,
-#                     responsibilities TEXT NOT NULL,
-#                    FOREIGN KEY (company_id) REFERENCES company_registration(id))''')
+# CREATE TABLE notification (
+#     noti_id INT PRIMARY KEY AUTO_INCREMENT,
+#     student_id INT,
+#     date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+#     msg VARCHAR(255),
+#     link VARCHAR(255),
+#     FOREIGN KEY (student_id) REFERENCES student_details(id)
+# )''')
     # print(insert_job_posting(company_id=1,job_role="a",job_type="b",skills_required="c",num_employees=500,num_openings=4,company_description="abc",responsibilities="response"))
     # insert_resume(email="aqib@gmail.com",filename="aqib.pdf")
-    cursor.execute("desc job_posting")
-    output = cursor.fetchall()
-    print(output)
-    for i in output:
-        print('\n')
-        print(i)
-        print('____'*20)
-        print('\n')
+    # update_student_details(email="aqibansari22298@gmail.com",field="dob",value="2002-10-12")
+    # cursor.execute("UPDATE notification SET date_time = CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata')")
+    # cursor.execute("delete from student_resume where id = 1")
+    # output = cursor.fetchall()
+    # for i in output:
+    #     print('\n')
+    #     print(i)
+    #     print('____'*20)
+    #     print('\n')
+    # print(output)
     # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
+    insert_notification(student_id=1,msg="go to dashboard",link='/student_dashboard1')
+    print(select_notification(student_id=1))
+    print(if_resume_present(email="aqibansari22298@gmail.com"))
    
     connection.commit()
