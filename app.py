@@ -146,56 +146,191 @@ def notifications():
     print(notifications)
     return render_template('notifications.html',notifications=notifications)
 # --------------------------------------------- Quiz ------------------------------------------------------
-
-# questions = sql_functions.fetch_quiz_question("mysql")
 @app.route('/quiz_details')
 def quiz_details():
     return render_template("quiz_details.html")
 
+@app.route('/previous_question')
+def previous_question():
+    if 'currentQuestionIndex' in session and session['currentQuestionIndex'] > 0:
+        session['currentQuestionIndex'] -= 1
+    return redirect(url_for('quiz'))
 
-
-@app.route('/quiz_details_form',methods = ["POST"])
+@app.route('/quiz_details_form', methods=["POST"])
 def quiz_details_form():
     if request.method == "POST":
-        session['qno']=-1
+        session['qno'] = 0
         session['correct_answers'] = 0
-        global qtype1
-        qtype1 = 'mysql'
         qtype = request.form["qtype"]
         questions = sql_functions.fetch_quiz_question(qtype=qtype)
         session["allQuestions"] = questions
-        print(qtype1)
+        session['currentQuestionIndex'] = 0  # Initialize current question index
+        
+        # Store selected subject in session
+        session['selected_subject'] = qtype
+        
         return redirect(url_for("quiz"))
     else:
-        return redirect(url_for(quiz_details))
-    
-
+        return redirect(url_for("quiz_details"))
 
 @app.route('/quiz')
 def quiz():
+    if "allQuestions" not in session:
+        return redirect(url_for("quiz_details"))
     
-    if session["qno"] >= len(session["allQuestions"]):
-        return "no more test enjoy"
+    questions = session.get("allQuestions")
+    if 'currentQuestionIndex' not in session or session['currentQuestionIndex'] >= len(questions):
+        return "No more questions. Enjoy!"
+
+    current_question_index = session['currentQuestionIndex']
+    session['curr_question'] = questions[current_question_index]
+
+    # Logging the current_question_index
+    print("Current Question Index:", current_question_index)
+
+    # Get the selected subject from the session
+    selected_subject = session.get('selected_subject')
+
+    return render_template("quiz.html", questions=questions[current_question_index], current_question_index=current_question_index, selected_subject=selected_subject)
+
+@app.route('/navigate_previous_question')
+def navigate_previous_question():
+    if 'prev_question' in request.args:
+        prev_question = int(request.args['prev_question'])
+        if 'currentQuestionIndex' in session and prev_question >= 0 and prev_question < session['currentQuestionIndex']:
+            session['currentQuestionIndex'] = prev_question
+    return redirect(url_for('quiz'))
+
+@app.route('/submit_answer', methods=["POST"])
+def submit_answer():
+    if request.method == "POST":
+        
+        if session['qno'] < 10:
+            answer = request.form["answer"]
+            session['qno'] += 1
+            if session['curr_question']['correct'] == answer:
+                session['correct_answers'] += 1
+            session['currentQuestionIndex'] += 1  # Move to the next question
+            return redirect(url_for("quiz"))
+        else:
+            return render_template("results.html", result=session["correct_answers"], len=10, percentage=((session["correct_answers"] * 100) / 10))
+'''
+@app.route('/quiz_details')
+def quiz_details():
+    return render_template("quiz_details.html")
+
+@app.route('/previous_question')
+def previous_question():
+    if 'currentQuestionIndex' in session and session['currentQuestionIndex'] > 0:
+        session['currentQuestionIndex'] -= 1
+    return redirect(url_for('quiz'))
+
+@app.route('/quiz_details_form', methods=["POST"])
+def quiz_details_form():
+    if request.method == "POST":
+        session['qno'] = 0
+        session['correct_answers'] = 0
+        qtype = request.form["qtype"]
+        questions = sql_functions.fetch_quiz_question(qtype=qtype)
+        session["allQuestions"] = questions
+        session['currentQuestionIndex'] = 0  # Initialize current question index
+        return redirect(url_for("quiz"))
+    else:
+        return redirect(url_for("quiz_details"))
+
+@app.route('/quiz')
+def quiz():
+    if "allQuestions" not in session:
+        return redirect(url_for("quiz_details"))
     
-    questions = session["allQuestions"]
-    print(len(session["allQuestions"]))
-    session['curr_question'] = questions[session['qno']]
-    
-    return render_template("quiz.html",questions = questions[session['qno']])
-    
-@app.route('/submit_answer',methods=["POST"])
+    questions = session.get("allQuestions")
+    if 'currentQuestionIndex' not in session or session['currentQuestionIndex'] >= len(questions):
+        return "No more questions. Enjoy!"
+
+    current_question_index = session['currentQuestionIndex']
+    session['curr_question'] = questions[current_question_index]
+
+    # Logging the current_question_index
+    print("Current Question Index:", current_question_index)
+
+    return render_template("quiz.html", questions=questions[current_question_index], current_question_index=current_question_index)
+
+
+@app.route('/navigate_previous_question')
+def navigate_previous_question():
+    if 'prev_question' in request.args:
+        prev_question = int(request.args['prev_question'])
+        if 'currentQuestionIndex' in session and prev_question >= 0 and prev_question < session['currentQuestionIndex']:
+            session['currentQuestionIndex'] = prev_question
+    return redirect(url_for('quiz'))
+
+@app.route('/submit_answer', methods=["POST"])
 def submit_answer():
     if request.method == "POST":
         session['qno'] += 1
         if session['qno'] < 10:
             answer = request.form["answer"]
-            print(answer)
-            if session['curr_question']['correct']==answer:
-                session['correct_answers'] +=1
+            if session['curr_question']['correct'] == answer:
+                session['correct_answers'] += 1
+            session['currentQuestionIndex'] += 1  # Move to the next question
             return redirect(url_for("quiz"))
-        
         else:
-            return render_template("results.html",result = session["correct_answers"],len = 10,percentage = ((session["correct_answers"]*100)/10))
+            return render_template("results.html", result=session["correct_answers"], len=10, percentage=((session["correct_answers"] * 100) / 10))
+
+'''
+
+
+# ------------------------------------------ Aditya quiz----------
+
+# # questions = sql_functions.fetch_quiz_question("mysql")
+# @app.route('/quiz_details')
+# def quiz_details():
+#     return render_template("quiz_details.html")
+
+
+
+# @app.route('/quiz_details_form',methods = ["POST"])
+# def quiz_details_form():
+#     if request.method == "POST":
+#         session['qno']=-1
+#         session['correct_answers'] = 0
+#         global qtype1
+#         qtype1 = 'mysql'
+#         qtype = request.form["qtype"]
+#         questions = sql_functions.fetch_quiz_question(qtype=qtype)
+#         session["allQuestions"] = questions
+#         print(qtype1)
+#         return redirect(url_for("quiz"))
+#     else:
+#         return redirect(url_for(quiz_details))
+    
+
+
+# @app.route('/quiz')
+# def quiz():
+    
+#     if session["qno"] >= len(session["allQuestions"]):
+#         return "no more test enjoy"
+    
+#     questions = session["allQuestions"]
+#     print(len(session["allQuestions"]))
+#     session['curr_question'] = questions[session['qno']]
+    
+#     return render_template("quiz.html",questions = questions[session['qno']])
+    
+# @app.route('/submit_answer',methods=["POST"])
+# def submit_answer():
+#     if request.method == "POST":
+#         session['qno'] += 1
+#         if session['qno'] < 10:
+#             answer = request.form["answer"]
+#             print(answer)
+#             if session['curr_question']['correct']==answer:
+#                 session['correct_answers'] +=1
+#             return redirect(url_for("quiz"))
+        
+#         else:
+#             return render_template("results.html",result = session["correct_answers"],len = 10,percentage = ((session["correct_answers"]*100)/10))
 
 
 
