@@ -4,6 +4,8 @@ import data_class_aidriven
 import smtplib
 from email.mime.text import MIMEText
 import ai_interviewer
+from datetime import datetime
+
 connection = sql_functions.make_sql_connection()
 
 
@@ -131,9 +133,19 @@ def redirect_to_student_dashboard():
         return render_template("dashboard_student.html",student_list = [session["user"]] )
     return redirect(url_for("login"))
 
+# ----------------------------------------- Profile -------------------------------------------
+@app.route('/profile')
+def profile():
+    return render_template("profile.html")
 
+@app.route('/notifications')
+def notifications():
+    student_details = sql_functions.get_student_details(session['user'])
+    student_id = student_details[0]['id']
+    notifications = sql_functions.select_notification(student_id=student_id)
+    print(notifications)
+    return render_template('notifications.html',notifications=notifications)
 # --------------------------------------------- Quiz ------------------------------------------------------
-
 @app.route('/quiz_details')
 def quiz_details():
     return render_template("quiz_details.html")
@@ -189,59 +201,19 @@ def navigate_previous_question():
             session['currentQuestionIndex'] = prev_question
     return redirect(url_for('quiz'))
 
-
 @app.route('/submit_answer', methods=["POST"])
 def submit_answer():
     if request.method == "POST":
-        session['qno'] += 1
+        
         if session['qno'] < 10:
             answer = request.form["answer"]
-            correct_answer = session['curr_question']['correct']
-            print("Answer submitted:", answer)
-            print("Correct answer:", correct_answer)
-            if correct_answer == answer:
-                session['correct_answers'] += 1
-                print("Correct answer! Current score:", session['correct_answers'])
-            else:
-                print("Incorrect answer. Current score:", session['correct_answers'])
-            session['currentQuestionIndex'] += 1  # Move to the next question
-            return redirect(url_for("quiz"))
-        else:
-            score = session["correct_answers"]
-            total_questions = 10
-            percentage = (score * 100) / total_questions
-            print("Quiz completed. Final score:", score)
-            return render_template("results.html", result=score, len=total_questions, percentage=percentage)
-
-  
-@app.route('/results')
-def results():
-    if 'correct_answers' in session:
-        score = session["correct_answers"]
-        total_questions = 10
-        percentage = (score * 100) / total_questions
-        return render_template("results.html", result=score, len=total_questions, percentage=percentage)
-    else:
-        return redirect(url_for('quiz_details'))  # Redirect to quiz details if no session data
-
-
-
-
-'''
-@app.route('/submit_answer', methods=["POST"])
-def submit_answer():
-    if request.method == "POST":
-        session['qno'] += 1
-        if session['qno'] < 10:
-            answer = request.form["answer"]
+            session['qno'] += 1
             if session['curr_question']['correct'] == answer:
                 session['correct_answers'] += 1
             session['currentQuestionIndex'] += 1  # Move to the next question
             return redirect(url_for("quiz"))
         else:
             return render_template("results.html", result=session["correct_answers"], len=10, percentage=((session["correct_answers"] * 100) / 10))
-'''
-
 '''
 @app.route('/quiz_details')
 def quiz_details():
@@ -308,60 +280,59 @@ def submit_answer():
 '''
 
 
-'''
-# Flask routes
-@app.route('/quiz_details')
-def quiz_details():
-    return render_template("quiz_details.html")
+# ------------------------------------------ Aditya quiz----------
 
-@app.route('/previous_question')
-def previous_question():
-    if 'qno' in session and session['qno'] > 0:
-        session['qno'] -= 1
-    return redirect(url_for('quiz'))
+# # questions = sql_functions.fetch_quiz_question("mysql")
+# @app.route('/quiz_details')
+# def quiz_details():
+#     return render_template("quiz_details.html")
 
-@app.route('/quiz_details_form', methods=["POST"])
-def quiz_details_form():
-    if request.method == "POST":
-        session['qno'] = -1
-        session['correct_answers'] = 0
-        global qtype1
-        qtype1 = 'mysql'
-        qtype = request.form["qtype"]
-        questions = sql_functions.fetch_quiz_question(qtype=qtype)
-        session["allQuestions"] = questions
-        print(qtype1)
-        return redirect(url_for("quiz"))
-    else:
-        return redirect(url_for('quiz_details'))
 
-@app.route('/quiz')
-def quiz():
-    if session["qno"] >= len(session["allQuestions"]):
-        return "No more questions. Test completed!"
 
-    questions = session["allQuestions"]
-    session['curr_question'] = questions[session['qno']]
+# @app.route('/quiz_details_form',methods = ["POST"])
+# def quiz_details_form():
+#     if request.method == "POST":
+#         session['qno']=-1
+#         session['correct_answers'] = 0
+#         global qtype1
+#         qtype1 = 'mysql'
+#         qtype = request.form["qtype"]
+#         questions = sql_functions.fetch_quiz_question(qtype=qtype)
+#         session["allQuestions"] = questions
+#         print(qtype1)
+#         return redirect(url_for("quiz"))
+#     else:
+#         return redirect(url_for(quiz_details))
+    
 
-    return render_template("quiz.html", questions=questions)
 
-@app.route('/submit_answer', methods=["POST"])
-def submit_answer():
-    if request.method == "POST":
-        session['qno'] += 1
-        if session['qno'] < 10:
-            answer = request.form["answer"]
-            print(answer)
-            if session['curr_question']['correct'] == answer:
-                session['correct_answers'] += 1
-            return redirect(url_for("quiz"))
-        else:
-            score = session['correct_answers']
-            total = len(session['allQuestions'])  # Total number of questions
-            percentage = (score / total) * 100
-            return render_template("results.html", score=score, total=total, percentage=percentage)
+# @app.route('/quiz')
+# def quiz():
+    
+#     if session["qno"] >= len(session["allQuestions"]):
+#         return "no more test enjoy"
+    
+#     questions = session["allQuestions"]
+#     print(len(session["allQuestions"]))
+#     session['curr_question'] = questions[session['qno']]
+    
+#     return render_template("quiz.html",questions = questions[session['qno']])
+    
+# @app.route('/submit_answer',methods=["POST"])
+# def submit_answer():
+#     if request.method == "POST":
+#         session['qno'] += 1
+#         if session['qno'] < 10:
+#             answer = request.form["answer"]
+#             print(answer)
+#             if session['curr_question']['correct']==answer:
+#                 session['correct_answers'] +=1
+#             return redirect(url_for("quiz"))
+        
+#         else:
+#             return render_template("results.html",result = session["correct_answers"],len = 10,percentage = ((session["correct_answers"]*100)/10))
 
-'''
+
 
 # ------------------------------------------------ Details ----------------------------------------------------------
 
@@ -372,11 +343,26 @@ def student_details():
     else:
         
         student_details = sql_functions.get_student_details(email=session['user'])
-        print(student_details)
+        # print(student_details)
         if student_details != ():
             return render_template('update_student_details.html',student_details = student_details )
         else:
-            student_details = [{ 'firstname': 'firstname', 'lastname': 'lastname', 'middlename': 'middlename', 'college': 'college', 'rollno': 'rollno', 'program': 'Computer Science', 'stream': 'AI', 'year': 0, 'backlog': 0, 'currentcgpa': '9.', 'email': 'john.doe@example.com', 'phoneno': '+919999999999', 'gender': 'Male/Female', 'dob': '2000, 1, 11', 'nationality': 'Indian', 'address': '123 road Area, City'}]
+            student_details = [{'firstname': 'firstname',
+                                 'lastname': 'lastname',
+                                   'middlename': 'middlename',
+                                     'college': 'college',
+                                       'rollno': 'rollno',
+                                         'program': 'Computer Science',
+                                           'stream': 'AI',
+                                             'year': 0,
+                                               'backlog': 0,
+                                                 'currentcgpa': '9.',
+                                                   'email': 'john.doe@example.com',
+                                                     'phoneno': '+919999999999',
+                                                       'gender': 'Male/Female',
+                                                         'dob': '2000, 1, 11',
+                                                           'nationality': 'Indian',
+                                                             'address': '123 road Area, City'}]
             return render_template('update_student_details.html',student_details = student_details)
         
 
@@ -390,6 +376,11 @@ def edit_student_field(field):
 def update_field(field):
     if request.method == "POST":
         value = request.form["value"]
+        print(value)
+        if field == "dob":
+            value = datetime.strptime(value,f"%Y-%m-%d")
+            print(value)
+        # print(value)
 
         sql_functions.update_student_details(email=session["user"],field=field,value=value)
         return redirect(url_for("student_details"))
@@ -442,7 +433,6 @@ def view_pdf():
     return send_file(file_path, as_attachment=False)
 
 # --------------------------------------------------------- view jobs ---------------------------------------
-'''
 @app.route('/view_jobs')
 def view_jobs():
     # if "user" not in session:
@@ -514,6 +504,15 @@ def interview_process():
     else:
         question = ai_interviewer.chat.send_message("Ask me only 1 easy python interview question")
         return render_template('interviewer.html', result=session["last_answer"], question = question.text, inter_pro = True)
+
+# -------------------------------------------- training resources --------------------------------------------------
+
+@app.route('/training')
+def training():
+    sql_functions.select_training()
+    
+    return render_template("training.html")
+
 
 
 # -------------------------------------------- view student details by company -------------------------------------
@@ -662,8 +661,6 @@ def send_email(subject, body, recipients):
     except Exception as e:
         flash(f'Error sending email: {e}', 'danger')
 
-
-
 @app.route('/view_students')
 def view_students():
     # Fetch all records of students from the database
@@ -821,303 +818,49 @@ def send_interview_notification(student_email, interview_details):
     except Exception as e:
         flash(f'Error sending email notification: {e}', 'danger')
 
-'''
+from flask import render_template, session
+import pymysql
 
+@app.route('/job_listings')
+def job_listings():
+    # Check if user is logged in
+    if 'company' not in session:
+        flash('Please log in to view job listings', 'danger')
+        return redirect(url_for('login'))
 
-@app.route('/register_company')
-def register_company():
-    
-    return render_template('company_registration.html')
+    # Fetch all job postings for the logged-in company from the database
+    try:
+        # Fetch company ID using the logged-in user's email
+        cursor.execute(f"SELECT id FROM company_registration WHERE email = '{session['company']}'")
+        company_id = cursor.fetchone()
 
-@app.route('/company_dashboard', methods = ["POST"])
-def company_dashboard():
-    if request.method == "POST":
-        username = request.form['username']
-        password1 = request.form['password1']
-        password2 = request.form['password2']
-        company_name = request.form['companyName']
-        registration_number = request.form['registrationNumber']
-        address = request.form['address']
-        phone_number = request.form['phoneNumber']
-        email = request.form['email']
-        industry_type = request.form['industryType']
-        company_description = request.form['companyDescription']
-        logo_upload = request.files['logoUpload']
-        company_size = request.form['companySize']
+        # Fetch job postings for the company
+        cursor.execute(f"SELECT * FROM job_posting WHERE company_id = {company_id['id']}")
+        job_postings = cursor.fetchall()
 
-        data = {
-        'Username': username,
-        'Password1': password1,
-        'Password2': password2,
-        'Company Name': company_name,
-        'Registration Number': registration_number,
-        'Address': address,
-        'Phone Number': phone_number,
-        'Email': email,
-        'Industry Type': industry_type,
-        'Company Description': company_description,
-        'Logo Upload': logo_upload.filename,
-        'Company Size': company_size,
-            }
-        print(data)
-        session['company'] = data['Email']
-        sql_functions.insert_company_data(username=username,
-                                          password1=password1,
-                                          password2=password2,
-                                          company_name=company_name,
-                                          registration_number=registration_number,
-                                          address=address,
-                                          phone_number=phone_number,
-                                          email=email,
-                                          industry_type=industry_type,
-                                          company_description=company_description,
-                                          logo_upload_filename=logo_upload.filename,
-                                          company_size=company_size)
-        return redirect(url_for("company_dashboard1"))
-        
-@app.route('/company_dashboard1') 
-def company_dashboard1():
-    name = session['company']
-    return render_template('dashboard_company.html',company_name = name )
+        return render_template('job_listings.html', job_postings=job_postings)
 
+    except Exception as e:
+        # Handle any exceptions
+        flash(f'Error fetching job postings: {e}', 'danger')
+        return render_template('job_listings.html', job_postings=[])
 
-# ------------------------------------------------------- Company Section job posting -----------------------
-
-
-@app.route('/post_job', methods=['POST', 'GET'])
-def post_job():
-    if request.method == 'POST':
-        job_role = request.form['job_role']
-        job_type = request.form['job_type']
-        skills_required = request.form['skills_required']
-        num_employees = request.form['num_employees']
-        num_openings = request.form['num_openings']
-        company_description = request.form['company_description']
-        responsibilities = request.form['responsibilities']
-
-        try:
-                # SQL query to insert data into the job_postings table
-                cursor.execute(f"select id from company_registration where email = '{session['company']}'")
-                company_id = cursor.fetchall()
-                print(company_id)
-
-                sql_functions.insert_job_posting(company_id=company_id[0]['id'],
-                                                 job_role=job_role,
-                                                 job_type=job_type,
-                                                 skills_required=skills_required,
-                                                 num_employees=num_employees,
-                                                 num_openings=num_openings,
-                                                 company_description=company_description,
-                                                 responsibilities=responsibilities)
-
-                # Notify all students about the new job posting
-                notify_students_about_job_posting(job_role)
-
-                flash('Job posting added successfully', 'success')
-        except Exception as e:
-            flash(f'Error: {e}', 'danger')
-
-        return redirect(url_for('job_listings'))
-
-    return render_template('post_job.html')
-
-# Function to send notifications to all students about the new job posting
-def notify_students_about_job_posting(job_role):
+@app.route('/scheduled_interviews')
+def scheduled_interviews():
     try:
         with connection.cursor() as cursor:
-            # Fetch all student emails from the database
-            sql = "SELECT email FROM student_register"
+            # Fetch all scheduled interviews from the database
+            sql = "SELECT id, student_id, date, time, location FROM interviews"
             cursor.execute(sql)
-            student_emails = [student['email'] for student in cursor.fetchall()]
-
-        # Send email notifications to students
-        subject = 'New Job Opening'
-        body = f'There is a new job opening for the position of {job_role}. Check your dashboard for more details.'
-        send_email(subject, body, student_emails)
+            scheduled_interviews = cursor.fetchall()
+            return render_template('scheduled_interviews.html', interviews=scheduled_interviews)
     except Exception as e:
-        flash(f'Error notifying students: {e}', 'danger')
+        flash(f'Error fetching scheduled interviews: {e}', 'danger')
+        scheduled_interviews = []
 
-# Function to send email
-def send_email(subject, body, recipients):
-    try:
-        # SMTP Configuration (Update with your SMTP server details)
-        smtp_server = 'smtp.gmail.com'  # Assuming you are using Gmail
-        smtp_port = 587
-        smtp_username = 'Projectdemo65@gmail.com'  # Your Gmail username
-        smtp_password = 'nbknetqtvnrgwnjv'  # Your Gmail password
+    return render_template('scheduled_interviews.html')
 
-        # Create the email message
-        msg = MIMEText(body)
-        msg['Subject'] = subject
-        msg['From'] = 'Projectdemo65@gmail.com'  # Replace with your sender email address
-        msg['To'] = ', '.join(recipients)
-
-        # Connect to the SMTP server and send the email
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_username, smtp_password)
-            server.sendmail(msg['From'], recipients, msg.as_string())
-
-    except Exception as e:
-        flash(f'Error sending email: {e}', 'danger')
-
-@app.route('/view_students')
-def view_students():
-    # Fetch all records of students from the database
-    
-    try:
-        
-            # Replace this query with your actual query to fetch all students
-            cursor.execute(f"select id from company_registration where email = '{session['company']}'")
-            company_id = cursor.fetchall()
-            # print(company_id)
-            student = sql_functions.select_applied_student(company_id=company_id[0]['id'])
-            # print(student)
-            student_ids = [x["student_id"] for x in student]
-            job_ids = [x["job_id"] for x in student]
-            print(job_ids)
-            # print(student_ids)
-            fetched_students = []
-            
-            for i,id in zip(student_ids,job_ids):
-                cursor.execute(f"select * from student_details where id = {i}")
-                fetched_student = cursor.fetchall()
-                print(fetched_student)
-                fetched_student[0]["job_id"]=id
-                fetched_students.append(fetched_student[0])
-            # print(fetched_students)
-            session["fetched_students"] = fetched_students
-            return render_template('view_students.html', students=fetched_students,job_ids = job_ids)
-    except Exception as e:
-        flash(f'Error fetching students: {e}', 'danger')
-        fetched_students = [{"firstname":"student not selected"}]
-        
-
-    return render_template('view_students.html', students=fetched_students,job_ids = job_ids)
-
-@app.route('/placement_analytics')
-def placement_analytics():
-    data = {
-        "year_wise_companies_visited": {
-            2017: 0.7,
-            2016: 0.7,
-            2015: 0.7,
-            2014: 0.55,
-        },
-        "top_packages_last_5_years": {
-            "correct_answers": [100, 100, 100, 100, 100],
-            "incorrect_answers": [2, 2, 2, 2, 2],
-            "unattempted_questions": [30, 30, 30, 30, 30],
-        },
-        "top_recruiter": {
-            "2015": "C",
-            "2014": {"Mar": 20, "Apr": 15},
-        },
-        "year_wise_placements": {
-            "2017": "Outcome 10",
-            "2016": "Outcome 10",
-            "2015": "Outcome 10",
-            "2014": "Outcome 10",
-        }
-    }
-    return render_template('placement_analytics.html', data=data, json_data=json.dumps(data))
-
-# ------------------------------------------------------- Company Section scheduling and viewing job postings ---------------------------------------
-
-interviews = []
-@app.route('/schedule_interview', methods=['GET', 'POST'])
-def schedule_interview():
-    # Fetch the list of students from the database
-    try:
-            # Replace this query with your actual query to fetch students
-            cursor.execute(f"select id from company_registration where email = '{session['company']}'")
-            company_id = cursor.fetchall()
-            # print(company_id)
-            student = sql_functions.select_applied_student(company_id=company_id[0]['id'])
-            print(student)
-            # print(student)
-            student_ids = [x["student_id"] for x in student]
-            job_ids = [x["job_id"] for x in student]
-            print(job_ids)
-            # print(student_ids)
-            fetched_students = []
-            for i,id in zip(student_ids,job_ids):
-                cursor.execute(f"select * from student_details where id = {i}")
-                fetched_student = cursor.fetchall()
-                print(fetched_student)
-                fetched_student[0]["job_id"]=id
-                fetched_students.append(fetched_student[0])
-            print(fetched_students)
-    except Exception as e:
-        flash(f'Error fetching students: {e}', 'danger')
-        fetched_students = []
-
-    if request.method == 'POST':
-        student_id = int(request.form['student_id'])
-        date = request.form['date']
-        time = request.form['time']
-        location = request.form['location']
-
-        selected_student = next((student for student in fetched_students if student['id'] == student_id), None)
-
-        if selected_student:
-            interview_details = {
-                'student_name': selected_student['name'],
-                'date': date,
-                'time': time,
-                'location': location
-            }
-
-            interviews.append(interview_details)
-
-            try:
-                with connection.cursor() as cursor:
-                    # SQL query to insert data into the interviews table
-                    sql = "INSERT INTO interviews (student_id, date, time, location) VALUES (%s, %s, %s, %s)"
-                    cursor.execute(sql, (student_id, date, time, location))
-                    connection.commit()
-
-                    # Send email notification to the student
-                    send_interview_notification(selected_student['email'], interview_details)
-
-                    flash('Interview scheduled successfully', 'success')
-            except Exception as e:
-                flash(f'Error: {e}', 'danger')
-
-        else:
-            flash('Selected student not found', 'danger')
-
-    return render_template('schedule_interview.html', students=fetched_students, interviews=interviews)
-
-
-
-def send_interview_notification(student_email, interview_details):
-    try:
-        smtp_server = 'smtp.gmail.com'  # Assuming you are using Gmail
-        smtp_port = 587
-        smtp_username = 'Projectdemo65@gmail.com'  # Your Gmail username
-        smtp_password = 'nbknetqtvnrgwnjv'
-        
-        # Create the email message
-        subject = 'Interview Scheduled'
-        body = f'Dear {interview_details["student_name"]},\n\nYour interview has been scheduled for the following details:\n\nDate: {interview_details["date"]}\nTime: {interview_details["time"]}\nLocation: {interview_details["location"]}\n\nBest Regards,\nYour Company Name'
-
-        msg = MIMEText(body)
-        msg['Subject'] = subject
-        msg['From'] = 'Projectdemo65@gmail.com'  # Replace with your sender email address
-        msg['To'] = student_email
-
-        # Connect to the SMTP server and send the email
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_username, smtp_password)
-            server.sendmail(msg['From'], [msg['To']], msg.as_string())
-
-        flash('Email notification sent successfully', 'success')
-
-    except Exception as e:
-        flash(f'Error sending email notification: {e}', 'danger')
-
+# ------------------------------------------------------- admin Dashboard ---------------------------------------
 
 @app.route('/admin_all_records')
 def admin_all_records():
@@ -1146,37 +889,6 @@ def admin_all_records():
         fetched_job_postings = []
 
     return render_template('all_records.html', students=fetched_students, interviews=fetched_interviews, job_postings=fetched_job_postings)
-
-
-
-@app.route('/job_listings')
-def job_listings():
-    # Fetch all job postings from the database
-
-            cursor.execute(f"select id from company_registration where email = '{session['company']}'")
-            company_id = cursor.fetchall()
-            sql = f"SELECT * FROM job_posting where company_id = {company_id[0]['id']}"
-            cursor.execute(sql)
-            job_postings = cursor.fetchall()
-
-            return render_template('job_listings.html', job_postings=job_postings)
-
-@app.route('/scheduled_interviews')
-def scheduled_interviews():
-    try:
-        with connection.cursor() as cursor:
-            # Fetch all scheduled interviews from the database
-            sql = "SELECT id, student_id, date, time, location FROM interviews"
-            cursor.execute(sql)
-            scheduled_interviews = cursor.fetchall()
-            return render_template('scheduled_interviews.html', interviews=scheduled_interviews)
-    except Exception as e:
-        flash(f'Error fetching scheduled interviews: {e}', 'danger')
-        scheduled_interviews = []
-
-    return render_template('scheduled_interviews.html')
-
-# ------------------------------------------------------- admin Dashboard ---------------------------------------
 
 @app.route('/register_admin1',methods = ["POST","GET"])
 def register_admin1():
