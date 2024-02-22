@@ -263,14 +263,16 @@ def insert_resume(email,filename):
     
     cursor.execute("select id from student_register where email = %s;",email)
     id = cursor.fetchall()
-    print(id)
+    # print(id)
     id= id[0]["id"]
 
-    if if_resume_present(email=email) == True:
+    if if_resume_present(email=email) == False:
         cursor.execute(f"insert into student_resume (id, file_name) values ({id} ,'{filename}' )")
         success = cursor.fetchall()
         connection.commit()
         return success
+    else:
+        cursor.execute(f"UPDATE student_resume SET file_name = '{filename}' WHERE id = {id};")
     
     
     
@@ -281,7 +283,7 @@ def if_resume_present(email):
 
     cursor.execute("select id from student_register where email = %s;",email)
     id = cursor.fetchall()
-    print(id)
+    # print(id)
     id= id[0]["id"]
 
     cursor.execute(f"select file_name from student_resume where id = {id}")
@@ -347,6 +349,7 @@ def validate_company_login(email, password):
 
         # Fetch the result
         result = cursor.fetchone()
+        print(result)
 
         # Close the cursor and connection
 
@@ -364,19 +367,19 @@ def validate_company_login(email, password):
 
 
 
-def insert_job_posting(job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities):
+def insert_job_posting(company_id,job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities):
     try:
         # Establish a connection to the MySQL database
         global connection,cursor
 
         # SQL query to insert data into the table
         sql = '''
-        INSERT INTO job_postings (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO job_posting (company_id,job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         '''
 
         # Data to be inserted into the table
-        data = (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
+        data = (company_id, job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
 
         # Execute the SQL query
         cursor.execute(sql, data)
@@ -429,24 +432,133 @@ def select_applied_student(company_id):
     return applied_students
 
 
+
+def insert_interview_data( student_id, job_id, date, time, location):
+    try:
+        # Create a cursor object to interact with the database
+        global connection,cursor
+
+        # SQL query to insert data into the interviews table
+        sql = '''
+        INSERT INTO interviews (student_id, job_id, date, time, location)
+        VALUES (%s, %s, %s, %s, %s)
+        '''
+
+        # Data to be inserted into the table
+        data = (student_id, job_id, date, time, location)
+
+        # Execute the SQL query
+        cursor.execute(sql, data)
+
+        # Commit the changes to the database
+        connection.commit()
+
+        print("Data inserted into interviews successfully!")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+
+
+
+#  ------------------------- admin -------------------------------------
+        
+def insert_admin(name,email,password,college_name,college_Address,college_id):
+    cursor.execute(f"insert into admin ( admin_name,admin_email,password,college_name,college_address,college_id) values ('{name}',  '{email}','{password}','{college_name}','{college_Address}',{college_id})")
+    output = cursor.fetchall()
+    connection.commit()
+    return output
+def validate_admin_login(email, password):
+    # try:
+        
+        global connection
+        global cursor
+        
+
+        # SQL query to check if the provided email and password match any record
+        sql = f"""SELECT * FROM admin
+                 WHERE admin_email = '{email}' AND password = '{password}'"""
+
+        # Data to be used in the query
+        
+
+        # Execute the SQL query
+        cursor.execute(sql)
+
+        # Fetch the result
+        result = cursor.fetchone()
+        print(result)
+
+        # Close the cursor and connection
+
+        # Check if a matching record was found
+        if result:
+            return True  # Login successful
+        else:
+            return False  # Login failed
+        
+
+# --------------------------------------------- View students in admin Panel -------------------------------
    
+
+# ------------------------------------------------------------------------ View Company ----------------------------------------------------------
+        
+def admin_sql_query():
+        global connection,cursor
+
+        with connection.cursor() as cursor:
+            # Execute the SQL query
+            sql_company_registration = "SELECT * FROM company_registration"
+            sql_interviews = "SELECT * FROM interviews"
+            sql_job_posting = "SELECT * FROM job_posting"
+            # Fetch all the data
+            cursor.execute(sql_company_registration)
+            company_registration_data = cursor.fetchall()
+            cursor.execute(sql_interviews)
+            interviews_data = cursor.fetchall()
+            cursor.execute(sql_job_posting)
+            job_posting_data = cursor.fetchall()
+
+        return company_registration_data, interviews_data, job_posting_data 
+
 connection.commit()
 if __name__ == "__main__":
    
     # insert_job_posting('Software Engineer', 'Full Time', 'Java, Python, SQL', 50, 5, 'A leading tech company', 'Develop and maintain software applications')
     # insert_job_posting('Marketing Specialist', 'Part Time', 'Digital Marketing, Social Media', 20, 3, 'A creative marketing agency', 'Plan and execute marketing campaigns')
-#     cursor.execute('''CREATE TABLE interviews (
-#     id INT AUTO_INCREMENT PRIMARY KEY,
-#     student_id INT,
-#     date DATE,
-#     time VARCHAR(20),
-#     location VARCHAR(255),
-#     FOREIGN KEY (student_id) REFERENCES student_details(id)
-# );''')
-    cursor.execute("desc interviews")
+    # insert_quiz_question('data/java_questions.tsv')
+#     cursor.execute('''
+# CREATE TABLE interviews (
+#                     interview_id INT AUTO_INCREMENT PRIMARY KEY,
+#                     student_id INT,
+#                     job_id INT,
+#                     date DATE,
+#                     time TIME,
+#                     location VARCHAR(255),
+#                     UNIQUE (interview_id),
+#                     FOREIGN KEY (student_id) REFERENCES student_details(id),
+#                     FOREIGN KEY (job_id) REFERENCES job_postings(id))
+# ''')
     # print(validate_company_login(email='company2@gmail.com',password="password"))
     # insert_applied_student_data(3, 1, 1)
+    # print(insert_interview_data( 1, 2, '2024-02-10', '15:30:00', 'Company HQ'))
+#     cursor.execute('''
+# CREATE TABLE job_posting (
+#                     id INT AUTO_INCREMENT PRIMARY KEY,
+#                     company_id int,
+#                     job_role VARCHAR(255) NOT NULL,
+#                     job_type VARCHAR(50) NOT NULL,
+#                     skills_required TEXT NOT NULL,
+#                     num_employees INT NOT NULL,
+#                     num_openings INT NOT NULL,
+#                     company_description TEXT NOT NULL,
+#                     responsibilities TEXT NOT NULL,
+#                    FOREIGN KEY (company_id) REFERENCES company_registration(id))''')
+    # print(insert_job_posting(company_id=1,job_role="a",job_type="b",skills_required="c",num_employees=500,num_openings=4,company_description="abc",responsibilities="response"))
+    # insert_resume(email="aqib@gmail.com",filename="aqib.pdf")
+    cursor.execute("desc job_posting")
     output = cursor.fetchall()
+    print(output)
     for i in output:
         print('\n')
         print(i)

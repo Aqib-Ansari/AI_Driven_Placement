@@ -3,7 +3,7 @@ import sql_functions
 import data_class_aidriven
 import smtplib
 from email.mime.text import MIMEText
-
+import ai_interviewer
 connection = sql_functions.make_sql_connection()
 
 
@@ -103,10 +103,11 @@ def student_dashboard():
                 return render_template("login.html",error_msg=validatiaon[1])
         
         elif login_as=="Admin":
-            student_register_Data_list = []
-            student_register_Data_list.append(email)
-            student_register_Data_list.append(password)
-            return redirect(url_for("redirect_to_student_dashboard",student_list = [session["user"]]))
+            validatiaon = sql_functions.validate_admin_login(email,password)
+            if validatiaon:
+                session["admin"] = email
+                
+            return redirect(url_for("admin_dashboard",admin_name = [session["admin"]]))
 
         elif login_as=="Company":
            
@@ -412,26 +413,25 @@ def upload_resume():
             # If the user does not select a file, browser will submit an empty part
             if file.filename == '':
                 return render_template('upload_resume.html', error='No selected file', pdf_path=pdf_path)
+            else:
+                sql_functions.insert_resume(email=session["user"],filename=file.filename)
+                file_path = 'static/' + file.filename
+                file.save(file_path)
+                return render_template('upload_resume.html', pdf_path=file_path)
+
             
 
             # Check if the file is a PDF
-            if sql_functions.if_resume_present(session['user']):
-                if file and file.filename.lower().endswith('.pdf'):
-                    # Save the PDF file
-                    sql_functions.insert_resume(session['user'],file.filename)
-                    file_path = 'static/' + file.filename
-                    file.save(file_path)
-
-                    # Set the PDF path for display
-                    pdf_path = f'/view_pdf?file={file_path}'
-
-                    # Render the template with the PDF path
-                    return render_template('upload_resume.html', pdf_path=pdf_path)
-                else:
-                    return render_template('upload_resume.html', error='Invalid file format. Please upload a PDF file', pdf_path=pdf_path)
+        if sql_functions.if_resume_present(session['user']):
+                file_name = sql_functions.if_resume_present(session["user"])
+                file_path = 'static/'+file_name
+                return render_template('upload_resume.html', pdf_path=file_path)
+        else:
+                
+                return render_template('upload_resume.html')
            
 
-        return render_template('upload_resume.html', pdf_path=pdf_path)
+        
    
         
 
@@ -447,11 +447,76 @@ def view_pdf():
 def view_jobs():
     # if "user" not in session:
     #     return redirect(url_for("login"))
-    row = [1, 2, 3]*20
+    try:
 
-    return render_template('view_jobs.html', row=row)
+        cursor.execute("select * from job_posting")
+        jobs = cursor.fetchall()
 
-# -------------------------------------------- view student details by company
+        print(jobs)
+    except Exception as e:
+        print(e)
+        # jobs = [1, 2, 3]*20
+
+    return render_template('view_jobs.html', jobs=jobs)
+@app.route('/apply_job/<job_id>')
+def apply_job(job_id):
+    try:
+        cursor.execute(f'select * from job_posting where id = {job_id}')
+        job = cursor.fetchall()
+        print(job)
+    except Exception as e:
+        print(e)
+    return render_template("apply_job.html",jobs = job)
+
+@app.route("/job_applied/<job_id>",methods=["POST"])
+def job_applied(job_id):
+    try:
+        if request.method == "POST":
+            student_details = sql_functions.get_student_details(session['user'])
+            student_id = student_details[0]['id']
+            cursor.execute(f'select company_id from job_posting where job_id = {job_id}')
+            company_id = cursor.fetchall()
+
+            sql_functions.insert_applied_student_data(company_id=company_id[0]['id'],job_id=int(job_id),student_id=student_id)
+            flash("applied successfully")
+    except Exception as e:
+        pass
+
+    return redirect(url_for("view_jobs"))
+
+
+# -------------------------------------------- Ai Interviewer -------------------------------------
+prompt = """
+ You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role data science. 
+  Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate
+"""
+
+@app.route('/start_interview', methods=['GET', 'POST'])
+def start_interview():
+    global prompt
+    
+    response = ai_interviewer.start_interview(prompt=prompt)
+    session["last_answer"] = False
+    
+    return render_template('interviewer.html', result=response, inter_pro = False, start = True)
+
+@app.route('/interview_process',methods= ["POST","GET"])
+def interview_process():
+    
+   
+    if request.method == "POST":
+        answer = request.form["answer"]
+        response = ai_interviewer.chat.send_message(answer)
+        session["last_answer"] = response.text
+        print(response.text)
+        question = ai_interviewer.chat.send_message("Ask me only 1 python interview question")
+        return render_template('interviewer.html', result=response.text, question = question.text,inter_pro = True)
+    else:
+        question = ai_interviewer.chat.send_message("Ask me only 1 easy python interview question")
+        return render_template('interviewer.html', result=session["last_answer"], question = question.text, inter_pro = True)
+
+
+# -------------------------------------------- view student details by company -------------------------------------
 
 @app.route('/fetch_student_details')
 def fetch_student_details():
@@ -497,7 +562,18 @@ def company_dashboard():
             }
         print(data)
         session['company'] = data['Email']
-        sql_functions.insert_company_data(username=username,password1=password1,password2=password2,company_name=company_name,registration_number=registration_number,address=address,phone_number=phone_number,email=email,industry_type=industry_type,company_description=company_description,logo_upload_filename=logo_upload.filename,company_size=company_size)
+        sql_functions.insert_company_data(username=username,
+                                          password1=password1,
+                                          password2=password2,
+                                          company_name=company_name,
+                                          registration_number=registration_number,
+                                          address=address,
+                                          phone_number=phone_number,
+                                          email=email,
+                                          industry_type=industry_type,
+                                          company_description=company_description,
+                                          logo_upload_filename=logo_upload.filename,
+                                          company_size=company_size)
         return redirect(url_for("company_dashboard1"))
         
 @app.route('/company_dashboard1') 
@@ -505,8 +581,8 @@ def company_dashboard1():
     name = session['company']
     return render_template('dashboard_company.html',company_name = name )
 
-# ---------------------------------------------- Login company -------------------------------------------
 
+# ------------------------------------------------------- Company Section job posting -----------------------
 
 
 @app.route('/post_job', methods=['POST', 'GET'])
@@ -521,11 +597,19 @@ def post_job():
         responsibilities = request.form['responsibilities']
 
         try:
-            with connection.cursor() as cursor:
                 # SQL query to insert data into the job_postings table
-                sql = "INSERT INTO job_postings (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(sql, (job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities))
-                connection.commit()
+                cursor.execute(f"select id from company_registration where email = '{session['company']}'")
+                company_id = cursor.fetchall()
+                print(company_id)
+
+                sql_functions.insert_job_posting(company_id=company_id[0]['id'],
+                                                 job_role=job_role,
+                                                 job_type=job_type,
+                                                 skills_required=skills_required,
+                                                 num_employees=num_employees,
+                                                 num_openings=num_openings,
+                                                 company_description=company_description,
+                                                 responsibilities=responsibilities)
 
                 # Notify all students about the new job posting
                 notify_students_about_job_posting(job_role)
@@ -543,7 +627,7 @@ def notify_students_about_job_posting(job_role):
     try:
         with connection.cursor() as cursor:
             # Fetch all student emails from the database
-            sql = "SELECT email FROM students"
+            sql = "SELECT email FROM student_register"
             cursor.execute(sql)
             student_emails = [student['email'] for student in cursor.fetchall()]
 
@@ -583,17 +667,36 @@ def send_email(subject, body, recipients):
 @app.route('/view_students')
 def view_students():
     # Fetch all records of students from the database
+    
     try:
-        with connection.cursor() as cursor:
+        
             # Replace this query with your actual query to fetch all students
-            sql = "SELECT id, first_name , email FROM student_details"
-            cursor.execute(sql)
-            fetched_students = cursor.fetchall()
+            cursor.execute(f"select id from company_registration where email = '{session['company']}'")
+            company_id = cursor.fetchall()
+            # print(company_id)
+            student = sql_functions.select_applied_student(company_id=company_id[0]['id'])
+            # print(student)
+            student_ids = [x["student_id"] for x in student]
+            job_ids = [x["job_id"] for x in student]
+            print(job_ids)
+            # print(student_ids)
+            fetched_students = []
+            
+            for i,id in zip(student_ids,job_ids):
+                cursor.execute(f"select * from student_details where id = {i}")
+                fetched_student = cursor.fetchall()
+                print(fetched_student)
+                fetched_student[0]["job_id"]=id
+                fetched_students.append(fetched_student[0])
+            # print(fetched_students)
+            session["fetched_students"] = fetched_students
+            return render_template('view_students.html', students=fetched_students,job_ids = job_ids)
     except Exception as e:
         flash(f'Error fetching students: {e}', 'danger')
-        fetched_students = []
+        fetched_students = [{"firstname":"student not selected"}]
+        
 
-    return render_template('view_students.html', students=fetched_students)
+    return render_template('view_students.html', students=fetched_students,job_ids = job_ids)
 
 @app.route('/placement_analytics')
 def placement_analytics():
@@ -622,17 +725,32 @@ def placement_analytics():
     }
     return render_template('placement_analytics.html', data=data, json_data=json.dumps(data))
 
+# ------------------------------------------------------- Company Section scheduling and viewing job postings ---------------------------------------
 
 interviews = []
 @app.route('/schedule_interview', methods=['GET', 'POST'])
 def schedule_interview():
     # Fetch the list of students from the database
     try:
-        with connection.cursor() as cursor:
             # Replace this query with your actual query to fetch students
-            sql = "SELECT id, username, email FROM student_register where id = select * from "
-            cursor.execute(sql)
-            fetched_students = cursor.fetchall()
+            cursor.execute(f"select id from company_registration where email = '{session['company']}'")
+            company_id = cursor.fetchall()
+            # print(company_id)
+            student = sql_functions.select_applied_student(company_id=company_id[0]['id'])
+            print(student)
+            # print(student)
+            student_ids = [x["student_id"] for x in student]
+            job_ids = [x["job_id"] for x in student]
+            print(job_ids)
+            # print(student_ids)
+            fetched_students = []
+            for i,id in zip(student_ids,job_ids):
+                cursor.execute(f"select * from student_details where id = {i}")
+                fetched_student = cursor.fetchall()
+                print(fetched_student)
+                fetched_student[0]["job_id"]=id
+                fetched_students.append(fetched_student[0])
+            print(fetched_students)
     except Exception as e:
         flash(f'Error fetching students: {e}', 'danger')
         fetched_students = []
@@ -1028,19 +1146,20 @@ def admin_all_records():
         fetched_job_postings = []
 
     return render_template('all_records.html', students=fetched_students, interviews=fetched_interviews, job_postings=fetched_job_postings)
+
+
+
 @app.route('/job_listings')
 def job_listings():
     # Fetch all job postings from the database
-    try:
-        with connection.cursor() as cursor:
-            sql = "SELECT id, job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities FROM job_postings"
+
+            cursor.execute(f"select id from company_registration where email = '{session['company']}'")
+            company_id = cursor.fetchall()
+            sql = f"SELECT * FROM job_posting where company_id = {company_id[0]['id']}"
             cursor.execute(sql)
             job_postings = cursor.fetchall()
-    except Exception as e:
-        flash(f'Error fetching job postings: {e}', 'danger')
-        job_postings = []
 
-    return render_template('job_listings.html', job_postings=job_postings)
+            return render_template('job_listings.html', job_postings=job_postings)
 
 @app.route('/scheduled_interviews')
 def scheduled_interviews():
@@ -1057,6 +1176,64 @@ def scheduled_interviews():
 
     return render_template('scheduled_interviews.html')
 
-# ------------------------------------------------------- Company Section job posting -----------------------
+# ------------------------------------------------------- admin Dashboard ---------------------------------------
+
+@app.route('/register_admin1',methods = ["POST","GET"])
+def register_admin1():
+    if request.method == "POST":
+        name = request.form["admin_name"]
+        email = request.form["admin_email"]
+        password = request.form["admin_password"]
+        colname = request.form["college_name"]
+        coladdress = request.form["college_address"]
+        colid = request.form["college_id"]
+
+        sql_functions.insert_admin(name=name,email=email,password=password,college_name=colname,college_Address=coladdress,college_id=colid)
+
+        return redirect(url_for("admin_dashboard"))
+    else:
+        return redirect(url_for("/register_admin"))
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    return render_template('dashboard_admin.html')
+
+@app.route('/admin_students')
+def students():
+     # Fetch data from applied_student table
+    cursor.execute("SELECT * FROM applied_student")
+    applied_student_data = cursor.fetchall()
+    
+    # Fetch data from student_details table
+    cursor.execute("SELECT * FROM student_details")
+    student_details_data = cursor.fetchall()
+    
+    # Fetch data from student_resume table
+    cursor.execute("SELECT * FROM student_resume")
+    student_resume_data = cursor.fetchall()
+    
+    # Fetch data from student_register table
+    cursor.execute("SELECT * FROM student_register")
+    student_register_data = cursor.fetchall()
+    return render_template('admin_student.html', 
+                           applied_students=applied_student_data, 
+                           student_details=student_details_data, 
+                           student_resume=student_resume_data, 
+                           student_register=student_register_data)
+
+@app.route('/companies')
+def companies():
+    
+    company_registration, interviews, job_posting= sql_functions.admin_sql_query()
+    print(company_registration, interviews, job_posting)
+
+    # Add logic to fetch company data from database
+    return render_template('companies.html', company_registration=company_registration,job_posting=job_posting,interviews=interviews)
+
+@app.route('/training_resources')
+def training_resources():
+    return render_template("training_resources.html")
+
+
 if __name__ == '__main__':
     app.run(debug=True)

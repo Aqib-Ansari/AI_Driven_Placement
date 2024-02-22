@@ -1,3 +1,5 @@
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,59 +8,40 @@
     <title>Company Dashboard</title>
 
     <style>
-        /* Reset some default styles */
+        /* Reset some default styles and set a background color */
         body {
-            font-family: 'Cormorant Garamond', serif; /* Apply the same font style used in the registration page */
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            color: #000; /* Black text color */
-            font-size: 16px;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #2C3E50, #4CA1AF); /* Gradient background */
-            background-size: cover;
-            background-position: center;
-            transition: background-image 0.3s ease; /* Transition for background image */
+            background-color: #f4f4f4;
+            color: #333;
         }
 
-        /* Add styling for the navigation bar */
+        /* Add some basic styling for the navigation bar */
         nav {
-            background-color: #34495E; /* Dark blue background color */
+            background-color: #333;
             overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            transition: background-color 0.3s ease; /* Transition for background color */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adding shadow effect */
-            animation: fadeInDown 1.5s ease; /* Animation for fade in down */
         }
 
         nav a {
-            display: inline-block;
-            color: #fff; /* White text color */
+            float: left;
+            display: block;
+            color: white;
             text-align: center;
             padding: 14px 16px;
             text-decoration: none;
-            transition: background-color 0.3s ease; /* Transition for background color */
-            animation: fadeIn 1.5s ease; /* Animation for fade in */
+            transition: background-color 0.3s;
         }
-        h2 {
-        color: #000; /* Black text color */
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Subtle text-shadow for better visibility */
-        margin-bottom: 10px;
-        transition: color 0.3s ease; /* Transition for text color */
-        animation: fadeInLeft 1.5s ease; /* Animation for fade in left */
-    }
 
         nav a:hover {
-            background-color: #4CA1AF; /* Light blue background color on hover */
+            background-color: #555;
         }
 
         h1 {
             margin: 20px 0;
             text-align: center;
-            color: #fff; /* White text color */
-            transition: color 0.3s ease; /* Transition for text color */
-            animation: slideInDown 1.5s ease; /* Animation for slide in down */
+            color: #333;
         }
 
         /* Style the main content container */
@@ -66,130 +49,65 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            transition: background-color 0.3s ease; /* Transition for background color */
-            animation: fadeInUp 1.5s ease; /* Animation for fade in up */
         }
 
         /* Style the sections */
         section {
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Semi-transparent black border */
-            transition: border-color 0.3s ease; /* Transition for border color */
-            animation: fadeIn 1.5s ease; /* Animation for fade in */
         }
 
         section h2 {
-            color: #fff; /* White text color */
-            margin-bottom: 10px;
-            transition: color 0.3s ease; /* Transition for text color */
-            animation: fadeInLeft 1.5s ease; /* Animation for fade in left */
+            color: #333;
         }
 
         section p {
-            color: #000; /* Black text color */
             line-height: 1.6;
-            animation: fadeInRight 1.5s ease; /* Animation for fade in right */
-        }
-
-        /* Keyframes for animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInLeft {
-            from {
-                transform: translateX(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInRight {
-            from {
-                transform: translateX(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
         }
     </style>
 </head>
 <body>
 
-<nav>
-    <a href="{{ url_for('post_job') }}">Post a Job</a>
-    <a href="{{ url_for('view_students') }}">View Student Details</a>
-    <a href="{{ url_for('schedule_interview') }}">Schedule Interview</a>
-    <!-- Add a link to the placement analytics page -->
-    <a href="{{ url_for('scheduled_interviews') }}">Scheduled Interviews</a>
-    <a href="{{ url_for('placement_analytics') }}">Placement Analytics</a>
-</nav>
+    <nav>
+        <a href="{{ url_for('post_job') }}">Post a Job</a>
+        <a href="{{ url_for('view_students') }}">View Student Details</a>
+        <a href="{{ url_for('schedule_interview') }}">Schedule Interview</a>
+        <!-- Add a link to the placement analytics page -->
+        <a href="{{ url_for('scheduled_interviews') }}">Scheduled Interviews</a>
 
-<h1>Welcome to the Company Dashboard</h1>
+        <a href="{{ url_for('placement_analytics') }}">Placement Analytics</a>
+    </nav>
 
-<div class="container">
+    <h1>Welcome to the Company Dashboard</h1>
 
-    <section id="welcome">
-        <h2 style="color: #000; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">Welcome</h2>
+    <div class="container">
 
-        <p>Thank you for using our company dashboard, {{company_name}}. Here you can manage job postings, view student details, and schedule interviews.</p>
-    </section>
+        <section id="postJob">
+            <h2>Welcome</h2>
+            <p>{{company_name}}.</p>
+        </section>
 
-    <!-- Post a Job Section -->
-    <section id="postJob">
-        <h2 style="color: #000; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">Post a Job</h2>
-        <p>This section allows you to post job listings for open positions in your company. Provide details about the job title, requirements, responsibilities, and any other relevant information.</p>
-    </section>
+        <!-- Post a Job Section -->
+        <section id="postJob">
+            <h2>Post a Job</h2>
+            <p>This is the content for the Post a Job section.</p>
+        </section>
 
-    <!-- View Student Details Section -->
-    <section id="viewStudents">
-        <h2 style="color: #000; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">View Student Details</h2>
-        <p>This section provides access to the details of students who have applied for positions in your company. You can view their resumes, qualifications, and other relevant information.</p>
-    </section>
+        <!-- View Student Details Section -->
+        <section id="viewStudents">
+            <h2>View Student Details</h2>
+            <p>This is the content for the View Student Details section.</p>
+        </section>
 
-    <!-- Schedule Interview Section -->
-    <section id="scheduleInterview">
-        <h2 style="color: #000; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">Schedule Interview</h2>
-        <p>This section allows you to schedule interviews with prospective candidates. Specify the date, time, and location of the interview, and communicate the details to the candidates.</p>
-    </section>
+        <!-- Schedule Interview Section -->
+        <section id="scheduleInterview">
+            <h2>Schedule Interview</h2>
+            <p>This is the content for the Schedule Interview section.</p>
+        </section>
 
-</div>
+    </div>
 
 </body>
 </html>

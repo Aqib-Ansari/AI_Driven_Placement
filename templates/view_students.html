@@ -51,12 +51,20 @@
            <th>Name</th>
            <th>ID</th>
            <th>Email</th>
+           <th>program</th>
+           <th>stream</th>
+           <th>currentcgpa</th>
+           <th>Job id</th>
        </tr>
        {% for student in students %}
            <tr>
-               <td>{{ student.name }}</td>
-               <td>{{ student.id }}</td>
+               <td>{{ student.firstname }}</td>
+               <td>{{ student.lastname }}</td>
                <td>{{student.email}}</td>
+               <td>{{student.program}}</td>
+               <td>{{student.stream}}</td>
+               <td>{{student.currentcgpa}}</td>
+               <td>{{student.job_id}}</td>
            </tr>
        {% endfor %}
    </table>
