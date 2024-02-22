@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Job</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Post a Job</title>
     <style>
         /* Custom CSS for visual enhancements */
         body {
-            background: linear-gradient(135deg, #2C3E50, #3498DB);
-            /* Same gradient background as the previous page */
-            color: #050505;
-            /* White text color */
-            font-family: 'Cormorant Garamond', serif; /* Use Roboto font */
+            background-color: #c1d2e3;
+            /* Light gray background */
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 0.8);
-            /* Light gray background for the container with some opacity */
+            background-color: #f0f0f0;
+            /* Light gray background for the container */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             /* Box shadow for depth */
@@ -32,63 +28,39 @@
             /* Add fade-in animation with 1 second duration */
         }
 
-        /* Add animation for input boxes and labels */
-@keyframes fadeInInput {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
 
-/* Apply animation to input boxes */
-.form-control {
-    animation: fadeInInput 0.5s ease;
-}
+            to {
+                opacity: 1;
+            }
+        }
 
-/* Apply animation to labels */
-label {
-    animation: fadeInInput 0.5s ease;
-}
-
-        
         h2 {
-    color: #000; /* Black font color */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Shadow with offset x = 2px, y = 2px, blur = 4px, and color with opacity */
-    margin-bottom: 30px;
-    /* Increased margin bottom for better separation */
-}
-
-        
+            color: #007bff;
+            /* Blue heading */
+            margin-bottom: 30px;
+            /* Increased margin bottom for better separation */
+        }
 
         label {
-            color: #040404;
-            /* White label text */
+            color: #495057;
+            /* Dark gray label text */
             margin-bottom: 0.5rem;
             /* Add some bottom margin to labels */
-            font-weight: bold;
         }
 
         .form-control {
-            background-color: rgba(255, 255, 255, 0.5);
-            /* Semi-transparent white background for input boxes */
-            color: #333;
-            /* Dark text color for input boxes */
-            border: none;
-            /* Remove default border */
-            border-radius: 5px;
-            /* Add border radius */
-            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             /* Smooth transition for input focus */
         }
 
         .form-control:focus {
-            background-color: rgba(255, 255, 255, 0.7);
-            /* Lighter semi-transparent background on focus */
-            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+            border-color: #80bdff;
+            /* Change border color on focus */
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
             /* Add box shadow on focus */
         }
 
@@ -132,73 +104,109 @@ label {
         }
     </style>
 </head>
-
 <body>
 
-    <div class="container mt-5">
-        <h2 class="text-center">Post a Job</h2>
-        <form id="jobForm" method="post" action="{{ url_for('post_job') }}">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="job_role">Job Role:</label>
-                    <input type="text" class="form-control" id="job_role" name="job_role" required>
-                    <div class="invalid-feedback" id="job_role_error">Please provide a job role.</div>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="job_type">Job Type:</label>
-                    <select class="form-control" id="job_type" name="job_type" required>
-                        <option value="">Select Job Type</option>
-                        <option value="Full Time">Full Time</option>
-                        <option value="Part Time">Part Time</option>
-                    </select>
-                    <div class="invalid-feedback" id="job_type_error">Please select a job type.</div>
-                </div>
+<div class="container mt-5">
+    <h2>Post a Job</h2>
+    <form method="post" action="{{ url_for('post_job') }}">
+        <div class="form-group">
+            <label for="job_role">Job Role:</label>
+            <input type="text" class="form-control" id="job_role" name="job_role" required>
+        </div>
+        <div class="form-group">
+            <label for="job_type">Job Type:</label>
+            <select class="form-control" id="job_type" name="job_type" required>
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="skills_required">Skills Required:</label>
+            <textarea class="form-control" id="skills_required" name="skills_required" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="num_employees">Number of Employees:</label>
+            <input type="number" class="form-control" id="num_employees" name="num_employees" required>
+        </div>
+        <div class="form-group">
+            <label for="num_openings">Number of Job Openings:</label>
+            <input type="number" class="form-control" id="num_openings" name="num_openings" required>
+        </div>
+        <!--<div class="form-group">
+            <label for="company_description">About the Company:</label>
+            <textarea class="form-control" id="company_description" name="company_description" rows="4" required></textarea>
+        </div>-->
+                
+        <div class="form-group">
+            <label for="application_deadline_date">Application Deadline Date:</label>
+            <input type="date" class="form-control" id="application_deadline_date" name="application_deadline_date" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="application_deadline_time">Application Deadline Time:</label>
+            <div class="input-group">
+                <input type="number" class="form-control" id="hours" name="hours" placeholder="Hours" min="1" max="12" required>
+                <span class="input-group-text">:</span>
+                <input type="number" class="form-control" id="minutes" name="minutes" placeholder="Minutes" min="0" max="59" required>
+                <select class="form-select" id="time_period" name="time_period" required>
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
             </div>
-            <div class="form-group">
-                <label for="skills_required">Skills Required:</label>
-                <textarea class="form-control" id="skills_required" name="skills_required" rows="4" required></textarea>
-                <div class="invalid-feedback" id="skills_required_error">Please provide required skills.</div>
-            </div>
-            <div class="form-group">
-                <label for="num_employees">Number of Employees:</label>
-                <input type="number" class="form-control" id="num_employees" name="num_employees" required>
-                <div class="invalid-feedback" id="num_employees_error">Please provide the number of employees.</div>
-            </div>
-            <div class="form-group">
-                <label for="num_openings">Number of Job Openings:</label>
-                <input type="number" class="form-control" id="num_openings" name="num_openings" required>
-                <div class="invalid-feedback" id="num_openings_error">Please provide the number of job openings.</div>
-            </div>
-            <div class="form-group">
-                <label for="company_description">About the Company:</label>
-                <textarea class="form-control" id="company_description" name="company_description" rows="4"
-                    required></textarea>
-                <div class="invalid-feedback" id="company_description_error">Please provide information about the
-                    company.</div>
-            </div>
-            <div class="form-group">
-                <label for="responsibilities">Responsibilities:</label>
-                <textarea class="form-control" id="responsibilities" name="responsibilities" rows="4"
-                    required></textarea>
-                <div class="invalid-feedback" id="responsibilities_error">Please provide job responsibilities.</div>
-            </div>
-            <!-- Add other form fields here if needed -->
-            <button type="submit" class="btn btn-primary btn-block">Submit</button>
-        </form>
-    </div>
+        </div>
+        
+        <!-- Eligibility Criteria for 10th Students -->
+        <div class="form-group">
+            <label for="eligibility_10th_criteria">Select Eligibility Criteria for 10th:</label>
+            <select class="form-select" id="eligibility_10th_criteria" name="eligibility_10th_criteria">
+                <option value="percentage">Percentage</option>
+                <option value="cgpa">CGPA</option>
+            </select>
+        </div>
 
-    <script>
-        // Hide error messages when input fields are changed
-        document.querySelectorAll('.form-control').forEach(function (input) {
-            input.addEventListener('input', function () {
-                var errorDiv = input.nextElementSibling;
-                if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
-                    errorDiv.style.display = input.value.trim() === '' ? 'block' : 'none';
-                }
-            });
-        });
-    </script>
+        <div class="form-group">
+            <label for="eligibility_10th_value">Eligibility Value for 10th:</label>
+            <textarea class="form-control" id="eligibility_10th_value" name="eligibility_10th_value" rows="4" pattern="[0-9]+(\.[0-9]+)?" title="Numeric value with optional decimal places"></textarea>
+        </div>
+        
+        <!-- Eligibility Criteria for 12th Students -->
+        <div class="form-group">
+            <label for="eligibility_12th_criteria">Select Eligibility Criteria for 12th:</label>
+            <select class="form-select" id="eligibility_12th_criteria" name="eligibility_12th_criteria">
+                <option value="percentage">Percentage</option>
+                <option value="cgpa">CGPA</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="eligibility_12th_value">Eligibility Value for 12th:</label>
+            <textarea class="form-control" id="eligibility_12th_value" name="eligibility_12th_value" rows="4" pattern="[0-9]+(\.[0-9]+)?" title="Numeric value with optional decimal places"></textarea>
+        </div>
+                     
+        <div class="form-group">
+            <label for="responsibilities">Responsibilities:</label>
+            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="4"></textarea>
+        </div>
+        <!-- Additional Information -->
+        <div class="form-group">
+            <label for="additional_information">Additional Information:</label>
+            <div id="additional_information_container">
+                <textarea class="form-control" name="additional_information" rows="4"></textarea>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addMoreTextarea()">+</button>
+        </div>
+        <script>
+        function addMoreTextarea() {
+            const container = document.getElementById('additional_information_container');
+            const newTextarea = document.createElement('textarea');
+            newTextarea.classList.add('form-control');
+            newTextarea.setAttribute('rows', '4');
+            container.appendChild(newTextarea);
+            }
+            </script>
+            <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 
 </body>
-
 </html>
