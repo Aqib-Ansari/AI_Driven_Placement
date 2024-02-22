@@ -9,13 +9,16 @@
     <style>
         /* Custom CSS for visual enhancements */
         body {
-            background-color: #c1d2e3;
-            /* Light gray background */
+            background: linear-gradient(135deg, #2C3E50, #3498DB);
+            /* Same gradient background as the previous page */
+            color: #050505;
+            /* White text color */
+            font-family: 'Cormorant Garamond', serif; /* Use Roboto font */
         }
 
         .container {
-            background-color: #f0f0f0;
-            /* Light gray background for the container */
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Light gray background for the container with some opacity */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             /* Box shadow for depth */
@@ -29,39 +32,63 @@
             /* Add fade-in animation with 1 second duration */
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
+        /* Add animation for input boxes and labels */
+@keyframes fadeInInput {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-            to {
-                opacity: 1;
-            }
-        }
+/* Apply animation to input boxes */
+.form-control {
+    animation: fadeInInput 0.5s ease;
+}
 
+/* Apply animation to labels */
+label {
+    animation: fadeInInput 0.5s ease;
+}
+
+        
         h2 {
-            color: #007bff;
-            /* Blue heading */
-            margin-bottom: 30px;
-            /* Increased margin bottom for better separation */
-        }
+    color: #000; /* Black font color */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Shadow with offset x = 2px, y = 2px, blur = 4px, and color with opacity */
+    margin-bottom: 30px;
+    /* Increased margin bottom for better separation */
+}
+
+        
 
         label {
-            color: #495057;
-            /* Dark gray label text */
+            color: #040404;
+            /* White label text */
             margin-bottom: 0.5rem;
             /* Add some bottom margin to labels */
+            font-weight: bold;
         }
 
         .form-control {
-            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            background-color: rgba(255, 255, 255, 0.5);
+            /* Semi-transparent white background for input boxes */
+            color: #333;
+            /* Dark text color for input boxes */
+            border: none;
+            /* Remove default border */
+            border-radius: 5px;
+            /* Add border radius */
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             /* Smooth transition for input focus */
         }
 
         .form-control:focus {
-            border-color: #80bdff;
-            /* Change border color on focus */
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            background-color: rgba(255, 255, 255, 0.7);
+            /* Lighter semi-transparent background on focus */
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
             /* Add box shadow on focus */
         }
 

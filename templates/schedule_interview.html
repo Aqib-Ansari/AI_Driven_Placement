@@ -8,23 +8,35 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
             margin: 0;
             padding: 0;
+            background: linear-gradient(135deg, #2C3E50, #3498DB); /* Gradient background */
+            color: #fff;
         }
 
         .container {
             max-width: 800px;
-            margin: 0 auto;
+            margin: 30px auto; /* Added some margin */
             padding: 20px;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            margin-top: 30px;
+            animation: fadeIn 0.5s ease; /* Fade-in animation */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         h2 {
+            text-align: center;
             color: #007bff;
+            margin-bottom: 20px;
         }
 
         form {
@@ -33,14 +45,18 @@
 
         label {
             font-weight: bold;
+            color: #333;
         }
 
         input,
         select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin: 8px 0;
             box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
         }
 
         .standard-button {
@@ -68,11 +84,6 @@
 
         button:hover {
             background-color: #0056b3;
-        }
-
-        h3 {
-            color: #007bff;
-            margin-top: 20px;
         }
 
         ul {
@@ -153,7 +164,7 @@
 </head>
 
 <body>
-    <div class="container mt-3">
+    <div class="container">
         <h2>Schedule Interview</h2>
 
         <form method="POST" action="{{ url_for('schedule_interview') }}">

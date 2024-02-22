@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #2C3E50, #3498DB);
             padding: 20px;
         }
 
@@ -20,30 +20,47 @@
             padding: 20px;
             border-radius: 10px;
             margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+            width: 80%; /* Set a specific width */
+            margin: 0 auto; /* Center alignment */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         h2 {
             text-align: center;
-            color: #007bff;
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
 
         .table-section {
             margin-top: 30px;
             margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
         }
 
         .table {
-            margin-bottom: 2rem;
             background-color: #ffffff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             margin-top: 20px;
+            width: 100%; /* Set width to 100% */
         }
 
         th,
         td {
             text-align: center;
             padding: 12px;
+            font-size: 14px;
         }
 
         th {
@@ -57,13 +74,20 @@
         }
 
         .back-button {
-            display: block;
-            margin: 0 auto;
+            display: inline-block;
             margin-top: 30px;
             margin-bottom: 30px;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 1.2rem;
+            font-size: 14px;
+            color: #fff;
+            text-decoration: none;
+            background-color: #007bff;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
         }
 
         .table-striped tbody tr:nth-of-type(odd) {
@@ -107,7 +131,7 @@
             <p>No scheduled interviews available.</p>
             {% endif %}
         </div>
-        <a href="/company_dashboard1" class="btn btn-primary back-button">Back to Home</a>
+        <a href="/company_dashboard1" class="back-button">Back to Home</a>
     </div>
     <!-- Add Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBud7TlRbs/ic4AwGcFZOxg5DpPt8EgeUIgIwzjWfXQKWA3" crossorigin="anonymous"></script>

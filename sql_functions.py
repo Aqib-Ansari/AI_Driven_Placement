@@ -4,10 +4,10 @@ import os
 import csv
 # import data_class_aidriven
 def make_sql_connection():
-    connection = pymysql.connect(host='aidriven.cdhiotv5c9su.us-east-1.rds.amazonaws.com',
-                                user='admin',
-                                password='aidriven',
-                                database='aidriven',
+    connection = pymysql.connect(host='sql6.freesqldatabase.com',
+                                user='sql6682320',
+                                password='zGRcDLE2gC',
+                                database='sql6682320',
                                 charset='utf8mb4',
                                 cursorclass=pymysql.cursors.DictCursor)
     return connection

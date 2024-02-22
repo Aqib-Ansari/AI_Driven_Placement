@@ -69,15 +69,12 @@
 </head>
 <body>
     <h1>Quiz Results</h1>
-    <p>Your score is: {{ score }}/{{ len }}</p>
-    <p>Percentage: {{ percentage }}</p>
+    <p>Your score is: {{ result }}/{{ len }}</p>
+    <p>Percentage: {{ percentage }}%</p>
 
-    
+    <!-- Add more content as needed -->
 
-    <!-- Donut Chart -->
-    <div class="ct-chart ct-chart-donut" id="donut-chart"></div>
-
-    <a href="{{ url_for('redirect_to_student_dashboard', student_list=[session['user']]) }}">
+    <a href="{{ url_for('previous_question') }}">
         <button>Back</button>
     </a>
     
