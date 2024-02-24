@@ -556,7 +556,7 @@ if __name__ == "__main__":
 #                    FOREIGN KEY (company_id) REFERENCES company_registration(id))''')
     # print(insert_job_posting(company_id=1,job_role="a",job_type="b",skills_required="c",num_employees=500,num_openings=4,company_description="abc",responsibilities="response"))
     # insert_resume(email="aqib@gmail.com",filename="aqib.pdf")
-    cursor.execute("desc job_posting")
+    cursor.execute("")
     output = cursor.fetchall()
     print(output)
     for i in output:
@@ -565,5 +565,6 @@ if __name__ == "__main__":
         print('____'*20)
         print('\n')
     # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
+        
    
     connection.commit()
