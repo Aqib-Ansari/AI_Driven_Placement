@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file,session,flash,json
+from flask import render_template, session, request, flash, redirect, url_for
+import pymysql
 import sql_functions
 import data_class_aidriven
 import smtplib
@@ -660,7 +662,7 @@ def send_email(subject, body, recipients):
 
     except Exception as e:
         flash(f'Error sending email: {e}', 'danger')
-
+'''
 @app.route('/view_students')
 def view_students():
     # Fetch all records of students from the database
@@ -694,6 +696,21 @@ def view_students():
         
 
     return render_template('view_students.html', students=fetched_students,job_ids = job_ids)
+'''
+@app.route('/view_students')
+def view_students():
+    try:
+        # Fetch student details based on their IDs
+        cursor.execute("SELECT * FROM student_details")
+        fetched_students = cursor.fetchall()
+
+        return render_template('view_students.html', students=fetched_students)
+    except Exception as e:
+        flash(f'Error fetching students: {e}', 'danger')
+        fetched_students = [{"firstname": "student not selected"}]
+
+    return render_template('view_students.html', students=fetched_students)
+
 
 @app.route('/placement_analytics')
 def placement_analytics():
@@ -723,7 +740,7 @@ def placement_analytics():
     return render_template('placement_analytics.html', data=data, json_data=json.dumps(data))
 
 # ------------------------------------------------------- Company Section scheduling and viewing job postings ---------------------------------------
-
+'''
 interviews = []
 @app.route('/schedule_interview', methods=['GET', 'POST'])
 def schedule_interview():
@@ -789,7 +806,42 @@ def schedule_interview():
 
     return render_template('schedule_interview.html', students=fetched_students, interviews=interviews)
 
+'''
+@app.route('/schedule_interview', methods=['GET', 'POST'])
+def schedule_interview():
+    # Fetch the list of job postings for the logged-in company
+    try:
+        # Fetch the company ID associated with the current user session
+        cursor.execute(f"SELECT id FROM company_registration WHERE email = '{session['company']}'")
+        company_id = cursor.fetchone()
 
+        # Fetch job postings for the company
+        cursor.execute(f"SELECT id, job_role FROM job_posting WHERE company_id = {company_id['id']}")
+        job_postings = cursor.fetchall()
+    except Exception as e:
+        flash(f'Error fetching job postings: {e}', 'danger')
+        job_postings = []
+
+    if request.method == 'POST':
+        # Rest of your code for handling form submission
+        job_id = int(request.form['job_id'])
+        date = request.form['date']
+        time = request.form['time']
+        location = request.form['location']
+
+        try:
+            # Insert the interview details into the database
+            with connection.cursor() as cursor:
+                # SQL query to insert data into the interviews table
+                sql = "INSERT INTO interviews (job_id, date, time, location) VALUES (%s, %s, %s, %s)"
+                cursor.execute(sql, (job_id, date, time, location))
+                connection.commit()
+
+                flash('Interview scheduled successfully', 'success')
+        except Exception as e:
+            flash(f'Error: {e}', 'danger')
+
+    return render_template('schedule_interview.html', job_postings=job_postings)
 
 def send_interview_notification(student_email, interview_details):
     try:
