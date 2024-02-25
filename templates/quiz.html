@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz App</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
     <style>
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -12,23 +14,27 @@
             padding: 0;
             background-color: #f8f8f8;
             color: #333;
+            /* text-align: center; */
         }
 
         h1 {
-            margin: 20px 40px;
-            width: fit-content;
-            height: auto;
-            font-size: 24px;
-            padding: 20px 40px;
-            color: white;
-            background-color: #1e1e1e;
-            border-radius: 5px 5px;
-        }
+    margin: 20px 40px;
+    width:fit-content;
+    height: auto;
+    font-size: 24px;
+    padding: 20px 40px;
+    color: white;
+    background-color: #1e1e1e;
+    border-radius: 5px 5px;
+    /* padding: 10px; */
+}
 
         form {
             margin-top: 20px;
             display: flex;
             flex-direction: column;
+            /* align-items: center; */
+            
         }
 
         label {
@@ -61,53 +67,37 @@
             color: #1e1e1e;
             font-size: large;
             font-weight: bolder;
-        }
-
-        #timer {
-            margin-top: 20px;
-            font-size: 20px;
-            text-align: center;
-        }
-
-        #navigationButtons {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
+            
+            
         }
     </style>
 </head>
 <body>
-    <h1>Quiz on {{ selected_subject }}</h1>
-    <!-- Display the selected subject here -->
-
-    <h1>{{ questions['question'] }}</h1>
     <div id="timer">Timer: <span id="timerDisplay"></span></div>
-    <form id="quizForm" action="/submit_answer" method="post">
-        <!-- Form content as before -->
-        <input type="hidden" name="answer" id="answer">
+    <h1>{{ questions['question'] }}</h1>
 
+    <form action="/submit_answer" method="post">
         <label>
-            <input type="radio" name="answer_option_{{ current_question_index }}" value="1"> {{ questions["option1"] }}
+            <input type="radio" name="answer" value="1"> {{ questions["option1"] }}
         </label>
         <br>
         <label>
-            <input type="radio" name="answer_option_{{ current_question_index }}" value="2"> {{ questions["option2"] }}
+            <input type="radio" name="answer" value="2" required> {{ questions["option2"] }}
         </label>
         <br>
         <label>
-            <input type="radio" name="answer_option_{{ current_question_index }}" value="3"> {{ questions["option3"] }}
+            <input type="radio" name="answer" value="3"> {{ questions["option3"] }}
         </label>
         <br>
         <label>
-            <input type="radio" name="answer_option_{{ current_question_index }}" value="4"> {{ questions["option4"] }}
+            <input type="radio" name="answer" value="4"> {{ questions["option4"] }}
         </label>
-        <div id="navigationButtons">
-            <button type="button" id="backButton" >Back</button>
-            <button type="submit" id="nextButton">Next</button>
-        </div>
+        <br>
+        <button type="submit">Next</button>
+        <a href="/previous_question">Previous</a>
     </form>
 
-    <script>
+    <!-- <script>
         var timerDisplay = document.getElementById("timerDisplay");
         var quizForm = document.getElementById("quizForm");
         var selectedTime = parseInt(localStorage.getItem("selectedTime")) || 0;
@@ -120,6 +110,7 @@
             var minutes = Math.floor(selectedTime / 60);
             var seconds = selectedTime % 60;
             timerDisplay.textContent = minutes + "m " + seconds + "s";
+            console.log(selectedTime)
             if (selectedTime > 0) {
                 selectedTime--;
                 localStorage.setItem("selectedTime", selectedTime);
@@ -168,7 +159,7 @@
             }
         }
 
-    </script>
-    
+    </script> -->
+
 </body>
 </html>

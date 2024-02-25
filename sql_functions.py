@@ -406,7 +406,7 @@ def insert_job_posting(company_id,job_role, job_type, skills_required, num_emplo
 # Example usage
 
 def insert_applied_student_data(student_id, company_id, job_id):
-    try:
+    
         # Establish a connection to the MySQL database
         global connection,cursor
 
@@ -427,14 +427,13 @@ def insert_applied_student_data(student_id, company_id, job_id):
 
         print("Data inserted into applied_student successfully!")
 
-    except Exception as e:
-        print(f"Error: {e}")
+    
 
 
 def select_applied_student(company_id):
     global connection,cursor
 
-    sql = f'''select * from applied_student where company_id = {company_id}'''
+    sql = f'''select * from applied_student where company_id = {int(company_id)}'''
 
     cursor.execute(sql)
     applied_students = cursor.fetchall()
@@ -554,6 +553,32 @@ def select_notification(student_id):
     notifications = cursor.fetchall()
     return notifications
 
+# --------------------------- training Resources ----------------------------------------
+
+def insert_training_resources(title,category,description,author,format,duration,language,level,tags,status,link):
+    data = (title,category,description,author,format,duration,language,level,tags,status,link)
+
+    insert_query = """
+        INSERT INTO training_resources (title, category, description, author, format, duration, language, level, tags, status, youtube_link)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+    
+    cursor.execute(insert_query, data)
+
+        # Commit changes to the database
+    connection.commit()
+
+    return "inserted successfully"
+
+def select_training_resources():
+    
+    query = "select * from training_resources"
+
+    cursor.execute(query=query)
+    training_resources = cursor.fetchall()
+    return training_resources
+
+
 connection.commit()
 if __name__ == "__main__":
    
@@ -561,16 +586,21 @@ if __name__ == "__main__":
     # insert_job_posting('Marketing Specialist', 'Part Time', 'Digital Marketing, Social Media', 20, 3, 'A creative marketing agency', 'Plan and execute marketing campaigns')
     # insert_quiz_question('data/java_questions.tsv')
 #     cursor.execute('''
-# CREATE TABLE interviews (
-#                     interview_id INT AUTO_INCREMENT PRIMARY KEY,
-#                     student_id INT,
-#                     job_id INT,
-#                     date DATE,
-#                     time TIME,
-#                     location VARCHAR(255),
-#                     UNIQUE (interview_id),
-#                     FOREIGN KEY (student_id) REFERENCES student_details(id),
-#                     FOREIGN KEY (job_id) REFERENCES job_postings(id))
+# CREATE TABLE training_resources (
+#     id INT AUTO_INCREMENT PRIMARY KEY,
+#     title VARCHAR(255) NOT NULL,
+#     category VARCHAR(255) NOT NULL,
+#     description TEXT NOT NULL,
+#     author VARCHAR(255) NOT NULL,
+#     format VARCHAR(255) NOT NULL,
+#     duration DECIMAL(5, 2) NOT NULL,
+#     language VARCHAR(50) NOT NULL,
+#     level ENUM('beginner', 'intermediate', 'advanced') NOT NULL,
+#     tags VARCHAR(255),
+#     status ENUM('active', 'inactive', 'under_review') NOT NULL,
+#     youtube_link VARCHAR(255),
+#     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+# )
 # ''')
     # print(validate_company_login(email='company2@gmail.com',password="password"))
     # insert_applied_student_data(3, 1, 1)
@@ -588,17 +618,20 @@ if __name__ == "__main__":
     # insert_resume(email="aqib@gmail.com",filename="aqib.pdf")
     # update_student_details(email="aqibansari22298@gmail.com",field="dob",value="2002-10-12")
     # cursor.execute("UPDATE notification SET date_time = CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata')")
-    # cursor.execute("delete from student_resume where id = 1")
-    # output = cursor.fetchall()
-    # for i in output:
-    #     print('\n')
-    #     print(i)
-    #     print('____'*20)
-    #     print('\n')
+    # insert_training_resources(title="Ai ML",category="any",description="Learn how to create a Chatbots",
+    #                           author="Nivedita",format="Online",duration=5.30,language="English",level="beginner",tags="Resume,placements",status="active",link="https://youtube.com")
+    cursor.execute("select * from applied_student where company_id = 1")
+    output = cursor.fetchall()
+    for i in output:
+        print('\n')
+        print(i)
+        print('____'*20)
+        print('\n')
+    print(select_applied_student(1))
     # print(output)
     # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
-    insert_notification(student_id=1,msg="go to dashboard",link='/student_dashboard1')
-    print(select_notification(student_id=1))
-    print(if_resume_present(email="aqibansari22298@gmail.com"))
+    # insert_notification(student_id=1,msg="go to dashboard",link='/student_dashboard1')
+    # print(select_notification(student_id=1))
+    # print(if_resume_present(email="aqibansari22298@gmail.com"))
    
     connection.commit()

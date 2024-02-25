@@ -104,7 +104,7 @@ change : SQL tables:
                     job_id INT,
                     FOREIGN KEY (student_id) REFERENCES student_details(id),
                     FOREIGN KEY (company_id) REFERENCES company_registration(id),
-                    FOREIGN KEY (job_id) REFERENCES job_postings(id),
+                    FOREIGN KEY (job_id) REFERENCES job_posting(id),
                     PRIMARY KEY (student_id, company_id, job_id));
             9) interviews
                 CREATE TABLE interviews (
