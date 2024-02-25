@@ -7,7 +7,7 @@
    <style>
        body {
            font-family: Arial, sans-serif;
-           max-width: 800px;
+           max-width: 1000px;
            margin: 0 auto;
            padding: 20px;
        }
@@ -54,7 +54,9 @@
            <th>program</th>
            <th>stream</th>
            <th>currentcgpa</th>
-           <th>Job id</th>
+           <th>Job Role</th>
+           <th>View Students</th>
+
        </tr>
        {% for student in students %}
            <tr>
@@ -65,9 +67,10 @@
                <td>{{student.stream}}</td>
                <td>{{student.currentcgpa}}</td>
                <td>{{student.job_id}}</td>
+               <td><a href="/view_student_applied_job/{{student.id}}">See Details</a></td>
            </tr>
        {% endfor %}
    </table>
-   <a href="{{ url_for('company_dashboard1') }}">Back to Home</a>
+   <a href="{{ url_for('company_dashboard1') }}" >Back to Home</a>
 </body>
 </html>

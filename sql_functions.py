@@ -14,6 +14,7 @@ def make_sql_connection():
 
 connection = make_sql_connection()
 cursor = connection.cursor()
+cursor.execute("SET SESSION time_zone = '+5:30';")
 # with connection:
 #     # with connection.cursor() as cursor:
 #         # Create a new record
@@ -213,7 +214,7 @@ def get_student_details(email):
         
         cursor.execute("select id from student_register where email = %s;",email)
         id = cursor.fetchall()
-        print(id)
+        # print(id)
         cursor.execute("SELECT * FROM student_details where id = %s;",id[0]['id'])
         
         student_details = cursor.fetchall()
@@ -233,18 +234,26 @@ def update_student_details(email, field,value):
         
         cursor.execute("select id from student_register where email = %s;",email)
         id = cursor.fetchall()
-        print(id)
+        # print(id)
         id= id[0]["id"]
-
+        print("field : : : : : : : : " ,field)
         student_details = get_student_details(email=email)
        
         if student_details != ():
-            cursor.execute(f"update student_details set {field} ='{value}' where id = {id}")
-            connection.commit()
-            student_details = cursor.fetchall()
-            print(student_details)
+            # print(field)
+            if field in ["year","phoneno","backlog","currentcgpa"]:
+                cursor.execute(f"update student_details set {field} ={value} where id = {id}")
+                student_details = cursor.fetchall()
+                connection.commit()
+            else:
+                cursor.execute(f"update student_details set {field} ='{value}' where id = {id}")
+                student_details = cursor.fetchall()
+                connection.commit()
+
+            # print(student_details)
             return student_details
         else:
+            # print(field)
             sql_query = f"INSERT INTO student_details (id,{field}) VALUES ( {id}, '{value}');"
 
             cursor.execute(sql_query)
@@ -397,7 +406,7 @@ def insert_job_posting(company_id,job_role, job_type, skills_required, num_emplo
 # Example usage
 
 def insert_applied_student_data(student_id, company_id, job_id):
-    try:
+    
         # Establish a connection to the MySQL database
         global connection,cursor
 
@@ -418,14 +427,13 @@ def insert_applied_student_data(student_id, company_id, job_id):
 
         print("Data inserted into applied_student successfully!")
 
-    except Exception as e:
-        print(f"Error: {e}")
+    
 
 
 def select_applied_student(company_id):
     global connection,cursor
 
-    sql = f'''select * from applied_student where company_id = {company_id}'''
+    sql = f'''select * from applied_student where company_id = {int(company_id)}'''
 
     cursor.execute(sql)
     applied_students = cursor.fetchall()
@@ -521,6 +529,56 @@ def admin_sql_query():
 
         return company_registration_data, interviews_data, job_posting_data 
 
+#  --------------------------------------- notification ----------------------------------------------
+
+def insert_notification(student_id,msg,link):
+    global connection
+    global cursor
+    insert_query = """
+        INSERT INTO notification (student_id, msg, link) 
+        VALUES (%s, %s, %s)
+        """
+    data_to_insert = (student_id, msg, link)
+    cursor.execute(insert_query, data_to_insert)
+    output = cursor.fetchall()
+        # Commit the changes
+    connection.commit()
+    return output
+
+def select_notification(student_id):
+    global connection
+    global cursor
+
+    cursor.execute(f"select * from notification where student_id = {student_id}")
+    notifications = cursor.fetchall()
+    return notifications
+
+# --------------------------- training Resources ----------------------------------------
+
+def insert_training_resources(title,category,description,author,format,duration,language,level,tags,status,link):
+    data = (title,category,description,author,format,duration,language,level,tags,status,link)
+
+    insert_query = """
+        INSERT INTO training_resources (title, category, description, author, format, duration, language, level, tags, status, youtube_link)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+    
+    cursor.execute(insert_query, data)
+
+        # Commit changes to the database
+    connection.commit()
+
+    return "inserted successfully"
+
+def select_training_resources():
+    
+    query = "select * from training_resources"
+
+    cursor.execute(query=query)
+    training_resources = cursor.fetchall()
+    return training_resources
+
+
 connection.commit()
 if __name__ == "__main__":
    
@@ -528,42 +586,52 @@ if __name__ == "__main__":
     # insert_job_posting('Marketing Specialist', 'Part Time', 'Digital Marketing, Social Media', 20, 3, 'A creative marketing agency', 'Plan and execute marketing campaigns')
     # insert_quiz_question('data/java_questions.tsv')
 #     cursor.execute('''
-# CREATE TABLE interviews (
-#                     interview_id INT AUTO_INCREMENT PRIMARY KEY,
-#                     student_id INT,
-#                     job_id INT,
-#                     date DATE,
-#                     time TIME,
-#                     location VARCHAR(255),
-#                     UNIQUE (interview_id),
-#                     FOREIGN KEY (student_id) REFERENCES student_details(id),
-#                     FOREIGN KEY (job_id) REFERENCES job_postings(id))
+# CREATE TABLE training_resources (
+#     id INT AUTO_INCREMENT PRIMARY KEY,
+#     title VARCHAR(255) NOT NULL,
+#     category VARCHAR(255) NOT NULL,
+#     description TEXT NOT NULL,
+#     author VARCHAR(255) NOT NULL,
+#     format VARCHAR(255) NOT NULL,
+#     duration DECIMAL(5, 2) NOT NULL,
+#     language VARCHAR(50) NOT NULL,
+#     level ENUM('beginner', 'intermediate', 'advanced') NOT NULL,
+#     tags VARCHAR(255),
+#     status ENUM('active', 'inactive', 'under_review') NOT NULL,
+#     youtube_link VARCHAR(255),
+#     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+# )
 # ''')
     # print(validate_company_login(email='company2@gmail.com',password="password"))
     # insert_applied_student_data(3, 1, 1)
     # print(insert_interview_data( 1, 2, '2024-02-10', '15:30:00', 'Company HQ'))
 #     cursor.execute('''
-# CREATE TABLE job_posting (
-#                     id INT AUTO_INCREMENT PRIMARY KEY,
-#                     company_id int,
-#                     job_role VARCHAR(255) NOT NULL,
-#                     job_type VARCHAR(50) NOT NULL,
-#                     skills_required TEXT NOT NULL,
-#                     num_employees INT NOT NULL,
-#                     num_openings INT NOT NULL,
-#                     company_description TEXT NOT NULL,
-#                     responsibilities TEXT NOT NULL,
-#                    FOREIGN KEY (company_id) REFERENCES company_registration(id))''')
+# CREATE TABLE notification (
+#     noti_id INT PRIMARY KEY AUTO_INCREMENT,
+#     student_id INT,
+#     date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+#     msg VARCHAR(255),
+#     link VARCHAR(255),
+#     FOREIGN KEY (student_id) REFERENCES student_details(id)
+# )''')
     # print(insert_job_posting(company_id=1,job_role="a",job_type="b",skills_required="c",num_employees=500,num_openings=4,company_description="abc",responsibilities="response"))
     # insert_resume(email="aqib@gmail.com",filename="aqib.pdf")
-    cursor.execute("desc job_posting")
+    # update_student_details(email="aqibansari22298@gmail.com",field="dob",value="2002-10-12")
+    # cursor.execute("UPDATE notification SET date_time = CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata')")
+    # insert_training_resources(title="Ai ML",category="any",description="Learn how to create a Chatbots",
+    #                           author="Nivedita",format="Online",duration=5.30,language="English",level="beginner",tags="Resume,placements",status="active",link="https://youtube.com")
+    cursor.execute("select * from applied_student where company_id = 1")
     output = cursor.fetchall()
-    print(output)
     for i in output:
         print('\n')
         print(i)
         print('____'*20)
         print('\n')
+    print(select_applied_student(1))
+    # print(output)
     # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
+    # insert_notification(student_id=1,msg="go to dashboard",link='/student_dashboard1')
+    # print(select_notification(student_id=1))
+    # print(if_resume_present(email="aqibansari22298@gmail.com"))
    
     connection.commit()

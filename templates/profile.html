@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+        /* styles.css */
+
+.profile-container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.profile-header {
+    text-align: center;
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.profile-details {
+    margin-bottom: 20px;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.action-button2 {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.notification-button {
+    background-color: #ff6347;
+}
+
+/* Font Awesome icons */
+.fa {
+    margin-right: 5px;
+}
+
+    </style>
+</head>
+<body >
+    <div class="profile-container">
+        <div class="profile-header">
+            <img src="static/profile.jpg" alt="Profile Picture" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;">
+            <h1>Aqib Ansari</h1>
+            <p>Data Science and ML Enthusiast</p>
+        </div>
+        <div class="profile-details">
+            <p>Email: aqib@example.com</p>
+            <p>Phone: +1 123-456-7890</p>
+        </div>
+        <div class="profile-actions">
+            <button class="action-button2">Change Password</button>
+            <button class="action-button2">View Applied Jobs</button>
+            <button class="action-button2 notification-button">
+                <i class="fa fa-bell"></i> <a href="/notifications">Notifications</a>
+            </button>
+        </div>
+    </div>
+</body>
+</html>

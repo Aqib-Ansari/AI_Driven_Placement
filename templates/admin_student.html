@@ -6,120 +6,211 @@
     <title>Student List</title>
     <!-- Include CSS styles -->
     <style>
-        /* CSS styles for navigation and student list */
-        /* CSS styles for navigation */
-        header {
-            background-color: #333;
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
+        /* Reset CSS */
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
         }
 
-        nav ul li {
-            display: inline;
-            margin-right: 10px;
+        /* Body styles */
+        body {
+            font-family: Cormorant Garamond;
+            line-height: 1.6;
+            background-color: #f8fafb; /* Light blue background color */
+            color: #090808; /* Black text color */
+            text-align: center;
+            padding: 20px;
         }
 
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-        }
-
-        nav ul li a:hover {
-            background-color: #555;
-        }
-        
-        /* CSS styles for student list */
-        .student-section {
+        /* Header styles */
+        header {
             margin-bottom: 30px;
         }
 
-        .student {
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        /* Dropdown styles */
+        .dropdown {
+            margin: 20px auto;
+            color: #000; /* Black text color */
+        }
+
+        .dropdown select {
             padding: 10px;
+            font-size: 16px;
+            border: 1px solid #1d1a1a; /* Darker border color */
+            border-radius: 5px;
+            background-color: #f4f4f4; /* White background color */
+            color: #0c0c0c; /* Black text color */
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        th, td {
+            border: 1px solid #666; /* Dark gray border color */
+            padding: 10px;
+        }
+
+        th {
+            background-color: #B8D8E3; /* Light blue background color */
+            color: #090808; /* Black text color */
+        }
+
+        /* Student section styles */
+        .student-section {
+            display: none;
+        }
+
+        .student-section.active {
+            display: block;
         }
     </style>
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/students">Students</a></li>
-                <li><a href="/companies">Companies</a></li>
-                <li><a href="/training_resources">Training Resources</a></li>
-            </ul>
-        </nav>
+        <h1>Student List</h1>
     </header>
-    <h1>Student List</h1>
+
+    <!-- Dropdown for selecting student section -->
+    <div class="dropdown">
+        <select id="studentDropdown">
+            <option value="applied_students">Applied Students</option>
+            <option value="student_details">Student Details</option>
+            <option value="student_resume">Student Resumes</option>
+            <option value="student_register">Student Register</option>
+        </select>
+    </div>
+
     <!-- Display applied student data -->
-    <div class="student-section">
+    <div class="student-section" id="applied_students">
         <h2>Applied Students</h2>
-        <div id="applied_students">
-            {% for student in applied_students %}
-                <div class="student">
-                    <h3>{{ student.student_id }}</h3>
-                    
-                    <!-- Add other fields as needed -->
-                </div>
-            {% endfor %}
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <!-- Add other headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in applied_students %}
+                    <tr>
+                        <td>{{ student.student_id }}</td>
+                        <!-- Add other fields as needed -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- Display student details data -->
-    <div class="student-section">
+    <div class="student-section" id="student_details">
         <h2>Student Details</h2>
-        <div id="student_details">
-            {% for student in student_details %}
-                <div class="student">
-                    <h3>{{ student.name }}</h3>
-                    <p>Email: {{ student.email }}</p>
-                    <p>firstname: {{ student.firstname }}</p>
-                    <p>lastname: {{ student.lastname }}</p>
-                    <p>middlename: {{ student.middlename }}</p>
-                    
-                    <!-- Add other fields as needed -->
-                </div>
-            {% endfor %}
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Middle Name</th>
+                    <!-- Add other headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in student_details %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.firstname }}</td>
+                        <td>{{ student.lastname }}</td>
+                        <td>{{ student.middlename }}</td>
+                        <!-- Add other fields as needed -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- Display student resume data -->
-    <div class="student-section">
+    <div class="student-section" id="student_resume">
         <h2>Student Resumes</h2>
-        <div id="student_resume">
-            {% for student in student_resume %}
-                <div class="student">
-                    <h3>{{ student.name }}</h3>
-                    <p>filename: {{ student.file_name }}</p>
-                    <!-- Add other fields as needed -->
-                </div>
-            {% endfor %}
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Filename</th>
+                    <!-- Add other headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in student_resume %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.file_name }}</td>
+                        <!-- Add other fields as needed -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- Display student register data -->
-    <div class="student-section">
+    <div class="student-section" id="student_register">
         <h2>Student Register</h2>
-        <div id="student_register">
-            {% for student in student_register %}
-                <div class="student">
-                    <h3>{{ student.name }}</h3>
-                    <p>Email: {{ student.email }}</p>
-                    <p>ID: {{ student.id }}</p>
-                    <p>username: {{ student.username }}</p>
-                    <p>Enrollment number: {{ student.enrollment_num }}</p>
-                    <p>course: {{ student.course }}</p>
-                    
-                    <!-- Add other fields as needed -->
-                </div>
-            {% endfor %}
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Enrollment Number</th>
+                    <th>Course</th>
+                    <!-- Add other headers as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in student_register %}
+                    <tr>
+                        <td>{{ student.firstname }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.username }}</td>
+                        <td>{{ student.enrollment_num }}</td>
+                        <td>{{ student.course }}</td>
+                        <!-- Add other fields as needed -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+
+    <script>
+        // JavaScript to toggle visibility of student sections based on dropdown selection
+        document.getElementById('studentDropdown').addEventListener('change', function() {
+            var selectedSectionId = this.value;
+            var studentSections = document.querySelectorAll('.student-section');
+            
+            // Hide all sections
+            studentSections.forEach(function(section) {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            var selectedSection = document.getElementById(selectedSectionId);
+            selectedSection.classList.add('active');
+        });
+    </script>
 </body>
 </html>

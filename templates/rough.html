@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z-Index Example</title>
+    <style>
+        /* Styles for the two elements */
+        .box1 {
+            width: 200px;
+            height: 200px;
+            background-color: #3498db;
+            position: relative;
+            z-index: 2; /* Higher z-index */
+        }
+
+        .box2 {
+            width: 200px;
+            height: 200px;
+            background-color: #e74c3c;
+            position: relative;
+            top: -50px;
+            left: 50px;
+            z-index: 5; /* Lower z-index */
+        }
+
+        .profile-container {
+            width: 500px;
+            height: 500px;
+            background-color: #a2a2a2;
+            position: relative;
+            top: -50px;
+            left: 50px;
+            z-index: 9; /* Lower z-index */
+        }
+    </style>
+</head>
+<body>
+    <div class="box1">
+        <p>Box 1 (Higher z-index)</p>
+    </div>
+
+    <div class="box2">
+        <p>Box 2 (Lower z-index)</p>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <img src="static/profile.jpg" alt="Profile Picture" class="profile-picture">
+            <h1>Aqib Ansari</h1>
+            <p>Data Science and ML Enthusiast</p>
+        </div>
+        <div class="profile-details">
+            <p>Email: aqib@example.com</p>
+            <p>Phone: +1 123-456-7890</p>
+        </div>
+        <div class="profile-actions">
+            <button class="action-button">Change Password</button>
+            <button class="action-button">View Applied Jobs</button>
+            <button class="action-button notification-button">
+                <i class="fa fa-bell"></i> <a href="/notifications">Notifications</a>
+            </button>
+        </div>
+    </div>
+</body>
+</html>
