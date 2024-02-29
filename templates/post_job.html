@@ -136,11 +136,69 @@
             <label for="company_description">About the Company:</label>
             <textarea class="form-control" id="company_description" name="company_description" rows="4" required></textarea>
         </div>
+                
+        <div class="form-group">
+            <label for="application_deadline_date">Application Deadline Date:</label>
+            <input type="date" class="form-control" id="application_deadline_date" name="application_deadline_date" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="application_deadline_time">Application Deadline Time:</label>
+            <div class="input-group">
+                <input type="time" class="form-control" id="hours" name="hours" placeholder="Hours" min="1" max="12" required>
+            </div>
+        </div>
+        
+        <!-- Eligibility Criteria for 10th Students -->
+        <div class="form-group">
+            <label for="eligibility_10th_criteria">Select Eligibility Criteria for 10th:</label>
+            <select class="form-select" id="eligibility_10th_criteria" name="eligibility_10th_criteria">
+                <option value="percentage">Percentage</option>
+                <option value="cgpa">CGPA</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="eligibility_10th_value">Eligibility Value for 10th:</label>
+            <textarea class="form-control" id="eligibility_10th_value" name="eligibility_10th_value" rows="4" pattern="[0-9]+(\.[0-9]+)?" title="Numeric value with optional decimal places"></textarea>
+        </div>
+        
+        <!-- Eligibility Criteria for 12th Students -->
+        <div class="form-group">
+            <label for="eligibility_12th_criteria">Select Eligibility Criteria for 12th:</label>
+            <select class="form-select" id="eligibility_12th_criteria" name="eligibility_12th_criteria">
+                <option value="percentage">Percentage</option>
+                <option value="cgpa">CGPA</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="eligibility_12th_value">Eligibility Value for 12th:</label>
+            <textarea class="form-control" id="eligibility_12th_value" name="eligibility_12th_value" rows="4" pattern="[0-9]+(\.[0-9]+)?" title="Numeric value with optional decimal places"></textarea>
+        </div>
+                     
         <div class="form-group">
             <label for="responsibilities">Responsibilities:</label>
-            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="4" required></textarea>
+            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="4"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <!-- Additional Information -->
+        <div class="form-group">
+            <label for="additional_information">Additional Information:</label>
+            <div id="additional_information_container">
+                <textarea class="form-control" name="additional_information" rows="4"></textarea>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addMoreTextarea()">+</button>
+        </div>
+        <script>
+        function addMoreTextarea() {
+            const container = document.getElementById('additional_information_container');
+            const newTextarea = document.createElement('textarea');
+            newTextarea.classList.add('form-control');
+            newTextarea.setAttribute('rows', '4');
+            container.appendChild(newTextarea);
+            }
+            </script>
+            <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
 
