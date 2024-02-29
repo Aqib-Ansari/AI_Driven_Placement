@@ -367,14 +367,14 @@ def validate_company_login(email, password):
 
 
 
-def insert_job_posting(company_id,job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities):
+def insert_job_posting(company_id,job_role, job_type, skills_required, num_employees, num_openings, responsibilities):
     try:
         # Establish a connection to the MySQL database
         global connection,cursor
 
         # SQL query to insert data into the table
         sql = '''
-        INSERT INTO job_posting (company_id,job_role, job_type, skills_required, num_employees, num_openings, company_description, responsibilities)
+        INSERT INTO job_posting (company_id,job_role, job_type, skills_required, num_employees, num_openings,  responsibilities)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         '''
 

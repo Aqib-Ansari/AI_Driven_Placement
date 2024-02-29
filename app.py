@@ -582,6 +582,10 @@ def company_dashboard1():
     name = session['company']
     return render_template('dashboard_company.html',company_name = name )
 
+@app.route('/back_to_dashboard')
+def back_to_dashboard():
+    # Redirect to the desired page
+    return redirect(url_for('company_dashboard1')) 
 
 # ------------------------------------------------------- Company Section job posting -----------------------
 
@@ -806,7 +810,7 @@ def schedule_interview():
 
     return render_template('schedule_interview.html', students=fetched_students, interviews=interviews)
 
-'''
+
 @app.route('/schedule_interview', methods=['GET', 'POST'])
 def schedule_interview():
     # Fetch the list of job postings for the logged-in company
@@ -842,6 +846,52 @@ def schedule_interview():
             flash(f'Error: {e}', 'danger')
 
     return render_template('schedule_interview.html', job_postings=job_postings)
+'''
+
+@app.route('/schedule_interview', methods=['GET', 'POST'])
+def schedule_interview():
+    try:
+        # Fetch the company ID associated with the current user session
+        company_email = session.get('company')  # Get company email from session
+        if company_email:
+            cursor.execute(f"SELECT id FROM company_registration WHERE email = '{company_email}'")
+            company = cursor.fetchone()
+            if company:
+                company_id = company['id']
+
+                # Fetch job postings for the company using the company_id
+                cursor.execute(f"SELECT id, job_role FROM job_posting WHERE company_id = {company_id}")
+                job_postings = cursor.fetchall()
+            else:
+                flash('Company not found', 'danger')
+                job_postings = []
+        else:
+            flash('No company email found in session', 'danger')
+            job_postings = []
+    except Exception as e:
+        flash(f'Error fetching job postings: {e}', 'danger')
+        job_postings = []
+
+    if request.method == 'POST':
+        # Handle form submission
+        job_id = int(request.form['job_id'])  # Extract job_id from form data
+        date = request.form['date']
+        time = request.form['time']
+        location = request.form['location']
+
+        try:
+            # Insert the interview details into the database
+            with connection.cursor() as cursor:
+                sql = "INSERT INTO interviews (job_id, date, time, location) VALUES (%s, %s, %s, %s)"
+                cursor.execute(sql, (job_id, date, time, location))
+                connection.commit()
+
+                flash('Interview scheduled successfully', 'success')
+        except Exception as e:
+            flash(f'Error: {e}', 'danger')
+
+    return render_template('schedule_interview.html', job_postings=job_postings)
+
 
 def send_interview_notification(student_email, interview_details):
     try:
@@ -997,6 +1047,46 @@ def companies():
 @app.route('/training_resources')
 def training_resources():
     return render_template("training_resources.html")
+
+
+
+#-------------------------------------------company_profile--------------------------------
+def get_current_logged_in_company_id():
+    if 'company' in session:
+        company_email = session['company']
+        cursor.execute("SELECT id FROM company_registration WHERE email = %s", [company_email])
+        company_id = cursor.fetchone()
+        return company_id['id'] if company_id else None
+    else:
+        return None
+
+@app.route('/company_view_profile')
+def company_view_profile():
+    company_id = get_current_logged_in_company_id()
+
+    if company_id:
+        cursor.execute("SELECT * FROM company_registration WHERE id = %s", [company_id])
+        company_data = cursor.fetchone()
+
+        if company_data:
+            company = {
+                "id": company_data['id'],
+                "username": company_data['username'],
+                "company_name": company_data['company_name'],
+                "registration_number": company_data['registration_number'],
+                "address": company_data['address'],
+                "phone_number": company_data['phone_number'],
+                "email": company_data['email'],
+                "industry_type": company_data['industry_type'],
+                "company_size": company_data['company_size']
+            }
+            return render_template('company_view_profile.html', company=company)
+        else:
+            flash("Company details not found")
+            return redirect(url_for("some_fallback_route"))  # Redirect to a fallback route
+    else:
+        flash("You need to log in to view this page")
+        return redirect(url_for("login"))
 
 
 if __name__ == '__main__':
