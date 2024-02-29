@@ -294,14 +294,18 @@ def quiz_details_form():
     if request.method == "POST":
         session['qno']=-1
         session['correct_answers'] = []
+        
         global qtype1
         qtype1 = 'mysql'
         qtype = request.form["qtype"]
+        session["qtype"] = qtype
         testtime = request.form["testtime"]
         questions = sql_functions.fetch_quiz_question(qtype=qtype)
         session["allQuestions"] = questions
         if testtime =="10" :
             session["no_of_question"] = 8
+            session["option_selected"] = [0]*8
+            print(session["option_selected"])
         elif testtime == "20":
             session["no_of_question"] = 14
         else:
@@ -323,7 +327,7 @@ def quiz():
     # print(len(session["allQuestions"]))
     session['curr_question'] = questions[session['qno']]
     
-    return render_template("quiz.html",questions = questions[session['qno']])
+    return render_template("quiz.html",questions = questions[session['qno']],option=session["option_selected"][session["qno"]])
     
 @app.route('/submit_answer',methods=["POST"])
 def submit_answer():
@@ -331,6 +335,7 @@ def submit_answer():
         session['qno'] += 1
         if session['qno'] < session["no_of_question"]:
             answer = request.form["answer"]
+            session["option_selected"][(session["qno"])-1] = answer  
             print(int(answer)," - ",int(session['curr_question']['correct']))
 
             if int(session['curr_question']['correct'])==int(answer):
@@ -340,6 +345,9 @@ def submit_answer():
             return redirect(url_for("quiz"))
         
         else:
+            student_details = sql_functions.get_student_details(session['user'])
+            student_id = student_details[0]['id']
+            sql_functions.insert_notification(student_id=student_id,msg=f"your result is for subject {session['qtype']}: \n correct answers are {sum(session['correct_answers'])} / {session['no_of_question']} : percentage : {((sum(session['correct_answers'])*100)/10)}%",link="/student_dashboard1") 
             return render_template("results.html",result = sum(session["correct_answers"]),len = session["no_of_question"],percentage = ((sum(session["correct_answers"])*100)/10))
 
 @app.route('/previous_question')
@@ -468,8 +476,12 @@ def view_jobs():
         job_applied_array = [i["job_id"] for i in job_applied]
         id_string = ', '.join(map(str, job_applied_array))
         print(id_string)
-        cursor.execute(f"select * from job_posting where id not in ({id_string})")
+        # cursor.execute(f"select * from job_posting where id not in ({id_string})")
+        cursor.execute(f"select * from job_posting")
+        # applied_array = [x for x in range()]
         jobs = cursor.fetchall()
+        for i,j in zip(jobs,job_applied):
+            i["applied"] = j
 
 
         # cursor.execute("select  ")
@@ -507,6 +519,13 @@ def job_applied(job_id):
 
             sql_functions.insert_applied_student_data(company_id=company_id[0]['company_id'],job_id=int(job_id),student_id=student_id)
             flash("applied successfully")
+            student_details = sql_functions.get_student_details(session['user'])
+            student_id = student_details[0]['id']
+
+            cursor.execute(f'select job_role from job_posting where id = {int(job_id)}')
+            job_name = cursor.fetchall()
+            sql_functions.insert_notification(student_id=student_id,msg=f"Succesfully Applied for job role {job_name[0]['job_role']}",link="/view_jobs") 
+
     
 
         return redirect(url_for("view_jobs"))
@@ -619,8 +638,6 @@ def company_dashboard1():
 
 
 # ------------------------------------------------------- Company Section job posting -----------------------
-
-
 @app.route('/post_job', methods=['POST', 'GET'])
 def post_job():
     if request.method == 'POST':
@@ -657,6 +674,7 @@ def post_job():
         return redirect(url_for('job_listings'))
 
     return render_template('post_job.html')
+
 
 # Function to send notifications to all students about the new job posting
 def notify_students_about_job_posting(job_role):
@@ -702,9 +720,10 @@ def send_email(subject, body, recipients):
 def view_students():
     # Fetch all records of students from the database
     
-    try:
+    # try:
         
             # Replace this query with your actual query to fetch all students
+            print(session['company'])
             cursor.execute(f"select id from company_registration where email = '{session['company']}'")
             company_id = cursor.fetchall()
             # print(company_id)
@@ -728,12 +747,12 @@ def view_students():
             # print(fetched_students)
             session["fetched_students"] = fetched_students
             return render_template('view_students.html', students=fetched_students,job_ids = job_ids)
-    except Exception as e:
-        flash(f'Error fetching students: {e}', 'danger')
-        fetched_students = [{"firstname":"student not selected"}]
+    # except Exception as e:
+    #     flash(f'Error fetching students: {e}', 'danger')
+    #     fetched_students = [{"firstname":"student not selected"}]
         
 
-    return render_template('view_students.html', students=fetched_students,job_ids = job_ids)
+    # return render_template('view_students.html', students=fetched_students,job_ids = job_ids)
 
 @app.route("/view_student_applied_job/<student_id>")
 def view_student_applied_job(student_id):
@@ -770,70 +789,84 @@ def placement_analytics():
 
 # ------------------------------------------------------- Company Section scheduling and viewing job postings ---------------------------------------
 
-interviews = []
-@app.route('/schedule_interview', methods=['GET', 'POST'])
+# interviews = []
+# @app.route('/schedule_interview', methods=['GET', 'POST'])
+# def schedule_interview():
+#     # Fetch the list of students from the database
+#     try:
+#             # Replace this query with your actual query to fetch students
+#             cursor.execute(f"select id from company_registration where email = '{session['company']}'")
+#             company_id = cursor.fetchall()
+#             # print(company_id)
+#             student = sql_functions.select_applied_student(company_id=company_id[0]['id'])
+#             print(student)
+#             # print(student)
+#             student_ids = [x["student_id"] for x in student]
+#             job_ids = [x["job_id"] for x in student]
+#             print(job_ids)
+#             # print(student_ids)
+#             fetched_students = []
+#             for i,id in zip(student_ids,job_ids):
+#                 cursor.execute(f"select * from student_details where id = {i}")
+#                 fetched_student = cursor.fetchall()
+#                 print(fetched_student)
+#                 fetched_student[0]["job_id"]=id
+#                 fetched_students.append(fetched_student[0])
+#             print(fetched_students)
+#     except Exception as e:
+#         flash(f'Error fetching students: {e}', 'danger')
+#         fetched_students = []
+
+#     if request.method == 'POST':
+#         student_id = int(request.form['student_id'])
+#         date = request.form['date']
+#         time = request.form['time']
+#         location = request.form['location']
+
+#         selected_student = next((student for student in fetched_students if student['id'] == student_id), None)
+
+#         if selected_student:
+#             interview_details = {
+#                 'student_name': selected_student['name'],
+#                 'date': date,
+#                 'time': time,
+#                 'location': location
+#             }
+
+#             interviews.append(interview_details)
+
+#             try:
+#                 with connection.cursor() as cursor:
+#                     # SQL query to insert data into the interviews table
+#                     sql = "INSERT INTO interviews (student_id, date, time, location) VALUES (%s, %s, %s, %s)"
+#                     cursor.execute(sql, (student_id, date, time, location))
+#                     connection.commit()
+
+#                     # Send email notification to the student
+#                     send_interview_notification(selected_student['email'], interview_details)
+
+#                     flash('Interview scheduled successfully', 'success')
+#             except Exception as e:
+#                 flash(f'Error: {e}', 'danger')
+
+#         else:
+#             flash('Selected student not found', 'danger')
+
+#     return render_template('schedule_interview.html', students=fetched_students, interviews=interviews)
+@app.route('/schedule_interview', )
 def schedule_interview():
-    # Fetch the list of students from the database
-    try:
-            # Replace this query with your actual query to fetch students
-            cursor.execute(f"select id from company_registration where email = '{session['company']}'")
-            company_id = cursor.fetchall()
-            # print(company_id)
-            student = sql_functions.select_applied_student(company_id=company_id[0]['id'])
-            print(student)
-            # print(student)
-            student_ids = [x["student_id"] for x in student]
-            job_ids = [x["job_id"] for x in student]
-            print(job_ids)
-            # print(student_ids)
-            fetched_students = []
-            for i,id in zip(student_ids,job_ids):
-                cursor.execute(f"select * from student_details where id = {i}")
-                fetched_student = cursor.fetchall()
-                print(fetched_student)
-                fetched_student[0]["job_id"]=id
-                fetched_students.append(fetched_student[0])
-            print(fetched_students)
-    except Exception as e:
-        flash(f'Error fetching students: {e}', 'danger')
-        fetched_students = []
+    cursor.execute(f"select id from company_registration where email = '{session['company']}'")
+    company_id = cursor.fetchall()
+    cursor.execute(f"select * from job_posting where company_id = {company_id[0]['id']} ")
+    jobs = cursor.fetchall()
 
-    if request.method == 'POST':
-        student_id = int(request.form['student_id'])
-        date = request.form['date']
-        time = request.form['time']
-        location = request.form['location']
+    job_role = []
+    for job in jobs:
+        job_role.append(job["job_role"])
+    
+    return render_template("schedule_interview.html",job_roles = job_role)
 
-        selected_student = next((student for student in fetched_students if student['id'] == student_id), None)
-
-        if selected_student:
-            interview_details = {
-                'student_name': selected_student['name'],
-                'date': date,
-                'time': time,
-                'location': location
-            }
-
-            interviews.append(interview_details)
-
-            try:
-                with connection.cursor() as cursor:
-                    # SQL query to insert data into the interviews table
-                    sql = "INSERT INTO interviews (student_id, date, time, location) VALUES (%s, %s, %s, %s)"
-                    cursor.execute(sql, (student_id, date, time, location))
-                    connection.commit()
-
-                    # Send email notification to the student
-                    send_interview_notification(selected_student['email'], interview_details)
-
-                    flash('Interview scheduled successfully', 'success')
-            except Exception as e:
-                flash(f'Error: {e}', 'danger')
-
-        else:
-            flash('Selected student not found', 'danger')
-
-    return render_template('schedule_interview.html', students=fetched_students, interviews=interviews)
+@app.route('/schedule_interview', methods=['POST'])
 
 
 

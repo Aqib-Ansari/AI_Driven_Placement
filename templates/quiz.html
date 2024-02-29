@@ -77,20 +77,38 @@
     <h1>{{ questions['question'] }}</h1>
 
     <form action="/submit_answer" method="post">
+        <!-- {{option}} -->
+        
         <label>
-            <input type="radio" name="answer" value="1"> {{ questions["option1"] }}
+            {% if option == "1" %}
+            <input type="radio" name="answer" value="1" checked  > {{ questions["option1"] }}
+            {% else %}
+            <input type="radio" name="answer" value="1"  > {{ questions["option1"] }}
+            {% endif %}
         </label>
         <br>
         <label>
+            {% if option == "2" %}
+            <input type="radio" name="answer" value="2" required checked> {{ questions["option2"] }}
+            {% else %}
             <input type="radio" name="answer" value="2" required> {{ questions["option2"] }}
+            {% endif %}
         </label>
         <br>
         <label>
+            {% if option == "3" %}
+            <input type="radio" name="answer" value="3" checked> {{ questions["option3"] }}
+            {% else %}
             <input type="radio" name="answer" value="3"> {{ questions["option3"] }}
+            {% endif %}
         </label>
         <br>
         <label>
+            {% if option == "4" %}
             <input type="radio" name="answer" value="4"> {{ questions["option4"] }}
+            {% else %}
+            <input type="radio" name="answer" value="4"> {{ questions["option4"] }}
+            {% endif %}
         </label>
         <br>
         <button type="submit">Next</button>
