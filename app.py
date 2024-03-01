@@ -3,9 +3,24 @@ import sql_functions
 import data_class_aidriven
 import smtplib
 from email.mime.text import MIMEText
+from PIL import Image 
+import pdf2image
+import base64
+import os
+import io
+import pymysql
 
 connection = sql_functions.make_sql_connection()
 
+# Connection setup
+connection = pymysql.connect(
+    host='sql6.freesqldatabase.com',
+    user='sql6682320',
+    password='zGRcDLE2gC',
+    database='sql6682320',
+    charset='utf8mb4',
+    cursorclass=pymysql.cursors.DictCursor
+)
 
 app = Flask(__name__)
 #  SEcretkey : 
@@ -645,6 +660,17 @@ def scheduled_interviews():
 
     return render_template('scheduled_interviews.html')
 
+# ------------------------------------------------------- admin -----------------------
+
+
 # ------------------------------------------------------- Company Section job posting -----------------------
+
+@app.route('/ats_system')
+def ats_system():
+    # Your ATS System logic here
+    return render_template('ats_system.html')
+
+# ------------------------------------------------------- ATS_System -----------------------
+
 if __name__ == '__main__':
     app.run(debug=True)
