@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, send_file,session,flash,json
+from flask import Flask, render_template, request, redirect, url_for, send_file,session,flash, jsonify,json
 import sql_functions
 import data_class_aidriven
 import smtplib
 from email.mime.text import MIMEText
 import ai_interviewer
-from datetime import datetime
+from datetime import datetime, timedelta
+import os
 
 connection = sql_functions.make_sql_connection()
 
@@ -145,144 +146,20 @@ def notifications():
     notifications = sql_functions.select_notification(student_id=student_id)
     # print(notifications)
     return render_template('notifications.html',notifications=notifications)
-# --------------------------------------------- Quiz ------------------------------------------------------
-# @app.route('/quiz_details')
-# def quiz_details():
-#     return render_template("quiz_details.html")
 
-# @app.route('/previous_question')
-# def previous_question():
-#     if 'currentQuestionIndex' in session and session['currentQuestionIndex'] > 0:
-#         session['currentQuestionIndex'] -= 1
-#     return redirect(url_for('quiz'))
-
-# @app.route('/quiz_details_form', methods=["POST"])
-# def quiz_details_form():
-#     if request.method == "POST":
-#         session['qno'] = 0
-#         session['correct_answers'] = 0
-#         qtype = request.form["qtype"]
-#         questions = sql_functions.fetch_quiz_question(qtype=qtype)
-#         session["allQuestions"] = questions
-#         session['currentQuestionIndex'] = 0  # Initialize current question index
-        
-#         # Store selected subject in session
-#         session['selected_subject'] = qtype
-        
-#         return redirect(url_for("quiz"))
-#     else:
-#         return redirect(url_for("quiz_details"))
-
-# @app.route('/quiz')
-# def quiz():
-#     if "allQuestions" not in session:
-#         return redirect(url_for("quiz_details"))
-    
-#     questions = session.get("allQuestions")
-#     if 'currentQuestionIndex' not in session or session['currentQuestionIndex'] >= len(questions):
-#         return "No more questions. Enjoy!"
-
-#     current_question_index = session['currentQuestionIndex']
-#     session['curr_question'] = questions[current_question_index]
-
-#     # Logging the current_question_index
-#     print("Current Question Index:", current_question_index)
-
-#     # Get the selected subject from the session
-#     selected_subject = session.get('selected_subject')
-
-#     return render_template("quiz.html", questions=questions[current_question_index], current_question_index=current_question_index, selected_subject=selected_subject)
-
-# @app.route('/navigate_previous_question')
-# def navigate_previous_question():
-#     if 'prev_question' in request.args:
-#         prev_question = int(request.args['prev_question'])
-#         if 'currentQuestionIndex' in session and prev_question >= 0 and prev_question < session['currentQuestionIndex']:
-#             session['currentQuestionIndex'] = prev_question
-#     return redirect(url_for('quiz'))
-
-# @app.route('/submit_answer', methods=["POST"])
-# def submit_answer():
-#     if request.method == "POST":
-        
-#         if session['qno'] < 10:
-#             answer = request.form["answer"]
-#             session['qno'] += 1
-#             if session['curr_question']['correct'] == answer:
-#                 session['correct_answers'] += 1
-#             session['currentQuestionIndex'] += 1  # Move to the next question
-#             return redirect(url_for("quiz"))
-#         else:
-#             return render_template("results.html", result=session["correct_answers"], len=10, percentage=((session["correct_answers"] * 100) / 10))
-# '''
-# @app.route('/quiz_details')
-# def quiz_details():
-#     return render_template("quiz_details.html")
-
-# @app.route('/previous_question')
-# def previous_question():
-#     if 'currentQuestionIndex' in session and session['currentQuestionIndex'] > 0:
-#         session['currentQuestionIndex'] -= 1
-#     return redirect(url_for('quiz'))
-
-# @app.route('/quiz_details_form', methods=["POST"])
-# def quiz_details_form():
-#     if request.method == "POST":
-#         session['qno'] = 0
-#         session['correct_answers'] = 0
-#         qtype = request.form["qtype"]
-#         questions = sql_functions.fetch_quiz_question(qtype=qtype)
-#         session["allQuestions"] = questions
-#         session['currentQuestionIndex'] = 0  # Initialize current question index
-#         return redirect(url_for("quiz"))
-#     else:
-#         return redirect(url_for("quiz_details"))
-
-# @app.route('/quiz')
-# def quiz():
-#     if "allQuestions" not in session:
-#         return redirect(url_for("quiz_details"))
-    
-#     questions = session.get("allQuestions")
-#     if 'currentQuestionIndex' not in session or session['currentQuestionIndex'] >= len(questions):
-#         return "No more questions. Enjoy!"
-
-#     current_question_index = session['currentQuestionIndex']
-#     session['curr_question'] = questions[current_question_index]
-
-#     # Logging the current_question_index
-#     print("Current Question Index:", current_question_index)
-
-#     return render_template("quiz.html", questions=questions[current_question_index], current_question_index=current_question_index)
+# ------------------------------------------  quiz----------
 
 
-# @app.route('/navigate_previous_question')
-# def navigate_previous_question():
-#     if 'prev_question' in request.args:
-#         prev_question = int(request.args['prev_question'])
-#         if 'currentQuestionIndex' in session and prev_question >= 0 and prev_question < session['currentQuestionIndex']:
-#             session['currentQuestionIndex'] = prev_question
-#     return redirect(url_for('quiz'))
+# def get_remaining_time_in_seconds():
+#     remaining_time = session["expiration_time"] - datetime.now()
+#     remaining_time_in_seconds = remaining_time.total_seconds()
+#     return remaining_time_in_seconds
 
-# @app.route('/submit_answer', methods=["POST"])
-# def submit_answer():
-#     if request.method == "POST":
-#         session['qno'] += 1
-#         if session['qno'] < 10:
-#             answer = request.form["answer"]
-#             if session['curr_question']['correct'] == answer:
-#                 session['correct_answers'] += 1
-#             session['currentQuestionIndex'] += 1  # Move to the next question
-#             return redirect(url_for("quiz"))
-#         else:
-#             return render_template("results.html", result=session["correct_answers"], len=10, percentage=((session["correct_answers"] * 100) / 10))
+# @app.route('/remaining_time')
+# def remaining_time():
+#     remaining_time_in_seconds = get_remaining_time_in_seconds()
+#     return jsonify({'remaining_time_in_seconds': remaining_time_in_seconds})
 
-# '''
-
-
-# ------------------------------------------ Aditya quiz----------
-
-# questions = sql_functions.fetch_quiz_question("mysql")
 @app.route('/quiz_details')
 def quiz_details():
     return render_template("quiz_details.html")
@@ -302,14 +179,24 @@ def quiz_details_form():
         testtime = request.form["testtime"]
         questions = sql_functions.fetch_quiz_question(qtype=qtype)
         session["allQuestions"] = questions
+
+
         if testtime =="10" :
             session["no_of_question"] = 8
-            session["option_selected"] = [0]*8
+            session["option_selected"] = [0]*20
+            # session["expiration_time"] = datetime.now() + timedelta(minutes=10)
+            # remaining_time = app.config['expiration_time'] - datetime.now()
+
             print(session["option_selected"])
+
         elif testtime == "20":
             session["no_of_question"] = 14
+            # session["expiration_time"] = datetime.now() + timedelta(minutes=20)
+
         else:
             session["no_of_question"] = len(session["allQuestions"])
+            # session["expiration_time"] = datetime.now() + timedelta(minutes=30)
+
         print(qtype1)
         return redirect(url_for("quiz"))
     else:
@@ -461,13 +348,13 @@ def view_pdf():
 # --------------------------------------------------------- view jobs ---------------------------------------
 @app.route('/view_jobs')
 def view_jobs():
-    # if "user" not in session:
-    #     return redirect(url_for("login"))
-    # try:
+    if "user" not in session:
+        return redirect(url_for("login"))
+    try:
 
         
-        # print(jobs)
-        student_details = sql_functions.get_student_details(session['user'])
+        cursor.execute(f"select id from student_register where email = '{session['user']}'")
+        student_details = cursor.fetchall()
         student_id = student_details[0]['id']
         cursor.execute(f"select job_id from applied_student where student_id = {student_id} ")
         print("\n\n")
@@ -484,14 +371,14 @@ def view_jobs():
             i["applied"] = j
 
 
-        # cursor.execute("select  ")
+        cursor.execute("select  ")
 
-        # print(jobs)
-    # except Exception as e:
-    #     print(e)
-    #     # jobs = [1, 2, 3]*20
+        print(jobs)
+    except Exception as e:
+        print(e)
+        # jobs = [1, 2, 3]*20
 
-        return render_template('view_jobs.html', jobs=jobs)
+    return render_template('view_jobs.html', jobs=jobs)
 
 
 
@@ -570,6 +457,35 @@ def training():
     return render_template("training.html", training_resources=result)
 
 
+#  --------------------------------------- change password ---------------------------
+@app.route('/change_pass',methods= ["POST","GET"])
+def change_pass():
+    if request.method == "POST":
+        currentPassword = request.form["currentPassword"]
+        newPassword = request.form["newPassword"]
+        confirmPassword = request.form["confirmPassword"]
+
+        cursor.execute(f"select password from student_register where email = '{session['user']}'")
+        original_pass = cursor.fetchall()
+
+        if currentPassword == original_pass[0]["password"]:
+            if newPassword == confirmPassword:
+                cursor.execute(f"update student_register set password = '{currentPassword}' where email = '{session['user']}'")
+                cursor.fetchall()
+                connection.commit()
+                student_details = sql_functions.get_student_details(session['user'])
+                student_id = student_details[0]['id']
+                sql_functions.insert_notification(student_id=student_id,msg="Password Updated Succesfully",link="/profile")
+                return redirect(url_for("profile"))
+            else:
+                return render_template("change_pass.html",error = "both password should be same")
+            
+        return render_template("change_pass.html",error = "Both Password should be same")
+    return render_template("change_pass.html",error = "both password should be same")
+
+
+    
+
 
 # -------------------------------------------- view student details by company -------------------------------------
 
@@ -600,6 +516,19 @@ def company_dashboard():
         company_description = request.form['companyDescription']
         logo_upload = request.files['logoUpload']
         company_size = request.form['companySize']
+
+        if logo_upload.filename == '':
+                return 'No selected file'
+
+        # Ensure the 'static/company' folder exists, create it if not
+        upload_folder = 'static/company'
+        os.makedirs(upload_folder, exist_ok=True)
+
+        # Save the uploaded file to the 'static/company' folder
+        print(logo_upload.filename)
+        logo_upload.filename = extract_name_from_email(session["company"]) + ".jpg"
+        file_path = os.path.join(upload_folder, logo_upload.filename)
+        logo_upload.save(file_path)
 
         data = {
         'Username': username,
@@ -634,9 +563,70 @@ def company_dashboard():
 @app.route('/company_dashboard1') 
 def company_dashboard1():
     name = session['company']
-    return render_template('dashboard_company.html',company_name = name )
+    logo = f'/static/company/{extract_name_from_email(session["company"]) + ".jpg"}'
+    return render_template('dashboard_company.html',company_name = name ,company_logo = logo)
+
+import re
+
+def extract_name_from_email(email):
+    # Define a regular expression pattern to extract the name before '@'
+    pattern = re.compile(r'^([^@]+)@')
+    
+    # Use the pattern to search for a match in the email
+    match = pattern.search(email)
+    
+    # Check if a match is found and return the extracted name
+    if match:
+        return match.group(1)
+    else:
+        return None
+
+# Example usage:
 
 
+# add this to the end of the app.py file after the training resources
+
+@app.route('/back_to_dashboard')
+def back_to_dashboard():
+    # Redirect to the desired page
+    return redirect(url_for('company_dashboard1')) 
+
+def get_current_logged_in_company_id():
+    if 'company' in session:
+        company_email = session['company']
+        cursor.execute("SELECT id FROM company_registration WHERE email = %s", [company_email])
+        company_id = cursor.fetchone()
+        return company_id['id'] if company_id else None
+    else:
+        return None
+
+@app.route('/company_view_profile')
+def company_view_profile():
+    company_id = get_current_logged_in_company_id()
+
+    if company_id:
+        cursor.execute("SELECT * FROM company_registration WHERE id = %s", [company_id])
+        company_data = cursor.fetchone()
+
+        if company_data:
+            company = {
+                "id": company_data['id'],
+                "username": company_data['username'],
+                "company_name": company_data['company_name'],
+                "registration_number": company_data['registration_number'],
+                "address": company_data['address'],
+                "phone_number": company_data['phone_number'],
+                "email": company_data['email'],
+                "industry_type": company_data['industry_type'],
+                "company_size": company_data['company_size']
+            }
+            return render_template('company_view_profile.html', company=company)
+        else:
+            flash("Company details not found")
+            return redirect(url_for("some_fallback_route"))  # Redirect to a fallback route
+    else:
+        flash("You need to log in to view this page")
+        return redirect(url_for("login"))
 # ------------------------------------------------------- Company Section job posting -----------------------
 @app.route('/post_job', methods=['POST', 'GET'])
 def post_job():
@@ -759,6 +749,7 @@ def view_student_applied_job(student_id):
     cursor.execute(f"select * from student_details where id = {student_id}")
     student_details = cursor.fetchall()
     return render_template("view_applied_student.html",students=student_details)
+
 
 @app.route('/placement_analytics')
 def placement_analytics():

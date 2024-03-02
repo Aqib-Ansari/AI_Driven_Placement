@@ -73,7 +73,7 @@
     </style>
 </head>
 <body>
-    <div id="timer">Timer: <span id="timerDisplay"></span></div>
+    <p id="timer"> Timer : <span id="remaining_time"></span></p>
     <h1>{{ questions['question'] }}</h1>
 
     <form action="/submit_answer" method="post">
@@ -178,6 +178,24 @@
         }
 
     </script> -->
-
+    <!-- <script>
+        function updateRemainingTime() {
+            fetch('/remaining_time')
+            .then(response => response.json())
+            .then(data => {
+                let minutes = Math.floor(data.remaining_time_in_seconds / 60);
+                let seconds = Math.floor(data.remaining_time_in_seconds % 60);
+                if (seconds < 10 && seconds >= 0) {
+                    seconds = "0" + seconds;
+                }
+    
+                let remainingTimeElement = document.getElementById("remaining_time");
+                remainingTimeElement.innerText = `${minutes}:${seconds}`;
+                document.getElementById("remaining_time").innerText = minutes + ":" + seconds;
+    
+            })
+        }
+        setInterval(updateRemainingTime, 500);
+    </script> -->
 </body>
 </html>
