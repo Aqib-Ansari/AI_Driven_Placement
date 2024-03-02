@@ -135,9 +135,45 @@ def redirect_to_student_dashboard():
     return redirect(url_for("login"))
 
 # ----------------------------------------- Profile -------------------------------------------
-@app.route('/profile')
+
+UPLOAD_FOLDER = 'static/student/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def image_exists(filename):
+    return os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+
+@app.route('/profile',methods=["POST","GET"])
 def profile():
-    return render_template("profile.html")
+    if request.method == 'POST':
+        # Check if the POST request has a file part
+        if 'file' not in request.files:
+            return redirect(request.url)
+
+        file = request.files['file']
+
+        # If the user does not select a file, display the file input again
+        if file.filename == '':
+            return render_template('profile.html', image_exists=image_exists)
+
+        # Save the uploaded file to the UPLOAD_FOLDER
+        if file:
+            sql_functions.insert_student_profile_img(email=session["user"],filename=file.filename)
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(filename)
+            return redirect(url_for('profile'))
+        
+
+    student_details = sql_functions.get_student_details(session['user'])
+    student_id = student_details[0]['id']
+    cursor.execute(f"select filename from student_profile_img where student_id = {student_id} ")
+    profile_filename = cursor.fetchone()
+    print(profile_filename)
+    if profile_filename == None or profile_filename == ():
+        return render_template("profile.html")
+
+    print(profile_filename["filename"])
+    return render_template("profile.html", image_pro=profile_filename["filename"])
 
 @app.route('/notifications')
 def notifications():
@@ -159,6 +195,22 @@ def notifications():
 # def remaining_time():
 #     remaining_time_in_seconds = get_remaining_time_in_seconds()
 #     return jsonify({'remaining_time_in_seconds': remaining_time_in_seconds})
+
+app.config['expiration_time'] = datetime.now() + timedelta(minutes=10)
+
+remaining_time = app.config['expiration_time'] - datetime.now()
+
+def get_remaining_time_in_seconds():
+    remaining_time = app.config['expiration_time'] - datetime.now()
+    remaining_time_in_seconds = remaining_time.total_seconds()
+    return remaining_time_in_seconds
+
+@app.route('/remaining_time')
+def remaining_time():
+    remaining_time_in_seconds = get_remaining_time_in_seconds()
+    return jsonify({'remaining_time_in_seconds': remaining_time_in_seconds})
+
+
 
 @app.route('/quiz_details')
 def quiz_details():
@@ -184,18 +236,20 @@ def quiz_details_form():
         if testtime =="10" :
             session["no_of_question"] = 8
             session["option_selected"] = [0]*20
-            # session["expiration_time"] = datetime.now() + timedelta(minutes=10)
-            # remaining_time = app.config['expiration_time'] - datetime.now()
+           
+            app.config['expiration_time'] = datetime.now() + timedelta(minutes=10)
 
             print(session["option_selected"])
 
         elif testtime == "20":
             session["no_of_question"] = 14
-            # session["expiration_time"] = datetime.now() + timedelta(minutes=20)
+            app.config['expiration_time'] = datetime.now() + timedelta(minutes=20)
+            
 
         else:
             session["no_of_question"] = len(session["allQuestions"])
-            # session["expiration_time"] = datetime.now() + timedelta(minutes=30)
+            app.config['expiration_time'] = datetime.now() + timedelta(minutes=30)
+            
 
         print(qtype1)
         return redirect(url_for("quiz"))
@@ -246,6 +300,9 @@ def previous_question():
 
     return redirect(url_for("quiz"))
 
+@app.route("/end_test")
+def end_test():
+    return render_template("results.html",result = sum(session["correct_answers"]),len = session["no_of_question"],percentage = ((sum(session["correct_answers"])*100)/10))
 
 # ------------------------------------------------ Details ----------------------------------------------------------
 
@@ -458,20 +515,19 @@ def training():
 
 
 #  --------------------------------------- change password ---------------------------
-@app.route('/change_pass',methods= ["POST","GET"])
+@app.route('/change_pass',methods= ["POST"])
 def change_pass():
     if request.method == "POST":
         currentPassword = request.form["currentPassword"]
         newPassword = request.form["newPassword"]
         confirmPassword = request.form["confirmPassword"]
-
+        # print(currentPassword,newPassword,confirmPassword)
         cursor.execute(f"select password from student_register where email = '{session['user']}'")
         original_pass = cursor.fetchall()
-
+        # print(original_pass[0]["password"])
         if currentPassword == original_pass[0]["password"]:
             if newPassword == confirmPassword:
-                cursor.execute(f"update student_register set password = '{currentPassword}' where email = '{session['user']}'")
-                cursor.fetchall()
+                cursor.execute(f"update student_register set password = '{newPassword}' where email = '{session['user']}'")
                 connection.commit()
                 student_details = sql_functions.get_student_details(session['user'])
                 student_id = student_details[0]['id']
@@ -483,7 +539,9 @@ def change_pass():
         return render_template("change_pass.html",error = "Both Password should be same")
     return render_template("change_pass.html",error = "both password should be same")
 
-
+@app.route('/change_pass_page')
+def change_pass_page():
+    return render_template("change_pass.html")
     
 
 
