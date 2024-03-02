@@ -1,0 +1,99 @@
+company_view_profile.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9ecef;
+            color: #212529;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #007bff;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .profile-item {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .profile-item strong {
+            display: block;
+            color: #007bff;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .back-button {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-button a {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button a:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff;
+            border-top: 1px solid #dee2e6;
+        }
+
+        footer small {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Company Profile</h2>
+        <div class="profile-item"><strong>ID:</strong> <span>{{ company.id }}</span></div>
+        <div class="profile-item"><strong>Username:</strong> <span>{{ company.username }}</span></div>
+        <div class="profile-item"><strong>Company Name:</strong> <span>{{ company.company_name }}</span></div>
+        <div class="profile-item"><strong>Registration Number:</strong> <span>{{ company.registration_number }}</span></div>
+        <div class="profile-item"><strong>Address:</strong> <span>{{ company.address }}</span></div>
+        <div class="profile-item"><strong>Phone Number:</strong> <span>{{ company.phone_number }}</span></div>
+        <div class="profile-item"><strong>Email:</strong> <span>{{ company.email }}</span></div>
+        <div class="profile-item"><strong>Industry Type:</strong> <span>{{ company.industry_type }}</span></div>
+        <div class="profile-item"><strong>Company Size:</strong> <span>{{ company.company_size }}</span></div>
+
+        <div class="back-button">
+            <a href="{{ url_for('back_to_dashboard') }}">Back to Dashboard</a>
+        </div>
+    </div>
+    <footer>
+        <small>&copy; 2024 Placed. All rights reserved.</small>
+    </footer>
+</body>
+</html>

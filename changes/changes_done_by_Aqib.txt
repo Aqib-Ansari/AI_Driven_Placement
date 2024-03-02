@@ -134,5 +134,10 @@ change : SQL tables:
                         date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         msg VARCHAR(255),
                         link VARCHAR(255),
-                        FOREIGN KEY (student_id) REFERENCES student_details(id)
-                    )
+                        FOREIGN KEY (student_id) REFERENCES student_details(id))
+                        
+            12) Student Profile Image
+                CREATE TABLE student_profile_img (
+                    student_id INT PRIMARY KEY,
+                    filename VARCHAR(255),
+                    FOREIGN KEY (student_id) REFERENCES student_register(id))

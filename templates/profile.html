@@ -60,7 +60,19 @@
 <body >
     <div class="profile-container">
         <div class="profile-header">
-            <img src="static/profile.jpg" alt="Profile Picture" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;">
+            <!-- <img src="static/profile.jpg" alt="Profile Picture" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;"> -->
+            {% if image_pro %}
+            
+        <img src="/static/student/{{ image_pro }}" alt="Profile Image" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;">
+    {% else %}
+        <form method="post" enctype="multipart/form-data">
+            <label for="file">Upload Profile Image:</label>
+            <input type="file" name="file" id="file" accept="image/*" required>
+            <button type="submit">Upload</button>
+        </form>
+    {% endif %}
+    
+
             <h1>Aqib Ansari</h1>
             <p>Data Science and ML Enthusiast</p>
         </div>
@@ -69,7 +81,7 @@
             <p>Phone: +1 123-456-7890</p>
         </div>
         <div class="profile-actions">
-            <button class="action-button2">Change Password</button>
+            <button class="action-button2"><i class="fa fa-bell"></i> <a href="/change_pass_page">Change Password</a></button>
             <button class="action-button2">View Applied Jobs</button>
             <button class="action-button2 notification-button">
                 <i class="fa fa-bell"></i> <a href="/notifications">Notifications</a>
