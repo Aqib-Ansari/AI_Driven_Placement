@@ -589,8 +589,11 @@ def insert_student_profile_img(email,filename):
                 cursor.execute(f"insert into student_profile_img (student_id,filename) values ({student_id} , '{filename}')")
                 connection.commit()
             else:
+                os.remove(f'/static/student/{profile_filename}')
                 cursor.execute(f"update student_profile_img set filename = '{filename}' where student_id = {student_id}" )
             connection.commit()
+
+# def insert_interviews()
 
 connection.commit()
 if __name__ == "__main__":
@@ -619,10 +622,13 @@ if __name__ == "__main__":
     # insert_applied_student_data(3, 1, 1)
     # print(insert_interview_data( 1, 2, '2024-02-10', '15:30:00', 'Company HQ'))
     cursor.execute('''
-CREATE TABLE student_profile_img (
-    student_id INT PRIMARY KEY,
-    filename VARCHAR(255),
-    FOREIGN KEY (student_id) REFERENCES student_register(id))''')
+CREATE TABLE scheduled_interviews (
+    interview_id INT AUTO_INCREMENT PRIMARY KEY,
+    job_id INT,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    FOREIGN KEY (job_id) REFERENCES job_posting(id))''')
     # print(insert_job_posting(company_id=1,job_role="a",job_type="b",skills_required="c",num_employees=500,num_openings=4,company_description="abc",responsibilities="response"))
     # insert_resume(email="aqib@gmail.com",filename="aqib.pdf")
     # update_student_details(email="aqibansari22298@gmail.com",field="dob",value="2002-10-12")

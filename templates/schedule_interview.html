@@ -159,7 +159,7 @@
         <form method="POST" action="{{ url_for('schedule_interview') }}">
             <div class="form-group">
                 <label for="student_id">Select Student:</label>
-                <select class="form-control" name="student_id" id="student_id" required>
+                <select class="form-control" name="job" id="student_id" required>
                     {% for job in job_roles %}
                     <option value="{{ job }}">{{ job }}</option>
                     {% endfor %}

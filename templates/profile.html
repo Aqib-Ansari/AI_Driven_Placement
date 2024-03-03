@@ -63,7 +63,10 @@
             <!-- <img src="static/profile.jpg" alt="Profile Picture" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;"> -->
             {% if image_pro %}
             
-        <img src="/static/student/{{ image_pro }}" alt="Profile Image" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;">
+                <img src="/static/student/{{ image_pro }}" alt="Profile Image" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;">
+                <br>
+                <a href="/profile_change_profile">Change Image</a>
+        
     {% else %}
         <form method="post" enctype="multipart/form-data">
             <label for="file">Upload Profile Image:</label>
@@ -73,7 +76,7 @@
     {% endif %}
     
 
-            <h1>Aqib Ansari</h1>
+            <h1>{{ 'abc' }}</h1>
             <p>Data Science and ML Enthusiast</p>
         </div>
         <div class="profile-details">
@@ -81,10 +84,10 @@
             <p>Phone: +1 123-456-7890</p>
         </div>
         <div class="profile-actions">
-            <button class="action-button2"><i class="fa fa-bell"></i> <a href="/change_pass_page">Change Password</a></button>
+            <button class="action-button2"><i class="fa fa-bell"></i> <a href="/change_pass_page" style="text-decoration: none; color: #ffffff;">Change Password</a></button>
             <button class="action-button2">View Applied Jobs</button>
             <button class="action-button2 notification-button">
-                <i class="fa fa-bell"></i> <a href="/notifications">Notifications</a>
+                <i class="fa fa-bell"></i> <a href="/notifications" style="text-decoration: none; color: #ffffff;">Notifications</a>
             </button>
         </div>
     </div>
