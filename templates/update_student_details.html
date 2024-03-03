@@ -6,128 +6,143 @@
     <title>Placed | Student details</title>
     <!-- Add Bootstrap CSS link -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Adjust button size and position */
+        .edit-btn {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        /* Custom styling for page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn-back {
+            margin-top: 20px;
+            text-align: center;
+            display: inline-block;
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 8px 15px; /* Adjusted padding */
+            border-radius: 20px; /* Rounded shape */
+            cursor: pointer;
+        }
+    </style>
 </head>
-<body class="bg-light" style="margin-bottom: 10%;">
-
+<body>
     <div class="container mt-5">
         <h1 class="text-center">Update Details</h1>
         <form method="post" action="/submit_student_details">
-            
-            <div class="table-responsive">
-                <table class="table">
-                    
-                        <tr>
-                            <td>First Name</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['firstname']}}" aria-label="username" aria-describedby="button-addon2" style="width: 400px;" disabled></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/firstname' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Last Name</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['lastname']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/lastname' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Middle Name</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['middlename']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/middlename' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>College</td>
-                            
-                                <td><input type="number" class="form-control" placeholder="{{student_details[0]['college']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/college' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Roll number</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['rollno']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/rollno' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Program</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['program']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/program' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Stream</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['stream']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/stream' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Year</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['year']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/year' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Backlog</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['backlog']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/backlog' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Current CPGA</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['currentcgpa']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/currentcgpa' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>email</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['email']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/email' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Phone Number</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['phoneno']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/phoneno' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Gender</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['gender']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/gender' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Date of Birth</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['dob']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/dob' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Nationality</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['nationality']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/nationality' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>address</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['address']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/address' >Edit</a></td>
-                        </tr>
-
-                        
-                        
-
-                    
-                </table>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" class="form-control" id="first_name" placeholder="{{student_details[0]['firstname']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/firstname')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" placeholder="{{student_details[0]['lastname']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/lastname')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="middle_name">Middle Name</label>
+                        <input type="text" class="form-control" id="middle_name" placeholder="{{student_details[0]['middlename']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/middlename')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="college">College</label>
+                        <input type="number" class="form-control" id="college" placeholder="{{student_details[0]['college']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/college')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="roll_number">Roll number</label>
+                        <input type="text" class="form-control" id="roll_number" placeholder="{{student_details[0]['rollno']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/rollno')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="program">Program</label>
+                        <input type="text" class="form-control" id="program" placeholder="{{student_details[0]['program']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/program')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="stream">Stream</label>
+                        <input type="text" class="form-control" id="stream" placeholder="{{student_details[0]['stream']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/stream')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <input type="text" class="form-control" id="year" placeholder="{{student_details[0]['year']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/year')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="backlog">Backlog</label>
+                        <input type="text" class="form-control" id="backlog" placeholder="{{student_details[0]['backlog']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/backlog')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="current_cgpa">Current CPGA</label>
+                        <input type="text" class="form-control" id="current_cgpa" placeholder="{{student_details[0]['currentcgpa']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/currentcgpa')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" id="email" placeholder="{{student_details[0]['email']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/email')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_number">Phone Number</label>
+                        <input type="text" class="form-control" id="phone_number" placeholder="{{student_details[0]['phoneno']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/phoneno')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <input type="text" class="form-control" id="gender" placeholder="{{student_details[0]['gender']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/gender')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="text" class="form-control" id="dob" placeholder="{{student_details[0]['dob']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/dob')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="nationality">Nationality</label>
+                        <input type="text" class="form-control" id="nationality" placeholder="{{student_details[0]['nationality']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/nationality')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address" placeholder="{{student_details[0]['address']}}" disabled>
+                        <button class="btn btn-outline-secondary edit-btn" type="button" onclick="editField('/edit_student_field/address')"><i class='fas fa-edit'></i> Edit</button>
+                    </div>
+                </div>
             </div>
-            
+            <div class="text-center">
+                <a href="/student_dashboard1" class="btn btn-back">Back</a>
+            </div>
         </form>
-        <a href="/student_dashboard1"><button>Back to Home
-        </button></a>
-        <!-- Add Bootstrap JS and Popper.js links if needed -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> 
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
-         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     </div>
 
+    <!-- Add Bootstrap JS and Popper.js links if needed -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript function to handle editing fields -->
+    <script>
+        function editField(url) {
+            window.location.href = url;
+        }
+    </script>
 </body>
 </html>

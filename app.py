@@ -376,6 +376,27 @@ def student_details():
 @app.route('/edit_student_field/<field>')
 def edit_student_field(field):
     return render_template("student_field_update.html",field=field)
+'''
+@app.route('/update_field/<field>', methods=["POST"])
+def update_field(field):
+    if request.method == "POST":
+        value = request.form.get("value")
+        email = request.form.get("email")  # Assuming email is also submitted in the form
+        if field == "dob":
+            value = datetime.strptime(value, "%Y-%m-%d")
+        try:
+            update_student_details(email=email, field=field, value=value)
+            return redirect(url_for("student_details"))
+        except Exception as e:
+            # Handle database update errors
+            print("Error updating database:", e)
+            return redirect(url_for("student_details"))  # Redirect to appropriate page
+    else:
+        # Handle invalid request method
+        return redirect(url_for("edit_student_details"))
+
+'''
+
 
 @app.route('/update_field/<field>',methods=["POST"])
 def update_field(field):
