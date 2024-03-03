@@ -172,8 +172,33 @@ def profile():
     if profile_filename == None or profile_filename == ():
         return render_template("profile.html")
 
-    print(profile_filename["filename"])
+    # print(profile_filename["filename"])
     return render_template("profile.html", image_pro=profile_filename["filename"])
+
+@app.route('/profile_change_profile',methods= ["POST","GET"])
+def profile_change_profile():
+    if request.method == 'POST':
+        # Check if the POST request has a file part
+        if 'file' not in request.files:
+            return redirect(request.url)
+
+        file = request.files['file']
+
+        # If the user does not select a file, display the file input again
+        if file.filename == '':
+            return render_template('profile.html', image_exists=image_exists)
+
+        # Save the uploaded file to the UPLOAD_FOLDER
+        if file:
+            sql_functions.insert_student_profile_img(email=session["user"],filename=file.filename)
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(filename)
+            connection.commit()
+            return redirect(url_for('profile'))
+        
+    else:
+        return render_template("update_image.html")
+        
 
 @app.route('/notifications')
 def notifications():
@@ -481,6 +506,9 @@ prompt = """
   Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate
 """
 
+prompt2 = '''
+give the result of mock interview in a json format having fields "correct answers" , "any Feedback for technical " 
+'''
 @app.route('/start_interview', methods=['GET', 'POST'])
 def start_interview():
     global prompt
@@ -504,6 +532,8 @@ def interview_process():
     else:
         question = ai_interviewer.chat.send_message("Ask me only 1 easy python interview question")
         return render_template('interviewer.html', result=session["last_answer"], question = question.text, inter_pro = True)
+
+
 
 # -------------------------------------------- training resources --------------------------------------------------
 
@@ -709,12 +739,11 @@ def post_job():
                                                  skills_required=skills_required,
                                                  num_employees=num_employees,
                                                  num_openings=num_openings,
-                                                 company_description=company_description,
                                                  responsibilities=responsibilities)
 
                 # Notify all students about the new job posting
                 notify_students_about_job_posting(job_role)
-
+                connection.commit()
                 flash('Job posting added successfully', 'success')
         except Exception as e:
             flash(f'Error: {e}', 'danger')
@@ -902,8 +931,16 @@ def placement_analytics():
 #             flash('Selected student not found', 'danger')
 
 #     return render_template('schedule_interview.html', students=fetched_students, interviews=interviews)
-@app.route('/schedule_interview', )
+@app.route('/schedule_interview' , methods=['POST',"GET"])
 def schedule_interview():
+
+    if request.method == "POST":
+        job = request.form.get("job")
+        job = request.form.get("date")
+        job = request.form.get("time")
+        job = request.form.get("location")
+
+
     cursor.execute(f"select id from company_registration where email = '{session['company']}'")
     company_id = cursor.fetchall()
     cursor.execute(f"select * from job_posting where company_id = {company_id[0]['id']} ")
@@ -912,10 +949,9 @@ def schedule_interview():
     job_role = []
     for job in jobs:
         job_role.append(job["job_role"])
+
     
     return render_template("schedule_interview.html",job_roles = job_role)
-
-@app.route('/schedule_interview', methods=['POST'])
 
 
 
