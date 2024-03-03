@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Training Resources</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Training Resources</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Author</th>
+                <th>Format</th>
+                <th>Duration</th>
+                <th>Language</th>
+                <th>Level</th>
+                <th>Tags</th>
+                <th>Status</th>
+                <th>YouTube Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resource in training_resources %}
+                <tr>
+                    <td>{{ resource.id }}</td>
+                    <td>{{ resource.title }}</td>
+                    <td>{{ resource.category }}</td>
+                    <td>{{ resource.description }}</td>
+                    <td>{{ resource.author }}</td>
+                    <td>{{ resource.format }}</td>
+                    <td>{{ resource.duration }}</td>
+                    <td>{{ resource.language }}</td>
+                    <td>{{ resource.level }}</td>
+                    <td>{{ resource.tags }}</td>
+                    <td>{{ resource.status }}</td>
+                    <td><a href="{{ resource.youtube_link }}">Visit</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

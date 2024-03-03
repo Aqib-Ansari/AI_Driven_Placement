@@ -7,43 +7,62 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
+        /* Reset some default styles */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Cormorant Garamond', serif; /* Apply the same font style used in the registration page */
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            background-color: #f4f4f4;
-            color: #333;
+            color: #000; /* Black text color */
+            font-size: 16px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #2C3E50, #4CA1AF); /* Gradient background */
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.3s ease; /* Transition for background image */
         }
 
+        /* Add styling for the navigation bar */
         nav {
-            display: flex;
-            justify-content: space-between;
-            background-color: #333;
+            background-color: #34495E; /* Dark blue background color */
             overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease; /* Transition for background color */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adding shadow effect */
+            animation: fadeInDown 1.5s ease; /* Animation for fade in down */
         }
 
-        .nav-left,
-        .nav-right {
-            display: flex;
-        }
-
-        .nav-left a,
-        .nav-right a {
-            float: none;
-            display: block;
-            color: white;
+        nav a {
+            display: inline-block;
+            color: #fff; /* White text color */
             text-align: center;
             padding: 14px 16px;
             text-decoration: none;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease; /* Transition for background color */
+            animation: fadeIn 1.5s ease; /* Animation for fade in */
         }
+        h2 {
+        color: #000; /* Black text color */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Subtle text-shadow for better visibility */
+        margin-bottom: 10px;
+        transition: color 0.3s ease; /* Transition for text color */
+        animation: fadeInLeft 1.5s ease; /* Animation for fade in left */
+    }
 
-        .nav-left a:hover,
-        .nav-right a:hover {
-            background-color: #555;
+        nav a:hover {
+            background-color: #4CA1AF; /* Light blue background color on hover */
         }
+        .nav-right {
+    float: right; /* Aligns the navigation items to the right */
+}
 
+/* Add a clearfix to the nav to ensure proper alignment */
+nav::after {
+    content: "";
+    display: table;
+    clear: both;
+}
         .nav-right a i {
             margin-right: 5px;
         }
@@ -51,70 +70,144 @@
         h1 {
             margin: 20px 0;
             text-align: center;
-            color: #333;
+            color: #fff; /* White text color */
+            transition: color 0.3s ease; /* Transition for text color */
+            animation: slideInDown 1.5s ease; /* Animation for slide in down */
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            transition: background-color 0.3s ease; /* Transition for background color */
+            animation: fadeInUp 1.5s ease; /* Animation for fade in up */
         }
 
         section {
             margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Semi-transparent black border */
+            transition: border-color 0.3s ease; /* Transition for border color */
+            animation: fadeIn 1.5s ease; /* Animation for fade in */
         }
 
         section h2 {
-            color: #333;
+            color: #fff; /* White text color */
+            margin-bottom: 10px;
+            transition: color 0.3s ease; /* Transition for text color */
+            animation: fadeInLeft 1.5s ease; /* Animation for fade in left */
         }
 
         section p {
+            color: #000; /* Black text color */
             line-height: 1.6;
+            animation: fadeInRight 1.5s ease; /* Animation for fade in right */
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-left">
-            <a href="{{ url_for('post_job') }}">Post a Job</a>
-            <a href="{{ url_for('view_students') }}">View Student Details</a>
-            <a href="{{ url_for('schedule_interview') }}">Schedule Interview</a>
-            <a href="{{ url_for('scheduled_interviews') }}">Scheduled Interviews</a>
-            <a href="{{ url_for('placement_analytics') }}">Placement Analytics</a>
-            <a href="{{ url_for('job_listings') }}">Job Listings</a>
-        </div>
-        <div class="nav-right">
-            <a href="{{ url_for('company_view_profile') }}"><i class="fas fa-user-circle"></i> Profile</a>
-        </div>
-    </nav>
-
-    <h1>Welcome to the Company Dashboard</h1>
-
-    <div class="container">
-        <section id="welcome">
-            <h2>Welcome</h2>
-            <p>Welcome to {{company_name}}'s dashboard.</p>
-        </section>
-
-        <section id="postJob">
-            <h2>Post a Job</h2>
-            <p>This section allows you to post new job opportunities.</p>
-        </section>
-
-        <section id="viewStudents">
-            <h2>View Student Details</h2>
-            <p>Here you can view details of students who have applied for jobs.</p>
-        </section>
-
-        <section id="scheduleInterview">
-            <h2>Schedule Interview</h2>
-            <p>Use this section to schedule interviews with candidates.</p>
-        </section>
+<nav>
+    <a href="{{ url_for('post_job') }}">Post a Job</a>
+    <a href="{{ url_for('view_students') }}">View Student Details</a>
+    <a href="{{ url_for('schedule_interview') }}">Schedule Interview</a>
+    <!-- Add a link to the placement analytics page -->
+    <a href="{{ url_for('scheduled_interviews') }}">Scheduled Interviews</a>
+    <a href="{{ url_for('placement_analytics') }}">Placement Analytics</a>
+    <div class="nav-right">
+        <a href="{{ url_for('company_view_profile') }}"><i class="fas fa-user-circle"></i> Profile</a>
     </div>
+</nav>
+
+<h1>Welcome to the Company Dashboard</h1>
+
+<div class="container">
+
+    <section id="welcome">
+        <h2 style="color: #000; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">Welcome</h2>
+
+        <p>Thank you for using our company dashboard, {{company_name}}. Here you can manage job postings, view student details, and schedule interviews.</p>
+    </section>
+
+    <!-- Post a Job Section -->
+    <section id="postJob">
+        <h2 style="color: #000; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">Post a Job</h2>
+        <p>This section allows you to post job listings for open positions in your company. Provide details about the job title, requirements, responsibilities, and any other relevant information.</p>
+    </section>
+
+    <!-- View Student Details Section -->
+    <section id="viewStudents">
+        <h2 style="color: #000; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">View Student Details</h2>
+        <p>This section provides access to the details of students who have applied for positions in your company. You can view their resumes, qualifications, and other relevant information.</p>
+    </section>
+
+    <!-- Schedule Interview Section -->
+    <section id="scheduleInterview">
+        <h2 style="color: #000; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">Schedule Interview</h2>
+        <p>This section allows you to schedule interviews with prospective candidates. Specify the date, time, and location of the interview, and communicate the details to the candidates.</p>
+    </section>
+
+</div>
 
 </body>
 </html>
+
+
+company_dashboard.html

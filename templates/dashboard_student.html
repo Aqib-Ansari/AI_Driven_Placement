@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Placed</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
 
     <style>
         body {
             font-family: Arial, sans-serif;
+            position: relative;
             
         }
 
@@ -39,7 +40,7 @@
             
             border-radius: 5px;
             color: #222222;
-            background-color: #79c8fc;
+            background-color: #88cfff;
             
             transition: background-color 0.3s;
         }
@@ -55,38 +56,70 @@
         #upload-resume {
             display: none;
         }
+
+        .dashboard-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #7bbdea; /* Example background color */
+    color: #fff; /* Example text color */
+    padding: 10px;
+    margin-top: 0;
+}
+
+.user-list {
+    list-style: none;
+    width:fit-content;
+    border-radius: 3px;
+    margin-left: 2%;
+    padding: 10px;
+    background-color: #f2f2f2; /* Example background color */
+}
+
+.user-list p {
+    margin: 0;
+}
+
+
     </style>
 </head>
 <body style="margin: 0px; padding: 0px;">
     
    
 
-   
+    
 
-    <div class="button-container" style="width: 100%; height: 80px; background-color: rgb(20, 127, 208);">
+    <div class="button-container" style="width: 100%; height: 80px; background-color: rgb(148, 235, 255);">
         <div style="margin-top: 0px; padding-top: 0px; margin-left: 20px; margin-right: 20px; ">
-        <a href="/student_details" class="action-button"><b>Update Details</b></a>
+            <b style="font-size: 20px;">Placed</b>
+        <a href="/" class="action-button"><b>Home</b></a>
+        <a href="/student_details" class="action-button"><b>Details</b></a>
         <a href="/quiz_details" class="action-button"><b>Give Mock Test</b></a>
         <a href="/view_jobs" class="action-button"><b>View Jobs</b></a>
         <a href="https://kccollege.edu.in/alumni/" class="action-button"><b>Contact Alumni</b></a>
         <a href="/upload_resume" class="action-button"><b>upload resume</b></a>
+        <a href="/start_interview" class="action-button"><b>Give Mock Interview</b></a>
+        <a href="/training" class="action-button"><b>Training Resources</b></a>
+        
+        <a href="/profile" class="action-button" style="float: right; margin-right: 20px;height: 50px; padding: 3px; border-radius: 50%; border: 3px solid rgb(140, 206, 250); background-color: #b8e3ff; margin-top: 10px; "><img src="{{ url_for('static', filename='profile.jpg') }}" alt="Profile Picture" class="profile-picture" style="margin: top 0; padding-top: 0%; width: 50px;height: auto; border-radius: 50%;">
+        </a>
         <a href="/start_interview" class="action-button"><b>Give Mock Interview</b></a>
     
         <a href="/notifications" class="action-button" style="float: right; margin-right: 20px; background-color: #ffcc00; color: black;height: 30px; padding: 4px; "><h3 style="margin: 0px; padding: 0px;"><img src="static/bell.png" alt="Description of the image" style="height: 30px ; width: auto; margin: 0px; padding: 0%;" ></h3></a>
     </div>
     </div>
 
-    <h1 style="display: flex; "> Student Dashboard</h1>
+    <h1 class="dashboard-heading">Student Dashboard</h1>
 
-    <ul>
-        <p>User : {% for item in student_list %}
+    <ul class="user-list">
+        <p> {% for item in student_list %}
             {{ item }}
         {% endfor %}</p>
+    </ul>
         
     </ul>
     <img src="/static/student2.jpg" alt="Dashboard Image" style="width: 400px; margin-left: 38%;">
    
-
-
+    
 </body>
 </html>

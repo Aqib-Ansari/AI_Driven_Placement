@@ -6,49 +6,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <style>
-        /* CSS styles for navigation */
-header {
-    background-color: #333;
-    padding: 10px 0; /* Add padding for better spacing */
-}
+        /* Reset CSS */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-nav ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
+        /* Body styles */
+        body {
+            font-family: Cormorant Garamond;
+            line-height: 1.6;
+            background-color: #ffffff;
+            color: #333;
+        }
 
-nav ul li {
-    display: inline;
-    margin-right: 10px;
-}
+        /* Header styles */
+        header {
+            background-color: #B8D8E3;
+            padding: 15px 0;
+            text-align: center;
+        }
 
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    padding: 10px;
-    background: none; /* Set background to none */
-    transition: background-color 0.3s; /* Add transition for smoother hover effect */
-}
+        header h1 {
+            color: #0a0101;
+        }
 
-nav ul li a:hover {
-    background-color: #555;
-}
+        /* Navigation styles */
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+        }
 
-/* Media query for responsiveness */
-@media (max-width: 600px) {
-    nav ul li {
-        display: block;
-        margin-bottom: 5px;
-    }
+        nav ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
 
-    nav ul li a {
-        display: block;
-        padding: 10px;
-    }
-}
+        nav ul li a {
+            color: #120101;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
 
+        nav ul li a:hover {
+            background-color: #555;
+        }
+
+        /* Main content styles */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            border: 1px solid #B8D8E3;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #B8D8E3;
+            color: #080202;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        
     </style>
+
 </head>
 <body>
     <header>
@@ -63,6 +96,9 @@ nav ul li a:hover {
     </header>
     <h1>Welcome to Admin Dashboard</h1>
     <!-- Other content goes here -->
+
     <img src="/static/admin.jpg" alt="Dashboard Image" style="width: 400px; margin-left: 40%;">
+
+   
 </body>
 </html>

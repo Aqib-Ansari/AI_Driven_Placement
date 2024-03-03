@@ -94,6 +94,131 @@
     {% if inter_pro %}
     <form method="post" action="/interview_process">
         <div class="mb-3">
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="answer" required></textarea>
+          </div>
+        <button type="submit">Submit</button>
+    </form>
+    
+    {% endif %}
+   
+    {% if result %}
+    <div class="div1">
+        <p style="margin: 30px;">{{ result }}</p>
+    </div>
+    {% endif %}
+
+    {% if start %}
+    <div class="div2" style="margin-left: 40%;">
+        <a href="/interview_process"><button>Start Interview</button></a>
+    </div>
+    {% endif %}
+
+    <a href="/student_dashboard1"><button style="color: #ffffff; margin-left: 90%; background-color: #959595;">back</button></a>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai Interviewer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        a {
+            width: 20%;
+            padding: 5px;
+            justify-items: center;
+            
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .div1 {
+            margin: 30px;
+            padding: 20px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        @media screen and (max-width: 768px) {
+            form {
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Interviewer</h1>
+
+    {% if question %}
+    <div class="div1">
+        <p style="margin: 30px;">{{ question }}</p>
+    </div>
+    {% endif %}
+
+    
+    
+
+    {% if inter_pro %}
+    <form method="post" action="/interview_process">
+        <div class="mb-3">
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="answer"></textarea>
           </div>
         <button type="submit">Submit</button>

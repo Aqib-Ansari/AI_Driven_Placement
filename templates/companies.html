@@ -6,117 +6,186 @@
     <title>Company List</title>
     <!-- Include CSS styles -->
     <style>
-        /* CSS styles for company list */
-        /* CSS styles for navigation */
-        header {
-            background-color: #333;
-        }
-
-        nav ul {
-            list-style-type: none;
-            padding: 0;
+        /* Reset CSS */
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
         }
 
-        nav ul li {
-            display: inline;
-            margin-right: 10px;
+        /* Body styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4; /* Light gray background color */
+            color: #333; /* Black text color */
+            padding: 40px;
+            text-align: center;
         }
 
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-        }
-
-        nav ul li a:hover {
-            background-color: #555;
-        }
-        
-        /* CSS styles for company list */
-        .company-section {
-            margin-bottom: 30px;
-        }
-
-        .company {
+        /* Dropdown styles */
+        .dropdown {
             margin-bottom: 20px;
-            border: 1px solid #ccc;
+        }
+
+        .dropdown select {
             padding: 10px;
+            font-size: 16px;
+            border: 1px solid #333; /* Dark gray border color */
+            border-radius: 5px;
+            background-color: #fff; /* White background color */
+            color: #333; /* Black text color */
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #333; /* Dark gray border color */
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #B8D8E3; /* Light blue background color */
+        }
+
+        /* Company section styles */
+        .company-section {
+            display: none;
+        }
+
+        .company-section.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/students">Students</a></li>
-                <li><a href="/companies">Companies</a></li>
-                <li><a href="/training_resources">Training Resources</a></li>
-            </ul>
-        </nav>
-    </header> 
+    <!-- Dropdown for selecting company section -->
+    <div class="dropdown">
+        <select id="companyDropdown">
+            <option value="company_registration">Company Registration</option>
+            <option value="interviews">Interviews</option>
+            <option value="job_posting">Job Postings</option>
+        </select>
+    </div>
 
-    <h1>Company List</h1>
-    
     <!-- Display company registration data -->
-    <div class="company-section">
+    <div class="company-section active" id="company_registration">
         <h2>Company Registration</h2>
-        <div id="company_registration">
-            {% for company in company_registration %}
-                <div class="company">
-                    <h3>{{ company.company_name }}</h3>
-                    <p>Registration Number: {{ company.registration_number }}</p>
-                    <p>Address: {{ company.address }}</p>
-                    <p>Phone Number: {{ company.phone_number }}</p>
-                    <p>Email: {{ company.email }}</p>
-                    <p>Industry Type: {{ company.industry_type }}</p>
-                    <p>Company Description: {{ company.company_description }}</p>
-                    <p>Logo: {{ company.logo_upload_filename }}</p>
-                    <p>Company Size: {{ company.company_size }}</p>
-                    <!-- Add other fields as needed -->
-                </div>
-            {% endfor %}
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Registration Number</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Industry Type</th>
+                    <th>Company Description</th>
+                    <th>Logo</th>
+                    <th>Company Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in company_registration %}
+                    <tr>
+                        <td>{{ company.company_name }}</td>
+                        <td>{{ company.registration_number }}</td>
+                        <td>{{ company.address }}</td>
+                        <td>{{ company.phone_number }}</td>
+                        <td>{{ company.email }}</td>
+                        <td>{{ company.industry_type }}</td>
+                        <td>{{ company.company_description }}</td>
+                        <td>{{ company.logo_upload_filename }}</td>
+                        <td>{{ company.company_size }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- Display interview data -->
-     <!-- Interviews Section -->
-     <div class="company-section">
+    <div class="company-section" id="interviews">
         <h2>Interviews</h2>
-        <div id="interviews">
-            {% for interview in interviews %}
-                <div class="company">
-                    <h3>{{ interview.interview_date }}</h3>
-                    <p>Interviewer: {{ interview.interviewer }}</p>
-                    <p>Location: {{ interview.location }}</p>
-                    <!-- Add other fields as needed -->
-                </div>
-            {% endfor %}
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Interview Date</th>
+                    <th>Interviewer</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for interview in interviews %}
+                    <tr>
+                        <td>{{ interview.interview_date }}</td>
+                        <td>{{ interview.interviewer }}</td>
+                        <td>{{ interview.location }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
 
     <!-- Display job posting data -->
-    <div class="company-section">
+    <div class="company-section" id="job_posting">
         <h2>Job Postings</h2>
-        <div id="job_posting">
-            {% for job_posting in job_posting %}
-                <div class="company">
-                    <h3>{{ job_posting.job_title }}</h3>
-                    <p>Description: {{ job_posting.description }}</p>
-                    <p>Location: {{ job_posting.location }}</p>
-                    <p>Company ID: {{ job_posting.company_id }}</p>
-                    <p>Job Role: {{ job_posting.job_role }}</p>
-                    <p>Job Type: {{ job_posting.job_type }}</p>
-                    <p>Skills Required: {{ job_posting.skills_required }}</p>
-                    <p>Number of Employees: {{ job_posting.num_employees }}</p>
-                    <p>Number of Openings: {{ job_posting.num_openings }}</p>
-                    <p>Responsibilities: {{ job_posting.responsibilities }}</p>
-                    <!-- Add other fields as needed -->
-                </div>
-            {% endfor %}
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Company ID</th>
+                    <th>Job Role</th>
+                    <th>Job Type</th>
+                    <th>Skills Required</th>
+                    <th>Number of Employees</th>
+                    <th>Number of Openings</th>
+                    <th>Responsibilities</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job_posting in job_posting %}
+                    <tr>
+                        <td>{{ job_posting.job_title }}</td>
+                        <td>{{ job_posting.description }}</td>
+                        <td>{{ job_posting.location }}</td>
+                        <td>{{ job_posting.company_id }}</td>
+                        <td>{{ job_posting.job_role }}</td>
+                        <td>{{ job_posting.job_type }}</td>
+                        <td>{{ job_posting.skills_required }}</td>
+                        <td>{{ job_posting.num_employees }}</td>
+                        <td>{{ job_posting.num_openings }}</td>
+                        <td>{{ job_posting.responsibilities }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+
+    <script>
+        // JavaScript to toggle visibility of company sections based on dropdown selection
+        document.getElementById('companyDropdown').addEventListener('change', function() {
+            var selectedSectionId = this.value;
+            var companySections = document.querySelectorAll('.company-section');
+            
+            // Hide all sections
+            companySections.forEach(function(section) {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            var selectedSection = document.getElementById(selectedSectionId);
+            selectedSection.classList.add('active');
+        });
+    </script>
 </body>
 </html>

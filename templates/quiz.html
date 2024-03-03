@@ -77,97 +77,80 @@
     </style>
 </head>
 <body>
-    <h1>Quiz on {{ selected_subject }}</h1>
-    <!-- Display the selected subject here -->
-
+    <div id="timer">Timer: <span id="timerDisplay">00:00</span></div>
     <h1>{{ questions['question'] }}</h1>
-    <div id="timer">Timer: <span id="timerDisplay"></span></div>
-    <form id="quizForm" action="/submit_answer" method="post">
-        <!-- Form content as before -->
-        <input type="hidden" name="answer" id="answer">
 
+    <form action="/submit_answer" method="post">
+        <!-- {{option}} -->
         <label>
-            <input type="radio" name="answer_option_{{ current_question_index }}" value="1"> {{ questions["option1"] }}
+            {% if option == "1" %}
+            <input type="radio" name="answer" value="1" checked> {{ questions["option1"] }}
+            {% else %}
+            <input type="radio" name="answer" value="1"> {{ questions["option1"] }}
+            {% endif %}
         </label>
         <br>
         <label>
-            <input type="radio" name="answer" value="2"> {{ questions["option2"] }}
+            {% if option == "2" %}
+            <input type="radio" name="answer" value="2" required checked> {{ questions["option2"] }}
+            {% else %}
+            <input type="radio" name="answer" value="2" required> {{ questions["option2"] }}
+            {% endif %}
         </label>
         <br>
         <label>
-            <input type="radio" name="answer_option_{{ current_question_index }}" value="3"> {{ questions["option3"] }}
+            {% if option == "3" %}
+            <input type="radio" name="answer" value="3" checked> {{ questions["option3"] }}
+            {% else %}
+            <input type="radio" name="answer" value="3"> {{ questions["option3"] }}
+            {% endif %}
         </label>
         <br>
         <label>
-            <input type="radio" name="answer_option_{{ current_question_index }}" value="4"> {{ questions["option4"] }}
+            {% if option == "4" %}
+            <input type="radio" name="answer" value="4" checked> {{ questions["option4"] }}
+            {% else %}
+            <input type="radio" name="answer" value="4"> {{ questions["option4"] }}
+            {% endif %}
         </label>
-        <div id="navigationButtons">
-            <button type="button" id="backButton" >Back</button>
-            <button type="submit" id="nextButton">Next</button>
-        </div>
+        <br>
+        <button id="nextButton" type="submit">Next</button>
+        <a href="/previous_question">Previous</a>
     </form>
-
     <script>
         var timerDisplay = document.getElementById("timerDisplay");
-        var quizForm = document.getElementById("quizForm");
-        var selectedTime = parseInt(localStorage.getItem("selectedTime")) || 0;
-        var initialMinutes = Math.floor(selectedTime / 60);
-        var initialSeconds = selectedTime % 60;
-        timerDisplay.textContent = initialMinutes + "m " + initialSeconds + "s";
-        var timerInterval;
+        var selectedTimeInSeconds = parseInt(localStorage.getItem("selectedTime")) || 0;
+        var countdownInterval;
+        var timerStarted = false;
     
-        function countdown() {
-            var minutes = Math.floor(selectedTime / 60);
-            var seconds = selectedTime % 60;
-            timerDisplay.textContent = minutes + "m " + seconds + "s";
-            if (selectedTime > 0) {
-                selectedTime--;
-                localStorage.setItem("selectedTime", selectedTime);
-                timerInterval = setTimeout(countdown, 1000);
-            } else {
-                clearInterval(timerInterval);
-                redirectToResults();
-            }
-        }
-        countdown();
+        function startTimer() {
+            var timeLeft = parseInt(localStorage.getItem("timeLeft")) || selectedTimeInSeconds;
+            updateTimerDisplay(timeLeft);
     
-        function redirectToResults() {
-            window.location.href = "http://127.0.0.1:5000/submit_answer";
+            countdownInterval = setInterval(function() {
+                timeLeft--;
+                localStorage.setItem("timeLeft", timeLeft);
+                updateTimerDisplay(timeLeft);
+    
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    localStorage.removeItem("timeLeft");  // Clear stored time at the end
+                    document.querySelector("form").submit();
+                }
+            }, 1000);
         }
+    
+        function updateTimerDisplay(timeLeft) {
+            var minutes = Math.floor(timeLeft / 60);
+            var seconds = timeLeft % 60;
+            timerDisplay.textContent = minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+        }
+    
+        window.onload = startTimer;
     
         document.getElementById("nextButton").addEventListener("click", function() {
-            clearTimeout(timerInterval);
+            // Don't clear the interval here, as we want the timer to continue
         });
-    
-        document.getElementById("backButton").addEventListener("click", function() {
-            // Save the selected answer and current question index
-            var currentQuestionIndex = "{{ current_question_index }}";
-            var selectedAnswer = document.querySelector('input[name="answer_option_' + currentQuestionIndex + '"]:checked');
-            if (selectedAnswer) {
-                localStorage.setItem("selectedAnswer_" + currentQuestionIndex, selectedAnswer.value);
-            }
-            localStorage.setItem("currentQuestionIndex", currentQuestionIndex);
-    
-            // Go back to the previous question
-            var prevQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex")) - 1;
-            if (prevQuestionIndex >= 0) {
-                window.location.href = "/navigate_previous_question?prev_question=" + prevQuestionIndex;
-            } else {
-                // Handle the case where the current question is the first question
-                alert("You are already on the first question.");
-            }
-        });
-    
-        // Set the selected answer when navigating back to this question
-        var currentQuestionIndex = "{{ current_question_index }}";
-        var selectedAnswerValue = localStorage.getItem("selectedAnswer_" + currentQuestionIndex);
-        if (selectedAnswerValue !== null) {
-            var selectedAnswer = document.querySelector('input[value="' + selectedAnswerValue + '"]');
-            if (selectedAnswer) {
-                selectedAnswer.checked = true;
-            }
-        }
-
     </script>
     
 </body>

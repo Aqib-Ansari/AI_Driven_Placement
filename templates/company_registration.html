@@ -4,231 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Registration</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Add Google Fonts link -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Add Google Fonts link -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap">
-
     <style>
-        body {
-            font-family: 'Cormorant Garamond '; /* Use Roboto font */
-            margin: 20px;
-            background: linear-gradient(135deg, #2C3E50, #3498DB);
-            color: #fff;
-        }
+       body {
+    font-family: 'Roboto', sans-serif;
+    margin: 20px;
+    background-color: #f5f5f5;
+}
 
-        h2 {
-            text-align: center;
-            color: #fff;
-            margin-bottom: 30px;
-        }
+h2 {
+    text-align: center;
+    color: #4285f4;
+}
 
-        form {
-            width: 90%;
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 0.5s ease;
-            font-size: 20px;
-        }
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #0c0c0c;
-        }
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
 
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px; /* Add margin between input boxes */
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            font-size: 20px;
-            font-family: 'Cormorant Garamond';/* Use Roboto font */
-        }
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 
-        .input-group {
-            position: relative;
-        }
+button {
+    padding: 12px;
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-        .input-group button {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            color: #666;
-        }
+button:hover {
+    background-color: #3b79c1;
+}
 
-        button:focus {
-            outline: none;
-        }
-        .btn-primary-custom {
-        background-color: #3498DB; /* Blue color */
-        border-color: #3498DB; /* Blue color */
-        color: #fff; /* White text color */
-        }
+/* Style for checkboxes */
+input[type="checkbox"] {
+    margin-right: 5px;
+}
 
-        .btn-primary-custom:hover {
-        background-color: #2980B9; /* Darker shade of blue on hover */
-        border-color: #2980B9; /* Darker shade of blue on hover */
-        }   
+/* Style for file input */
+input[type="file"] {
+    margin-top: 5px;
+}
 
+/* Responsive layout adjustments */
+@media (max-width: 768px) {
+    form {
+        padding: 15px;
+    }
+}
 
-        button:hover {
-            color: #333;
-        }
-
-        button:active {
-            transform: translateY(-50%) scale(0.95);
-        }
-
-        button.show-password-btn:focus {
-            outline: none;
-        }
-
-        button.show-password-btn:hover {
-            color: #333;
-        }
-
-        button.show-password-btn:active {
-            transform: translateY(-50%) scale(0.95);
-        }
-
-        button.show-password-btn:active,
-        button.show-password-btn:focus {
-            outline: none;
-        }
-
-        button.show-password-btn {
-            font-size: 18px;
-        }
-
-        @media (max-width: 768px) {
-            form {
-                padding: 15px;
-            }
-            input,
-            textarea,
-            select {
-                font-size: 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            form {
-                width: 95%;
-            }
-            input,
-            textarea,
-            select {
-                font-size: 20px;
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
     </style>
 </head>
 <body>
 
-<h2>Company Registration</h2>
+    <h2>Company Registration</h2>
 
-<form action="/company_dashboard" method="post" enctype="multipart/form-data" class="mx-auto bg-light p-4 rounded shadow-sm" style="max-width: 700px;padding: 30px 100px;margin-bottom: 40px" id="registrationForm">
-    <div class="mb-3">
-        <label for="userCredentials" class="form-label">User Credentials:</label>
-        <div class="row g-3">
-            <div class="col">
-                <input type="text" class="form-control" id="username" name="username" placeholder="Username (alphabets only)" pattern="[A-Za-z]+" maxlength="28" required>
-            </div>
-            <div class="col">
-                <div class="input-group">
-                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password (8-16 characters, alphanumeric)" pattern="^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,16}$" required maxlength="16" minlength="8">
-                    <button class="btn btn-outline-secondary show-password-btn" type="button" id="showPassword1"><i class="fas fa-eye"></i></button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="input-group">
-                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Re-enter Password" pattern="^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,16}$" required maxlength="16" minlength="8" required>
-                    <button class="btn btn-outline-secondary show-password-btn" type="button" id="showPassword2"><i class="fas fa-eye"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Add other form fields here -->
-    
-    <div class="mb-3">
-        <label for="companyName" class="form-label">Company Name:</label>
-        <input type="text" class="form-control" id="companyName" name="companyName" required>
-    </div>
+    <form action="/company_dashboard" method="post" enctype="multipart/form-data">
 
-    <div class="mb-3">
-        <label for="registrationNumber" class="form-label">Business Registration Number:</label>
-        <input type="number" class="form-control" id="registrationNumber" name="registrationNumber" maxlength="21" required>
-    </div>
+        <label for="userCredentials">User Credentials:</label>
+        <label for="companyName">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="companyName">Password:</label>
+        <input type="password" id="password" name="password1" required>
+        <label for="companyName">Re-Enter Password:</label>
+        <input type="password" id="password" name="password2" required>
+        
 
-    <div class="mb-3">
-        <label for="address" class="form-label">Address:</label>
-        <textarea class="form-control" id="address" name="address" rows="4"  maxlength="68" required></textarea>
-    </div>
 
-    <div class="mb-3">
-        <label for="phoneNumber" class="form-label">Phone Number:</label>
-        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" maxlength="10" required>
-    </div>
+        <label for="companyName">Company Name:</label>
+        <input type="text" id="companyName" name="companyName" required>
 
-    <div class="mb-3">
-        <label for="email" class="form-label">Email Address:</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-    </div>
+        <label for="registrationNumber">Business Registration Number:</label>
+        <input type="text" id="registrationNumber" name="registrationNumber" required>
 
-    <div class="mb-3">
-        <label for="industryType" class="form-label">Industry Type:</label>
-        <select class="form-select" id="industryType" name="industryType" required>
-            <option value="" disabled selected>Select Industry Type</option>
-            <option value="Software Development">Software Development</option>
-            <option value="Information Technology Services">Information Technology Services</option>
-            <option value="Hardware Manufacturing">Hardware Manufacturing</option>
-            <option value="Telecommunications">Telecommunications</option>
-            <option value="Cybersecurity">Cybersecurity</option>
-            <option value="Artificial Intelligence">Artificial Intelligence</option>
-            <option value="Cloud Computing">Cloud Computing</option>
-            <option value="Data Analytics">Data Analytics</option>
-            <option value="Robotics">Robotics</option>
-            <option value="Internet of Things (IoT)">Internet of Things (IoT)</option>
-            <option value="Blockchain">Blockchain</option>
-            <option value="Augmented Reality (AR)">Augmented Reality (AR)</option>
-            <option value="Virtual Reality (VR)">Virtual Reality (VR)</option>
-            <option value="Fintech">Fintech</option>
-            <option value="Healthtech">Healthtech</option>
-            <option value="Edtech">Edtech</option>
-            <option value="E-commerce">E-commerce</option>
-            <option value="Mobile App Development">Mobile App Development</option>
-            <option value="Gaming">Gaming</option>
-            <option value="Digital Marketing">Digital Marketing</option>
-            <option value="Other">Other</option>
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" rows="4" required></textarea>
+
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" required>
+
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="industryType">Industry Type:</label>
+        <select id="industryType" name="industryType" required>
+            <option value="IT">IT</option>
+            <option value="Finance">Finance</option>
+            <!-- Add more options as needed -->
         </select>
     </div>
 
@@ -244,52 +125,18 @@
 
     <div class="mb-3">
         <label for="companySize" class="form-label">Company Size:</label>
-        <input type="number" class="form-control" id="companySize" name="companySize" required maxlength="5" max="99999" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+        <input type="number" class="form-control" id="companySize" name="companySize" required>
     </div>
 
-    <button type="submit" class="btn btn-primary-custom" style="max-width:700px;padding: 30px 100px; border-radius: 10px;" id="submitButton">
+    <button type="submit" class="btn btn-primary" style="max-width:170px;padding: 15px 30px; border-radius: 10px; ">
         Submit
     </button>
-    
 </form>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $("#showPassword1").click(function(){
-            var passwordField = $("#password1");
-            var passwordType = passwordField.attr("type");
-            if(passwordType === "password"){
-                passwordField.attr("type", "text");
-                $(this).html('<i class="fas fa-eye-slash"></i>');
-            } else {
-                passwordField.attr("type", "password");
-                $(this).html('<i class="fas fa-eye"></i>');
-            }
-        });
-
-        $("#showPassword2").click(function(){
-            var passwordField = $("#password2");
-            var passwordType = passwordField.attr("type");
-            if(passwordType === "password"){
-                passwordField.attr("type", "text");
-                $(this).html('<i class="fas fa-eye-slash"></i>');
-            } else {
-                passwordField.attr("type", "password");
-                $(this).html('<i class="fas fa-eye"></i>');
-            }
-        });
-
-        $("#registrationForm").submit(function(event){
-            var password1 = $("#password1").val();
-            var password2 = $("#password2").val();
-            if(password1 !== password2){
-                alert("Passwords do not match.");
-                event.preventDefault();
-            }
-        });
-    });
-</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
+
+
+

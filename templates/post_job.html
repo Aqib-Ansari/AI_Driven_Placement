@@ -140,6 +140,27 @@
                 <option value="cgpa">CGPA</option>
             </select>
         </div>
+                
+        <div class="form-group">
+            <label for="application_deadline_date">Application Deadline Date:</label>
+            <input type="date" class="form-control" id="application_deadline_date" name="application_deadline_date" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="application_deadline_time">Application Deadline Time:</label>
+            <div class="input-group">
+                <input type="time" class="form-control" id="hours" name="hours" placeholder="Hours" min="1" max="12" required>
+            </div>
+        </div>
+        
+        <!-- Eligibility Criteria for 10th Students -->
+        <div class="form-group">
+            <label for="eligibility_10th_criteria">Select Eligibility Criteria for 10th:</label>
+            <select class="form-select" id="eligibility_10th_criteria" name="eligibility_10th_criteria">
+                <option value="percentage">Percentage</option>
+                <option value="cgpa">CGPA</option>
+            </select>
+        </div>
 
         <div class="form-group">
             <label for="eligibility_10th_value">Eligibility Value for 10th:</label>
