@@ -8,10 +8,6 @@ def make_sql_connection():
                                 user='sql6682320',
                                 password='zGRcDLE2gC',
                                 database='sql6682320',
-    connection = pymysql.connect(host='sql6.freesqldatabase.com',
-                                user='sql6682320',
-                                password='zGRcDLE2gC',
-                                database='sql6682320',
                                 charset='utf8mb4',
                                 cursorclass=pymysql.cursors.DictCursor)
     return connection

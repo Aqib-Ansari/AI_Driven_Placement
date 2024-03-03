@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz App</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+
     <style>
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -12,23 +14,27 @@
             padding: 0;
             background-color: #f8f8f8;
             color: #333;
+            /* text-align: center; */
         }
 
         h1 {
-            margin: 20px 40px;
-            width: fit-content;
-            height: auto;
-            font-size: 24px;
-            padding: 20px 40px;
-            color: white;
-            background-color: #1e1e1e;
-            border-radius: 5px 5px;
-        }
+    margin: 20px 40px;
+    width:fit-content;
+    height: auto;
+    font-size: 24px;
+    padding: 20px 40px;
+    color: white;
+    background-color: #1e1e1e;
+    border-radius: 5px 5px;
+    /* padding: 10px; */
+}
 
         form {
             margin-top: 20px;
             display: flex;
             flex-direction: column;
+            /* align-items: center; */
+            
         }
 
         label {
@@ -61,32 +67,23 @@
             color: #1e1e1e;
             font-size: large;
             font-weight: bolder;
-        }
-
-        #timer {
-            margin-top: 20px;
-            font-size: 20px;
-            text-align: center;
-        }
-
-        #navigationButtons {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
+            
+            
         }
     </style>
 </head>
 <body>
-    <div id="timer">Timer: <span id="timerDisplay">00:00</span></div>
+     <div id="timer">Timer : <span id="remaining_time"></span></div>
     <h1>{{ questions['question'] }}</h1>
 
     <form action="/submit_answer" method="post">
         <!-- {{option}} -->
+        
         <label>
             {% if option == "1" %}
-            <input type="radio" name="answer" value="1" checked> {{ questions["option1"] }}
+            <input type="radio" name="answer" value="1" checked  > {{ questions["option1"] }}
             {% else %}
-            <input type="radio" name="answer" value="1"> {{ questions["option1"] }}
+            <input type="radio" name="answer" value="1"  > {{ questions["option1"] }}
             {% endif %}
         </label>
         <br>
@@ -108,49 +105,61 @@
         <br>
         <label>
             {% if option == "4" %}
-            <input type="radio" name="answer" value="4" checked> {{ questions["option4"] }}
+            <input type="radio" name="answer" value="4"> {{ questions["option4"] }}
             {% else %}
             <input type="radio" name="answer" value="4"> {{ questions["option4"] }}
             {% endif %}
         </label>
         <br>
-        <button id="nextButton" type="submit">Next</button>
+        <button type="submit">Next</button>
         <a href="/previous_question">Previous</a>
     </form>
-    <script>
-        var timerDisplay = document.getElementById("timerDisplay");
-        var selectedTimeInSeconds = parseInt(localStorage.getItem("selectedTime")) || 0;
-        var countdownInterval;
-        var timerStarted = false;
-    
-        function startTimer() {
-            var timeLeft = parseInt(localStorage.getItem("timeLeft")) || selectedTimeInSeconds;
-            updateTimerDisplay(timeLeft);
-    
-            countdownInterval = setInterval(function() {
-                timeLeft--;
-                localStorage.setItem("timeLeft", timeLeft);
-                updateTimerDisplay(timeLeft);
-    
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    localStorage.removeItem("timeLeft");  // Clear stored time at the end
-                    document.querySelector("form").submit();
+
+    <!-- <script>
+        function updateRemainingTime() {
+            fetch('/remaining_time')
+            .then(response => response.json())
+            .then(data => {
+                let minutes = Math.floor(data.remaining_time_in_seconds / 60);
+                let seconds = Math.floor(data.remaining_time_in_seconds % 60);
+                if (seconds < 10 && seconds >= 0) {
+                    seconds = "0" + seconds;
                 }
-            }, 1000);
+    
+                let remainingTimeElement = document.getElementById("remaining_time");
+                remainingTimeElement.innerText = `${minutes}:${seconds}`;
+                document.getElementById("remaining_time").innerText = minutes + ":" + seconds;
+    
+            })
+        }
+        setInterval(updateRemainingTime, 50);
+    </script> -->
+
+    <script>
+        function updateRemainingTime() {
+            fetch('/remaining_time')
+                .then(response => response.json())
+                .then(data => {
+                    let remainingTime = data.remaining_time_in_seconds;
+    
+                    if (remainingTime <= 0) {
+                        // Redirect to the "/end_test" route
+                        window.location.href = "/end_test";
+                    } else {
+                        let minutes = Math.floor(remainingTime / 60);
+                        let seconds = Math.floor(remainingTime % 60);
+    
+                        if (seconds < 10 && seconds >= 0) {
+                            seconds = "0" + seconds;
+                        }
+    
+                        let remainingTimeElement = document.getElementById("remaining_time");
+                        remainingTimeElement.innerText = `${minutes}:${seconds}`;
+                    }
+                });
         }
     
-        function updateTimerDisplay(timeLeft) {
-            var minutes = Math.floor(timeLeft / 60);
-            var seconds = timeLeft % 60;
-            timerDisplay.textContent = minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
-        }
-    
-        window.onload = startTimer;
-    
-        document.getElementById("nextButton").addEventListener("click", function() {
-            // Don't clear the interval here, as we want the timer to continue
-        });
+        setInterval(updateRemainingTime, 50); // Update every second
     </script>
     
 </body>
