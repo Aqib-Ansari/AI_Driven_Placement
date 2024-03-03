@@ -339,6 +339,9 @@ def previous_question():
 def end_test():
     return render_template("results.html",result = sum(session["correct_answers"]),len = session["no_of_question"],percentage = ((sum(session["correct_answers"])*100)/10))
 
+@app.route('/dashboard_student')
+def dashboard_student():
+    return render_template('dashboard_student.html')
 # ------------------------------------------------ Details ----------------------------------------------------------
 
 @app.route('/student_details')
