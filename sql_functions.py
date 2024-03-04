@@ -45,12 +45,19 @@ cursor.execute("SET SESSION time_zone = '+5:30';")
 
 def insert_register_student(username,email,password,enrollment_num,college,course,year,rollno):
     cursor = connection.cursor()
+    sql = "INSERT INTO student_register (username, email, password, enrollment_num, college, course, year, rollno) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    values = (username, email, password, enrollment_num, college, course, year, rollno)
+    cursor.execute(sql, values)
+    connection.commit()
+'''
+def insert_register_student(username,email,password,enrollment_num,college,course,year,rollno):
+    cursor = connection.cursor()
     sql = f"INSERT INTO student_register (username, email, password, enrollment_num, college, course, year, rollno) VALUES ('{username}', '{email}', '{password}', '{enrollment_num}', '{college}', '{course}','{year}', {rollno});"
     cursor.execute(sql)
     result = cursor.fetchall()
     print(result)
     connection.commit()
-
+'''
 # def select_register_student()
 
 # def upload_resume():

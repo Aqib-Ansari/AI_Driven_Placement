@@ -36,7 +36,7 @@ def register_admin():
     return render_template('admin_registration.html')
 
 
-
+'''
 @app.route('/register_data', methods=['POST'])
 def register_data():
     if request.method=="POST":
@@ -59,6 +59,30 @@ def register_data():
         
     
     return redirect(url_for("redirect_to_student_dashboard"))
+'''
+@app.route('/register_data', methods=['POST'])
+def register_data():
+    if request.method=="POST":
+        student = {
+            "name": request.form['username'],
+            "email": request.form['email'],
+            "pass2": request.form['pass2'],
+            "Enrolno": request.form['Enrolno'],
+            "college": request.form['college'],
+            "course": request.form['course'],
+            "year": request.form['year'],
+            "rollno": request.form['rollno']
+        }
+        
+        sql_functions.insert_register_student(username=student['name'],email=student['email'],password=student['pass2'],enrollment_num=student['Enrolno'],college=student['college'],course=student['course'],year=student['year'],rollno=student['rollno'])
+        session["user"] = student["email"]
+        
+        return redirect(url_for("redirect_to_student_dashboard"))
+    else:
+        name = "not found"
+    
+    return redirect(url_for("redirect_to_student_dashboard"))
+
 
 @app.route('/redirect', methods=['POST'])
 def redirect_to_page():
