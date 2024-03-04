@@ -535,6 +535,9 @@ def job_applied(job_id):
 
 
 # -------------------------------------------- Ai Interviewer -------------------------------------
+
+
+
 prompt = """
  You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role data science. 
   Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate
@@ -563,6 +566,7 @@ def interview_process():
     else:
         question = ai_interviewer.chat.send_message("Ask me only 1 easy python interview question")
         return render_template('interviewer.html', result=session["last_answer"], question = question.text, inter_pro = True)
+    
 
 # -------------------------------------------- training resources --------------------------------------------------
 
