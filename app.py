@@ -199,6 +199,8 @@ def profile():
     print(profile_filename["filename"])
     return render_template("profile.html", image_pro=profile_filename["filename"])
 
+
+'''
 @app.route('/notifications')
 def notifications():
     student_details = sql_functions.get_student_details(session['user'])
@@ -207,6 +209,28 @@ def notifications():
     # print(notifications)
     return render_template('notifications.html',notifications=notifications)
 
+'''
+
+@app.route('/notifications')
+def notifications():
+    student_details = sql_functions.get_student_details(session['user'])
+    student_id = student_details[0]['id']
+    notifications = sql_functions.select_notification(student_id=student_id)
+    
+    # Process notifications to add a priority based on the message content
+    for notification in notifications:
+        if "your result is for subject" in notification["msg"]:
+            notification["priority"] = "exam-result"
+        elif "Succesfully Applied for job" in notification["msg"]:
+            notification["priority"] = "job-success"
+        elif "Password Updated Succesfully" in notification["msg"]:
+            notification["priority"] = "password-update"
+        elif "go to dashboard" in notification['msg']:
+            notification['priority'] = "redirect dashboard"
+        else:
+            notification["priority"] = "general"  # Default category for other notifications
+
+    return render_template('notifications.html', notifications=notifications)
 
 #------------------------------student/appliedjob---------------------------------------------
 #--------------------------------------------------------------------------------------------
