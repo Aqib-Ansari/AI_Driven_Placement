@@ -257,7 +257,8 @@ def quiz_details_form():
         session["qtype"] = qtype
         testtime = request.form["testtime"]
         questions = sql_functions.fetch_quiz_question(qtype=qtype)
-        session["allQuestions"] = questions
+        session["allQuestions"] = questions[0:30]
+        print(len(session["allQuestions"]))
 
 
         if testtime =="10" :
@@ -287,8 +288,8 @@ def quiz_details_form():
 
 @app.route('/quiz')
 def quiz():
-    
-    if session["qno"] >= len(session["allQuestions"]):
+    print(session['qno'])
+    if session['qno'] >= len(session["allQuestions"]):
         return "no more test enjoy"
     
     questions = session["allQuestions"]
@@ -727,6 +728,7 @@ def company_view_profile():
         flash("You need to log in to view this page")
         return redirect(url_for("login"))
 # ------------------------------------------------------- Company Section job posting -----------------------
+
 @app.route('/post_job', methods=['POST', 'GET'])
 def post_job():
     if request.method == 'POST':
@@ -735,34 +737,54 @@ def post_job():
         skills_required = request.form['skills_required']
         num_employees = request.form['num_employees']
         num_openings = request.form['num_openings']
-        company_description = request.form['company_description']
         responsibilities = request.form['responsibilities']
+        eligibility_10th_value = request.form['eligibility_10th_value']
+        eligibility_12th_value = request.form['eligibility_12th_value']
+        additional_information = request.form['additional_information']
 
         try:
-                # SQL query to insert data into the job_postings table
-                cursor.execute(f"select id from company_registration where email = '{session['company']}'")
-                company_id = cursor.fetchall()
-                print(company_id)
+            # SQL query to insert data into the job_postings table
+            cursor = sql_functions.cursor
 
-                sql_functions.insert_job_posting(company_id=company_id[0]['id'],
-                                                 job_role=job_role,
-                                                 job_type=job_type,
-                                                 skills_required=skills_required,
-                                                 num_employees=num_employees,
-                                                 num_openings=num_openings,
-                                                 responsibilities=responsibilities)
+            cursor.execute(f"SELECT id FROM company_registration WHERE email = '{session['company']}'")
+            company_id = cursor.fetchall()
 
-                # Notify all students about the new job posting
-                notify_students_about_job_posting(job_role)
-                connection.commit()
-                flash('Job posting added successfully', 'success')
+            # Print or log the values to verify correctness
+            print(f"Company ID: {company_id[0]['id']}")
+            print(f"Job Role: {job_role}")
+            print(f"Job Type: {job_type}")
+            print(f"Skills Required: {skills_required}")
+            print(f"Number of Employees: {num_employees}")
+            print(f"Number of Openings: {num_openings}")
+            print(f"Responsibilities: {responsibilities}")
+            print(f"Eligibility 10th Value:{eligibility_10th_value}")
+            print(f"Eligibility 12th Value:{eligibility_12th_value}")
+            print(f"Additional Information:{additional_information}")
+            # SQL query using parameterized query
+            query = """
+                INSERT INTO job_posting (company_id, job_role, job_type, skills_required, num_employees,
+                                        num_openings, responsibilities, eligibility_10th_value, eligibility_12th_value, additional_information)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+
+            cursor.execute(query, (company_id[0]['id'], job_role, job_type, skills_required,
+                                   num_employees, num_openings, responsibilities, eligibility_10th_value, eligibility_12th_value, additional_information))
+
+            # Commit the changes to the database
+            sql_functions.connection.commit()
+
+            # Notify all students about the new job posting
+            notify_students_about_job_posting(job_role)
+
+            flash('Job posting added successfully', 'success')
         except Exception as e:
+            # Print or log the error for debugging
+            print(f'Error: {e}')
             flash(f'Error: {e}', 'danger')
 
         return redirect(url_for('job_listings'))
 
     return render_template('post_job.html')
-
 
 # Function to send notifications to all students about the new job posting
 def notify_students_about_job_posting(job_role):
@@ -779,6 +801,7 @@ def notify_students_about_job_posting(job_role):
         send_email(subject, body, student_emails)
     except Exception as e:
         flash(f'Error notifying students: {e}', 'danger')
+
 
 # Function to send email
 def send_email(subject, body, recipients):
