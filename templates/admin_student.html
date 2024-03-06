@@ -75,12 +75,44 @@
         .student-section.active {
             display: block;
         }
+
+        /* Search bar styles */
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+            margin-right: 10px;
+        }
+
+        .search-btn {
+            padding: 8px 12px;
+            background-color: #02080f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background-color: #B8D8E3;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Student List</h1>
     </header>
+
+    <!-- Search bar -->
+    <div class="search-bar">
+        <input type="text" class="search-box" id="searchInput" placeholder="Search...">
+        <button class="search-btn" id="searchButton">Search</button>
+    </div>
 
     <!-- Dropdown for selecting student section -->
     <div class="dropdown">
@@ -94,7 +126,6 @@
 
     <!-- Display applied student data -->
     <div class="student-section" id="applied_students">
-        <h2>Applied Students</h2>
         <table>
             <thead>
                 <tr>
@@ -111,6 +142,7 @@
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
 
     <!-- Display student details data -->
@@ -210,6 +242,40 @@
             // Show selected section
             var selectedSection = document.getElementById(selectedSectionId);
             selectedSection.classList.add('active');
+        });
+
+        // JavaScript for search functionality
+        document.getElementById('searchButton').addEventListener('click', function() {
+            var searchValue = document.getElementById('searchInput').value.toLowerCase();
+            var studentTables = document.querySelectorAll('.student-section.active table');
+
+            // Iterate through each student table
+            studentTables.forEach(function(table) {
+                var rows = table.getElementsByTagName('tr');
+
+                // Iterate through each row of the table
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows[i];
+                    var cells = row.getElementsByTagName('td');
+                    var found = false;
+
+                    // Iterate through each cell of the row
+                    for (var j = 0; j < cells.length; j++) {
+                        var cell = cells[j];
+                        if (cell.textContent.toLowerCase().includes(searchValue)) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    // Toggle row visibility based on search result
+                    if (found) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
         });
     </script>
 </body>

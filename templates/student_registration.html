@@ -1,145 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Registration</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <style>
-    body {
-      background: linear-gradient(45deg, #142433, #142433, #EDE1D6);
-      color: #EDE1D6;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0;
-    }
-
-    form {
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-      width: 60%;
-    }
-
-    h2,
-    .form-label {
-      color: #000;
-      /* Black color for heading and labels */
-    }
-
-    .btn-login,
-    .btn-register {
-      background-color: #BC3823;
-      color: #EDE1D6;
-      border: none;
-      margin-top: 10px;
-    }
-
-    .btn-login:hover {
-      background-color: #E27F3C;
-      color: #EDE1D6;
-    }
-
-    .btn-register:hover {
-      background-color: #BC3823;
-      color: #EDE1D6;
-    }
-
-    /* Set font color of the label "Email" to black */
-    .form-label[for="inputPassword4"] {
-      color: #000;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Placed</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+        crossorigin="anonymous"
+    />
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        .error-message {
+            color: red;
+        }
+    </style>
 </head>
 
 <body>
-
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#" style="font-family: 'Cormorant Garamond'; font-style: 'italics'; font-size: 30pt">
-        <b>Placed</b>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About Us</a>
-          </li>
-        </ul>
-        <!-- <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form> -->
-      </div>
+        <a
+            class="navbar-brand"
+            href="#"
+            style="
+            font-family: 'Cormorant Garamond';
+            font-style: 'italics';
+            font-size: 30pt
+          "
+        ><h3><b>Placed</b></h3></a
+        >
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="About_us.html">About Us</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input
+                    class="form-control me-2"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                />
+                <button class="btn btn-outline-success" type="submit">
+                    Search
+                </button>
+            </form>
+        </div>
     </div>
-  </nav>
+</nav>
 
-  <!-- Main Content -->
-  <div class="container mt-5" style="display: flex;align-items: center;justify-content: center;">
-    <form class="row g-3" method="POST" action="{{ url_for('register_data') }}">
-      <div class="col-12 text-center">
-        <h2>Register as Student</h2>
-      </div>
-      <div class="col-md-4">
+<form
+    class="row g-3"
+    style="
+        width: 750px;
+        height: auto;
+        margin-left: 250px;
+        margin-top: 20px;
+        background-color: rgb(232, 232, 232);
+        padding: 40px 40px;
+        border-radius: 40px;
+      "
+    method="POST" action="{{ url_for('register_data') }}"
+>
+    <div
+        class="col-12"
+        style="display: flex; justify-content: center; align-items: center"
+    >
+        <label class="form-label" style="text-align: center">
+            <h2><b>Register as Student</b></h2>
+        </label>
+    </div>
+    <div class="col-md-4">
         <label for="inputEmail4" class="form-label"><b>User Name</b></label>
-        <input type="text" class="form-control" id="inputEmail4" name="username" />
-      </div>
-      <div class="col-md-4">
+        <input type="text" class="form-control" id="inputEmail4" name="username"  maxlength="20" required />
+    </div>
+    <div class="col-md-4">
         <label for="inputPassword4" class="form-label"><b>Email</b></label>
-        <input type="email" class="form-control" id="inputPassword4" name="email" />
-      </div>
-      <div class="col-md-4">
-        <label for="inputPassword4" class="form-label"><b>Password</b></label>
-        <input type="password" class="form-control" id="inputPassword4" name="pass2" />
-      </div>
-      <div class="col-12">
+        <input type="email" class="form-control" id="inputPassword4" name="email" required />
+    </div>
+    <div class="col-md-4">
+      <label for="inputPassword" class="form-label"><b>Password</b></label>
+      <input type="password" class="form-control" id="inputPassword" name="pass1" minlength="8" maxlength="16" required />
+  </div>
+  <div class="col-md-4">
+      <label for="confirmPassword" class="form-label"><b>Confirm Password</b></label>
+      <input type="password" class="form-control" id="confirmPassword" name="pass2" minlength="8" maxlength="16" required />
+      <div id="passwordError" class="error-message"></div>
+  </div>
+    <div class="col-12">
         <label for="inputAddress" class="form-label"><b>Enrollment Number</b></label>
-        <input type="text" class="form-control" id="inputAddress" name="Enrolno" />
-      </div>
-      <div class="col-12">
-        <label for="inputAddress2" class="form-label"><b>College</b></label>
-        <input type="text" name="college" class="form-control" id="inputAddress2" placeholder="KC College" />
-      </div>
-      <div class="col-md-6">
-        <label for="inputCity" class="form-label"><b>Course</b></label>
-        <input type="text" class="form-control" id="inputCity" name="course" placeholder="Bsc CS" />
-      </div>
-      <div class="col-md-2">
-        <label for="inputState" class="form-label"><b>Year</b></label>
-        <select id="inputState" class="form-select" name="year">
-          <option>Fy</option>
-          <option>Sy</option>
-          <option selected>Ty</option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <label for="inputZip" class="form-label"><b>Roll Number</b></label>
-        <input type="text" class="form-control" id="inputZip" name="rollno" />
-      </div>
+        <input type="text" class="form-control" id="inputAddress" name="Enrolno" minlength="16" maxlength="16" required />
+        <div id="enrollmentError" class="error-message"></div>
+    </div>
+    <div class="col-12">
+      <label for="inputAddress2" class="form-label"><b>College</b></label>
+      <select name="college" class="form-select" id="inputAddress2" required>
+          <option value="" disabled selected>Select College</option>
+          <option value="H.R. College of Commerce and Economics">H.R. College of Commerce and Economics</option>
+          <option value="Kishinchand Chellaram College">Kishinchand Chellaram College</option>
+      </select>
+  </div>  
+  <div class="col-md-6">
+    <label for="inputCity" class="form-label"><b>Course</b></label>
+    <select id="inputCity" class="form-select" name="course" required>
+        <option value="" disabled selected>Select Course</option>
+        <option value="B.Sc. Computer Sciences">B.Sc. Computer Sciences</option>
+        <option value="B.Sc. Data Science">B.Sc. Data Science</option>
+        <option value="B.Sc. Statistics">B.Sc. Statistics</option>
+        <option value="B.Sc. Information Technology">B.Sc. Information Technology</option>
+        <option value="M.Sc. (Papers) Computer Science">M.Sc. (Papers) Computer Science</option>
+        <option value="M.Sc. (Papers) Information Technology">M.Sc. (Papers) Information Technology</option>
+        <option value="M.Sc. in Computer Science ">M.Sc. in Computer Science </option>
+        <option value="M.Sc. In Information Technology">M.Sc. In Information Technology</option>
+        <option value="M.Sc. In Data Sciences">M.Sc. In Data Sciences</option>
+    </select>
+</div>
 
-      <div class="col-12 text-center">
+    <div class="col-md-2">
+        <label for="inputState" class="form-label"><b>Year</b></label>
+        <select id="inputState" class="form-select" name="year" required>
+            <option value="" disabled selected>Select Year</option>
+            <option>First year</option>
+            <option>Second year</option>
+            <option>Third year</option>
+            <option>Fourth year</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+      <label for="inputZip" class="form-label"><b>Roll Number</b></label>
+      <input type="text" class="form-control" id="inputZip" name="rollno" pattern="\d{3}" title="Roll number must have the first 6 letters followed by 3 digits" minlength="3" maxlength="3" required placeholder="001"/>
+      <div id="rollNumberError" class="error-message"></div>
+  </div>
+  
+
+    <div class="col-12 text-center">
         <button type="submit" class="btn btn-register">Register</button>
         <a href="/login" type="button" class="btn btn-login mx-2">Login</a>
-      </div>
-    </form>
-  </div>
+    </div>
+</form>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-    crossorigin="anonymous"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const passwordInput = document.getElementById('inputPassword');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      const passwordError = document.getElementById('passwordError');
+
+      confirmPasswordInput.addEventListener('input', function () {
+          if (passwordInput.value !== confirmPasswordInput.value) {
+              passwordError.textContent = "Passwords do not match";
+          } else {
+              passwordError.textContent = "";
+          }
+      });
+
+      passwordInput.addEventListener('input', function () {
+          const password = passwordInput.value;
+          const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+
+          if (!passwordRegex.test(password)) {
+              passwordError.textContent = "Password must be 8-16 characters long and contain at least one alphabet, one number, and one special character";
+          } else {
+              passwordError.textContent = "";
+          }
+      });
+
+      const enrollmentInput = document.getElementById('inputAddress');
+      const enrollmentError = document.getElementById('enrollmentError');
+
+      enrollmentInput.addEventListener('input', function () {
+          const enrollmentNumber = enrollmentInput.value;
+
+          if (enrollmentNumber.length !== 16) {
+              enrollmentError.textContent = "Enrollment number must be exactly 16 characters long";
+          } else {
+              enrollmentError.textContent = "";
+          }
+      });
+
+      const rollNumberInput = document.getElementById('inputZip');
+      const rollNumberError = document.getElementById('rollNumberError');
+
+      rollNumberInput.addEventListener('input', function () {
+          const rollNumber = rollNumberInput.value;
+
+          if (!/^\d{3}$/.test(rollNumber)) {
+              rollNumberError.textContent = "Roll number must have the last 3 digits";
+          } else {
+              rollNumberError.textContent = "";
+          }
+      });
+  });
+</script>
+
 
 </body>
-
 </html>

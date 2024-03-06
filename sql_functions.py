@@ -2,6 +2,8 @@ import pymysql
 import pymysql.cursors
 import os
 import csv
+from datetime import datetime, timedelta , date , time
+
 # import data_class_aidriven
 def make_sql_connection():
     connection = pymysql.connect(host='sql6.freesqldatabase.com',
@@ -593,7 +595,23 @@ def insert_student_profile_img(email,filename):
                 cursor.execute(f"update student_profile_img set filename = '{filename}' where student_id = {student_id}" )
             connection.commit()
 
-# def insert_interviews()
+def insert_interviews(job,date,time,location):
+    job_id = job # Replace with the actual job_id
+    interview_date = date  # Replace with the actual date
+    interview_time = time  # Replace with the actual time
+    location = location  # Replace with the actual location
+
+        # SQL query to insert a record into the scheduled_interviews table
+    sql = '''INSERT INTO scheduled_interviews (job_id, date, time, location)
+                 VALUES (%s, %s, %s, %s)  '''
+
+        # Execute the SQL query
+    cursor.execute(sql, (job_id, interview_date, interview_time, location))
+
+    # Commit the changes to the database
+    connection.commit()
+
+
 
 connection.commit()
 if __name__ == "__main__":
@@ -621,21 +639,22 @@ if __name__ == "__main__":
     # print(validate_company_login(email='company2@gmail.com',password="password"))
     # insert_applied_student_data(3, 1, 1)
     # print(insert_interview_data( 1, 2, '2024-02-10', '15:30:00', 'Company HQ'))
-    cursor.execute('''
-CREATE TABLE scheduled_interviews (
-    interview_id INT AUTO_INCREMENT PRIMARY KEY,
-    job_id INT,
-    date DATE NOT NULL,
-    time TIME NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    FOREIGN KEY (job_id) REFERENCES job_posting(id))''')
+#     cursor.execute('''
+# CREATE TABLE scheduled_interviews (
+#     interview_id INT AUTO_INCREMENT PRIMARY KEY,
+#     job_id INT UNIQUE,  -- Add UNIQUE constraint to job_id
+#     date DATE NOT NULL,
+#     time TIME NOT NULL,
+#     location VARCHAR(255) NOT NULL,
+#     FOREIGN KEY (job_id) REFERENCES job_posting(id))''')
     # print(insert_job_posting(company_id=1,job_role="a",job_type="b",skills_required="c",num_employees=500,num_openings=4,company_description="abc",responsibilities="response"))
     # insert_resume(email="aqib@gmail.com",filename="aqib.pdf")
     # update_student_details(email="aqibansari22298@gmail.com",field="dob",value="2002-10-12")
     # cursor.execute("UPDATE notification SET date_time = CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata')")
     # insert_training_resources(title="Ai ML",category="any",description="Learn how to create a Chatbots",
     #                           author="Nivedita",format="Online",duration=5.30,language="English",level="beginner",tags="Resume,placements",status="active",link="https://youtube.com")
-    # cursor.execute("select * from applied_student where company_id = 1")
+    insert_interviews(job=19,date=date(2024, 3, 10),time=time(14, 30),location="Mumbai")
+    cursor.execute("select * from scheduled_interviews")
     output = cursor.fetchall()
     for i in output:
         print('\n')

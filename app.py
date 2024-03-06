@@ -173,7 +173,9 @@ def profile():
         return render_template("profile.html")
 
     # print(profile_filename["filename"])
-    return render_template("profile.html", image_pro=profile_filename["filename"])
+    student_details = sql_functions.get_student_details(email=session["user"])
+
+    return render_template("profile.html", image_pro=profile_filename["filename"],student = student_details )
 
 @app.route('/profile_change_profile',methods= ["POST","GET"])
 def profile_change_profile():
@@ -479,9 +481,12 @@ def job_applied(job_id):
 
         if request.method == "POST":
             print("this is job id",job_id)
-            student_details = sql_functions.get_student_details(session['user'])
+            
             # print(student_dashboard)
+            cursor.execute(f"select id from student_register where email = '{session['user']}'")
+            student_details = cursor.fetchall()
             student_id = student_details[0]['id']
+            
             print(student_id)
             cursor.execute(f'select company_id from job_posting where id = {int(job_id)}')
             company_id = cursor.fetchall()
@@ -533,6 +538,12 @@ def interview_process():
         question = ai_interviewer.chat.send_message("Ask me only 1 easy python interview question")
         return render_template('interviewer.html', result=session["last_answer"], question = question.text, inter_pro = True)
 
+
+@app.route('/end_interview')
+def end_interview():
+    end_test_text = ai_interviewer.end_interview()
+    print(end_test_text)
+    return render_template("end_interview.html" ,text = end_test_text)
 
 
 # -------------------------------------------- training resources --------------------------------------------------
@@ -1092,8 +1103,31 @@ def companies():
     # Add logic to fetch company data from database
     return render_template('companies.html', company_registration=company_registration,job_posting=job_posting,interviews=interviews)
 
-@app.route('/training_resources')
+@app.route('/training_resources',methods = ["POST","GET"])
 def training_resources():
+    if request.method == "POST":
+        title = request.form.get('title')
+        category = request.form.get('category')
+        description = request.form.get('description')
+        author = request.form.get('author')
+        format = request.form.get('format')
+        duration = request.form.get('duration')
+        language = request.form.get('language')
+        level = request.form.get('level')
+        tags = request.form.get('tags')
+        status = request.form.get('status')
+        youtube_link = request.form.get('youtube_link')
+        sql_functions.insert_training_resources(title = title,
+                                                category= category,
+                                                description = description,
+                                                author = author,
+                                                format = format,
+                                                duration = duration ,
+                                                language = language,
+                                                level  = level,
+                                                tags = tags,
+                                                status = status,
+                                                link = youtube_link)
     return render_template("training_resources.html")
 
 
