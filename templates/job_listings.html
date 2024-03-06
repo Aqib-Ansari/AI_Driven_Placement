@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,8 +77,12 @@
                     <th>Skills Required</th>
                     <th>Number of Employees</th>
                     <th>Number of Openings</th>
-                    <th>Company Description</th>
+                    <!--<th>Company Description</th>-->
                     <th>Responsibilities</th>
+                    <!--<th>Eligibility 10th Criteria</th>-->
+                    <th>Eligibility 10th Value</th>
+                    <!--<th>Eligibility 12th Criteria</th>-->
+                    <th>Eligibility 12th Value</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -90,8 +95,12 @@
                         <td>{{ job.skills_required }}</td>
                         <td>{{ job.num_employees }}</td>
                         <td>{{ job.num_openings }}</td>
-                        <td>{{ job.company_description }}</td>
+                        <!--<td>{{ job.company_description }}</td>-->
                         <td>{{ job.responsibilities }}</td>
+                        <!--<td>{{ job.eligibility_10th_criteria }}</td>-->
+                        <td>{{ job.eligibility_10th_value }}</td>
+                        <!--<td>{{ job.eligibility_12th_criteria }}</td>-->
+                        <td>{{ job.eligibility_12th_value }}</td>
                         <td>
                             <a href="{{ url_for('schedule_interview', job_id=job.id) }}" class="check-applicants-btn">schedule interview</a>
 
