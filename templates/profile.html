@@ -76,12 +76,12 @@
     {% endif %}
     
 
-            <h1>{{ 'abc' }}</h1>
-            <p>Data Science and ML Enthusiast</p>
+            <h1>{{student[0]["firstname"]}} {{student[0]["lastname"]}}</h1>
+            
         </div>
         <div class="profile-details">
-            <p>Email: aqib@example.com</p>
-            <p>Phone: +1 123-456-7890</p>
+            <p>email : {{ student[0]["email"]}}</p>
+            <p>Phone: {{student[0]["phoneno"]}}</p>
         </div>
         <div class="profile-actions">
             <button class="action-button2"><i class="fa fa-bell"></i> <a href="/change_pass_page" style="text-decoration: none; color: #ffffff;">Change Password</a></button>
