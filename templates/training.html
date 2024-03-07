@@ -5,48 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Training Resources</title>
+    <style>
+        body {
+            background-color: #007bff; /* Solid blue background */
+            color: #333;
+            min-height: 100vh; /* Full height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .container {
+            background-color: #ffffffee; /* Slightly transparent white for contrast */
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            margin-bottom: 30px;
+            border: 0;
+            border-radius: 15px;
+            overflow: hidden; /* Ensure all parts follow border radius */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .card-header {
+            background-color: #0056b3; /* Darker blue */
+            color: #fff;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .card-body {
+            padding: 20px;
+            background-color: #e9ecef; /* Light background for the content */
+        }
+        .btn-primary {
+            background-color: #0069d9;
+            border-color: #0062cc;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin-bottom: 20px;
+            color: #fff;
+            transition: color 0.3s ease;
+        }
+        .back-button:hover {
+            color: #e9ecef;
+        }
+        @media (max-width: 768px) {
+            .card {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="container mt-5">
-    <h2>Training Resources</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Author</th>
-                <th>Format</th>
-                <th>Duration</th>
-                <th>Language</th>
-                <th>Level</th>
-                <th>Tags</th>
-                <th>Status</th>
-                <th>YouTube Link</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for resource in training_resources %}
-                <tr>
-                    <td>{{ resource.id }}</td>
-                    <td>{{ resource.title }}</td>
-                    <td>{{ resource.category }}</td>
-                    <td>{{ resource.description }}</td>
-                    <td>{{ resource.author }}</td>
-                    <td>{{ resource.format }}</td>
-                    <td>{{ resource.duration }}</td>
-                    <td>{{ resource.language }}</td>
-                    <td>{{ resource.level }}</td>
-                    <td>{{ resource.tags }}</td>
-                    <td>{{ resource.status }}</td>
-                    <td><a href="{{ resource.youtube_link }}">Visit</a></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="container">
+        <a href="student_dashboard" class="btn btn-secondary back-button">Back to Dashboard</a>
+        <h2 style="color: #3a93ed;">Explore Our Training Resources</h2> <!-- Adjusted color for better visibility -->
+        <div class="row justify-content-center">
+        {% for resource in training_resources %}
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        {{ resource.title }}
+                    </div>
+                    <div class="card-body">
+                        <p>Category: {{ resource.category }}</p>
+                        <p>Description: {{ resource.description }}</p>
+                        <p>Author: {{ resource.author }}</p>
+                        <p>Format: {{ resource.format }}</p>
+                        <p>Duration: {{ resource.duration }}</p>
+                        <p>Language: {{ resource.language }}</p>
+                        <p>Level: {{ resource.level }}</p>
+                        <p>Tags: {{ resource.tags }}</p>
+                        <p>Status: {{ resource.status }}</p>
+                        <a href="{{ resource.youtube_link }}" class="btn btn-primary">Visit</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

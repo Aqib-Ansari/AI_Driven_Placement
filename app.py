@@ -149,6 +149,44 @@ def student_dashboard():
         else:
             return redirect(url_for('login'))
         
+        
+@app.route('/add_skills', methods=['GET', 'POST'])
+def add_skills():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    if request.method == 'POST':
+        # Each of these can be a comma-separated list
+        skill = request.form['skill']
+        soft_skills = request.form['soft_skills']
+        certifications = request.form['certifications']
+        student_email = session['user']
+
+        try:
+            cursor.execute("SELECT id FROM student_register WHERE email = %s", (student_email,))
+            student_id_result = cursor.fetchone()
+
+            if student_id_result:
+                student_id = student_id_result['id']
+
+                # Assuming skills and certifications are entered as comma-separated values
+                # Directly store these CSV strings into the database
+                insert_query = """
+                INSERT INTO student_skills (student_id, skill, soft_skills, certifications) 
+                VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(insert_query, (student_id, skill, soft_skills, certifications))
+                connection.commit()
+
+                flash('Skills and certifications added successfully!')
+                return redirect(url_for('add_skills'))
+        except Exception as e:
+            print(e)
+            flash('Error adding skills and certifications.')
+
+    return render_template('add_skills.html')
+
+
 
 
 @app.route('/student_dashboard1')
