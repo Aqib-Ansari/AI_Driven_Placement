@@ -150,3 +150,13 @@ change : SQL tables:
                     time TIME NOT NULL,
                     location VARCHAR(255) NOT NULL,
                     FOREIGN KEY (job_id) REFERENCES job_posting(id))
+
+            14) Percent MAtch
+                CREATE TABLE student_percent_match (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    student_id INT,
+                    job_id INT,
+                    percent_match DECIMAL(5,2), 
+
+                    FOREIGN KEY (student_id) REFERENCES student_register(id),
+                    FOREIGN KEY (job_id) REFERENCES job_posting(id))

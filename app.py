@@ -6,6 +6,7 @@ from email.mime.text import MIMEText
 import ai_interviewer
 from datetime import datetime, timedelta
 import os
+import ATSmain
 
 connection = sql_functions.make_sql_connection()
 
@@ -131,7 +132,18 @@ def student_dashboard():
 def redirect_to_student_dashboard():
     if "user" in session:
         
-        return render_template("dashboard_student.html",student_list = [session["user"]] )
+        student_details = sql_functions.get_student_details(session['user'])
+        print(student_details)
+        if student_details != ():
+            student_id = student_details[0]['id']
+            print(student_id)
+            cursor.execute(f"select filename from student_profile_img where student_id = {student_id} ")
+            profile_filename = cursor.fetchone()
+            print(profile_filename)
+            return render_template("dashboard_student.html",student_list = [session["user"]] , image_pro =  profile_filename)
+        
+        return render_template("dashboard_student.html",student_list = [session["user"]] , image_pro =  False , msg = "please Update Your Details")
+
     return redirect(url_for("login"))
 
 # ----------------------------------------- Profile -------------------------------------------
@@ -162,18 +174,22 @@ def profile():
             filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filename)
             return redirect(url_for('profile'))
-        
+    
 
     student_details = sql_functions.get_student_details(session['user'])
+
+    if student_details == ():
+        return redirect(url_for("student_details"))
     student_id = student_details[0]['id']
     cursor.execute(f"select filename from student_profile_img where student_id = {student_id} ")
     profile_filename = cursor.fetchone()
     print(profile_filename)
+    student_details = sql_functions.get_student_details(email=session["user"])
     if profile_filename == None or profile_filename == ():
-        return render_template("profile.html")
+
+        return render_template("profile.html",student = student_details)
 
     # print(profile_filename["filename"])
-    student_details = sql_functions.get_student_details(email=session["user"])
 
     return render_template("profile.html", image_pro=profile_filename["filename"],student = student_details )
 
@@ -210,6 +226,40 @@ def notifications():
     # print(notifications)
     return render_template('notifications.html',notifications=notifications)
 
+@app.route('/view_applied_jobs')
+def view_applied_jobs():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    
+    applied_jobs = []
+    try:
+        # Fetch the student's ID based on their email
+        cursor.execute("SELECT id FROM student_register WHERE email = %s", (session['user'],))
+        student_details = cursor.fetchone()
+        
+        if student_details:
+            student_id = student_details['id']
+
+            # Query the database to get the applied jobs for the student
+            query = """
+            SELECT jp.*
+            FROM job_posting jp
+            INNER JOIN applied_student ap ON jp.id = ap.job_id
+            WHERE ap.student_id = %s
+            """
+            cursor.execute(query, (student_id,))
+            applied_jobs = cursor.fetchall()
+
+    except Exception as e:
+        print(e)
+        # Handle any exceptions or errors here
+    
+    return render_template('student_appliedjob.html', applied_jobs=applied_jobs)
+
+
+
+
+
 # ------------------------------------------  quiz----------
 
 
@@ -241,12 +291,17 @@ def remaining_time():
 
 @app.route('/quiz_details')
 def quiz_details():
+    student_details = sql_functions.get_student_details(session['user'])
+    if student_details == ():
+        return redirect(url_for("student_details"))
     return render_template("quiz_details.html")
 
 
 
 @app.route('/quiz_details_form',methods = ["POST"])
 def quiz_details_form():
+    
+
     if request.method == "POST":
         session['qno']=-1
         session['correct_answers'] = []
@@ -257,13 +312,14 @@ def quiz_details_form():
         session["qtype"] = qtype
         testtime = request.form["testtime"]
         questions = sql_functions.fetch_quiz_question(qtype=qtype)
-        session["allQuestions"] = questions[0:30]
+        session["allQuestions"] = questions[0:35]
+        print(session["allQuestions"])
         print(len(session["allQuestions"]))
 
 
         if testtime =="10" :
             session["no_of_question"] = 8
-            session["option_selected"] = [0]*20
+            session["option_selected"] = [0]*40
            
             app.config['expiration_time'] = datetime.now() + timedelta(minutes=10)
 
@@ -275,7 +331,7 @@ def quiz_details_form():
             
 
         else:
-            session["no_of_question"] = len(session["allQuestions"])
+            session["no_of_question"] = 20
             app.config['expiration_time'] = datetime.now() + timedelta(minutes=30)
             
 
@@ -295,6 +351,8 @@ def quiz():
     questions = session["allQuestions"]
     # print(len(session["allQuestions"]))
     session['curr_question'] = questions[session['qno']]
+    print("question  =", questions[session['qno']])
+    print("option = ",session["option_selected"][session["qno"]])
     
     return render_template("quiz.html",questions = questions[session['qno']],option=session["option_selected"][session["qno"]])
     
@@ -305,7 +363,7 @@ def submit_answer():
         if session['qno'] < session["no_of_question"]:
             answer = request.form["answer"]
             session["option_selected"][(session["qno"])-1] = answer  
-            print(int(answer)," - ",int(session['curr_question']['correct']))
+            # print(int(answer)," - ",int(session['curr_question']['correct']))
 
             if int(session['curr_question']['correct'])==int(answer):
                 session['correct_answers'].append(1)
@@ -317,7 +375,9 @@ def submit_answer():
             student_details = sql_functions.get_student_details(session['user'])
             student_id = student_details[0]['id']
             sql_functions.insert_notification(student_id=student_id,msg=f"your result is for subject {session['qtype']}: \n correct answers are {sum(session['correct_answers'])} / {session['no_of_question']} : percentage : {((sum(session['correct_answers'])*100)/10)}%",link="/student_dashboard1") 
-            return render_template("results.html",result = sum(session["correct_answers"]),len = session["no_of_question"],percentage = ((sum(session["correct_answers"])*100)/10))
+            session["option_selected"] = [0]*40
+
+            return render_template("results.html",result = sum(session["correct_answers"]),len = session["no_of_question"],percentage = ((sum(session["correct_answers"])*100)/session["no_of_question"]))
 
 @app.route('/previous_question')
 def previous_question():
@@ -330,6 +390,8 @@ def previous_question():
 
 @app.route("/end_test")
 def end_test():
+    session["option_selected"] = [0]*40
+
     return render_template("results.html",result = sum(session["correct_answers"]),len = session["no_of_question"],percentage = ((sum(session["correct_answers"])*100)/10))
 
 # ------------------------------------------------ Details ----------------------------------------------------------
@@ -433,9 +495,9 @@ def view_pdf():
 # --------------------------------------------------------- view jobs ---------------------------------------
 @app.route('/view_jobs')
 def view_jobs():
-    if "user" not in session:
-        return redirect(url_for("login"))
-    try:
+    # if "user" not in session:
+    #     return redirect(url_for("login"))
+    # try:
 
         
         cursor.execute(f"select id from student_register where email = '{session['user']}'")
@@ -452,18 +514,24 @@ def view_jobs():
         cursor.execute(f"select * from job_posting")
         # applied_array = [x for x in range()]
         jobs = cursor.fetchall()
-        for i,j in zip(jobs,job_applied):
-            i["applied"] = j
+        # for i,j in zip(jobs,job_applied):
+
+        #     if i["id"] == j:
+        #         i["applied"] = True
+        #     else:
+        #         i['applied'] = False
+
+        # for i in range()
 
 
-        cursor.execute("select  ")
+        
 
-        print(jobs)
-    except Exception as e:
-        print(e)
-        # jobs = [1, 2, 3]*20
+        # print(jobs)
+    # except Exception as e:
+    #     print(e)
+    #     # jobs = [1, 2, 3]*20
 
-    return render_template('view_jobs.html', jobs=jobs)
+        return render_template('view_jobs.html', jobs=jobs)
 
 
 
@@ -492,6 +560,17 @@ def job_applied(job_id):
             cursor.execute(f'select company_id from job_posting where id = {int(job_id)}')
             company_id = cursor.fetchall()
 
+            cursor.execute(f'select * from job_posting where id = {job_id}')
+            job = cursor.fetchall()
+
+            jd = job[0]["job_role"] +"\n"+ job[0]["skills_required"] +"\n"+ job[0]["responsibilities"]
+            if sql_functions.if_resume_present(session['user']):
+                file_name = sql_functions.if_resume_present(session["user"])
+                file_path = 'static/'+file_name
+            percent_match = ATSmain.ATS(path=file_path,job_description=jd)
+
+            sql_functions.insert_percent_match(student_id=student_id,job_id=job_id,percent_match=percent_match)
+
             sql_functions.insert_applied_student_data(company_id=company_id[0]['company_id'],job_id=int(job_id),student_id=student_id)
             flash("applied successfully")
             student_details = sql_functions.get_student_details(session['user'])
@@ -507,36 +586,52 @@ def job_applied(job_id):
 
 
 # -------------------------------------------- Ai Interviewer -------------------------------------
-prompt = """
- You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role data science. 
-  Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate
-"""
+subject = ""
 
 prompt2 = '''
 give the result of mock interview in a json format having fields "correct answers" , "any Feedback for technical " 
 '''
 @app.route('/start_interview', methods=['GET', 'POST'])
 def start_interview():
-    global prompt
+    global   subject
+    if request.method == "POST":
+        subject = request.form["interview_topic"]
+        prompt = f"""
+            You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role {subject}. 
+            Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate
+            """
+
     
-    response = ai_interviewer.start_interview(prompt=prompt)
-    session["last_answer"] = False
+        response = ai_interviewer.start_interview(prompt=prompt)
+        session["last_answer"] = False
+
     
-    return render_template('interviewer.html', result=response, inter_pro = False, start = True)
+        return render_template('interviewer.html', result=response, inter_pro = False, start = True)
+    
 
 @app.route('/interview_process',methods= ["POST","GET"])
 def interview_process():
     
-   
+    global subject
     if request.method == "POST":
         answer = request.form["answer"]
         response = ai_interviewer.chat.send_message(answer)
         session["last_answer"] = response.text
         print(response.text)
-        question = ai_interviewer.chat.send_message("Ask me only 1 python interview question")
+        prompt = f"""
+            You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role {subject}. 
+            Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate.
+             
+            """
+        question = ai_interviewer.chat.send_message(["Ask me only 1 interview question" , prompt])
         return render_template('interviewer.html', result=response.text, question = question.text,inter_pro = True)
     else:
-        question = ai_interviewer.chat.send_message("Ask me only 1 easy python interview question")
+        prompt = f"""
+            You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role {subject}. 
+            Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate.
+             
+            """
+        question = ai_interviewer.chat.send_message(["Ask me only 1 interview question" , prompt])
         return render_template('interviewer.html', result=session["last_answer"], question = question.text, inter_pro = True)
 
 
@@ -587,12 +682,14 @@ def change_pass_page():
     
 
 
-# -------------------------------------------- view student details by company -------------------------------------
+@app.route('/interview_option',methods = ["POST" , "GET"])
+def interview_option():
+    if request.method == "POST":
+        subject = request.form["interview_topic"]
+        return redirect(url_for("start_interview"))
 
-@app.route('/fetch_student_details')
-def fetch_student_details():
-    students = sql_functions.get_student_details()
-    print(students)
+    return render_template("interview_options.html")
+
 
 # --------------------------------------------- company dashboard -------------------------------------
 

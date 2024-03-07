@@ -172,9 +172,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Job Title</th>
-                    <th>Description</th>
-                    <th>Location</th>
+                    
                     <th>Company ID</th>
                     <th>Job Role</th>
                     <th>Job Type</th>
@@ -187,9 +185,7 @@
             <tbody>
                 {% for job_posting in job_posting %}
                     <tr>
-                        <td>{{ job_posting.job_title }}</td>
-                        <td>{{ job_posting.description }}</td>
-                        <td>{{ job_posting.location }}</td>
+                        
                         <td>{{ job_posting.company_id }}</td>
                         <td>{{ job_posting.job_role }}</td>
                         <td>{{ job_posting.job_type }}</td>
@@ -219,39 +215,43 @@
             selectedSection.classList.add('active');
         });
 
-        // JavaScript for search functionality
-        document.getElementById('searchButton').addEventListener('click', function() {
-            var searchValue = document.getElementById('searchInput').value.toLowerCase();
-            var companyTables = document.querySelectorAll('.company-section.active table');
+    // JavaScript for search functionality
+    document.getElementById('searchButton').addEventListener('click', function() {
+        var searchValue = document.getElementById('searchInput').value.toLowerCase();
+        var companyTables = document.querySelectorAll('.company-section.active table');
 
-            // Iterate through each company table
-            companyTables.forEach(function(table) {
-                var rows = table.getElementsByTagName('tr');
+        // Iterate through each company table
+        companyTables.forEach(function(table) {
+            var rows = table.getElementsByTagName('tr');
 
-                // Iterate through each row of the table
-                for (var i = 0; i < rows.length; i++) {
-                    var row = rows[i];
-                    var cells = row.getElementsByTagName('td');
-                    var found = false;
+            // Toggle header row visibility initially
+            var headerRow = rows[0];
+            headerRow.style.display = '';
 
-                    // Iterate through each cell of the row
-                    for (var j = 0; j < cells.length; j++) {
-                        var cell = cells[j];
-                        if (cell.textContent.toLowerCase().includes(searchValue)) {
-                            found = true;
-                            break;
-                        }
-                    }
+            // Iterate through each row of the table starting from index 1 (skipping the header row)
+            for (var i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var cells = row.getElementsByTagName('td');
+                var found = false;
 
-                    // Toggle row visibility based on search result
-                    if (found) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
+                // Iterate through each cell of the row
+                for (var j = 0; j < cells.length; j++) {
+                    var cell = cells[j];
+                    if (cell.textContent.toLowerCase().includes(searchValue)) {
+                        found = true;
+                        break;
                     }
                 }
-            });
+
+                // Toggle row visibility based on search result
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
         });
+    });
     </script>
 </body>
 </html>
