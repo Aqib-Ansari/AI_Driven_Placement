@@ -130,7 +130,9 @@
         <table>
             <thead>
                 <tr>
-                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Jobs Role</th>
+                    <th>Company</th>
                     
                     
                 </tr>
@@ -138,7 +140,9 @@
             <tbody>
                 {% for student in applied_students %}
                     <tr>
-                        <td>{{ student.student_id }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.job_role }}</td>
+                        <td>{{ student.company_name }}</td>
                         <!-- Add other fields as needed -->
                         
                     </tr>
