@@ -15,8 +15,9 @@ model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])
 
 prompt = """
- You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role data science. 
+ You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role Java Developer. 
   Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate
+  give output in html form with html tags
 """
 
 def start_interview(prompt):
@@ -26,9 +27,9 @@ def start_interview(prompt):
     return response.text
 
 def interview_process(prompt):
-    for i in range(3):
+    for i in range(1):
         
-        question_query =chat.send_message(["Ask me only 1 easy python interview question",prompt])
+        question_query =chat.send_message(["Ask me only 1  interview question",prompt])
         print(question_query.text)
         answer = input("\n Enter Answer : \n")
         answer_query = chat.send_message(answer)
@@ -39,16 +40,21 @@ def interview_process(prompt):
 def end_interview():
     response =chat.send_message("Tell me how many answers were correct for the above three questions, also give me some feedback")
     print(response.text)
+
+    chat.history = []
     return response.text
+
 
 
 
 
 if __name__ == "__main__":
     prompt = """
- You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role data science. 
+ You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role Java Developer. 
   Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate
+  give output in html form with html tags to show the content do not use any input tags
 """
     start_interview(prompt=prompt)
     interview_process(prompt=prompt)
     end_interview()
+    print(chat.history)
