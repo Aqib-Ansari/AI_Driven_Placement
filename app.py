@@ -1196,6 +1196,30 @@ def students():
      # Fetch data from applied_student table
     cursor.execute("SELECT * FROM applied_student")
     applied_student_data = cursor.fetchall()
+    for i in applied_student_data:
+        print(i["student_id"])
+        print()
+    
+
+    print("student Id is : ",applied_student_data[0]["student_id"])
+    app_student = []
+    for i in applied_student_data:
+        student = {}
+        cursor.execute(f'select firstname,lastname from student_details where id = {i["student_id"]}')
+        result = cursor.fetchone()
+        student["name"] = result["firstname"] 
+
+        cursor.execute(f"select job_role from job_posting where id = {i['job_id']}")
+        result = cursor.fetchone()
+        student["job_role"] = result["job_role"]
+
+        cursor.execute(f"select company_name from company_registration where id = {i['company_id']}")
+        result = cursor.fetchone()
+        student["company_name"] = result["company_name"]
+        app_student.append(student)
+    
+
+
     
     # Fetch data from student_details table
     cursor.execute("SELECT * FROM student_details")
@@ -1209,7 +1233,7 @@ def students():
     cursor.execute("SELECT * FROM student_register")
     student_register_data = cursor.fetchall()
     return render_template('admin_student.html', 
-                           applied_students=applied_student_data, 
+                           applied_students=app_student, 
                            student_details=student_details_data, 
                            student_resume=student_resume_data, 
                            student_register=student_register_data)
