@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,6 +31,11 @@
             transition: background-color 0.3s ease; /* Transition for background color */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adding shadow effect */
             animation: fadeInDown 1.5s ease; /* Animation for fade in down */
+            height: 60px; /* Increase the height of the navigation bar */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px; /* Add padding to the navigation bar */
         }
 
         nav a {
@@ -41,13 +47,10 @@
             transition: background-color 0.3s ease; /* Transition for background color */
             animation: fadeIn 1.5s ease; /* Animation for fade in */
         }
-        h2 {
-        color: #000; /* Black text color */
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Subtle text-shadow for better visibility */
-        margin-bottom: 10px;
-        transition: color 0.3s ease; /* Transition for text color */
-        animation: fadeInLeft 1.5s ease; /* Animation for fade in left */
-    }
+
+        nav a:last-child {
+            margin-left: auto; /* Move the profile link to the extreme right */
+        }
 
         nav a:hover {
             background-color: #4CA1AF; /* Light blue background color on hover */
@@ -159,13 +162,7 @@
     <!-- Add a link to the placement analytics page -->
     <a href="{{ url_for('scheduled_interviews') }}">Scheduled Interviews</a>
     <a href="{{ url_for('placement_analytics') }}">Placement Analytics</a>
-    <a href="{{ url_for('company_view_profile') }}"><i class="fas fa-user-circle"></i> Profile</a>
-
-    <img src="static/company/{{company_logo}}" alt="" style="display: flex; float: right; margin-left: 40%; width: auto; height: 30px ; margin-top: 10px; margin-right: 20px;">
-    <!-- <div class="nav-right">
-        <a href="{{ url_for('company_view_profile') }}"><i class="fas fa-user-circle"></i> Profile</a>
-    </div> -->
-
+    <a href="{{ url_for('company_view_profile') }}" style="margin-left: auto;"><i class="fas fa-user-circle"></i> Profile</a> <!-- Move the profile link to the extreme right -->
 </nav>
 
 <h1>Welcome to the Company Dashboard</h1>
@@ -200,5 +197,3 @@
 
 </body>
 </html>
-
-
