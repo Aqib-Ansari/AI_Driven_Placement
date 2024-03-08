@@ -24,7 +24,7 @@
                 <th>Level</th>
                 <th>Tags</th>
                 <th>Status</th>
-                <th>YouTube Link</th>
+                <th>Link</th>
             </tr>
         </thead>
         <tbody>
@@ -41,7 +41,7 @@
                     <td>{{ resource.level }}</td>
                     <td>{{ resource.tags }}</td>
                     <td>{{ resource.status }}</td>
-                    <td><a href="{{ resource.youtube_link }}">Visit</a></td>
+                    <td><a href="{{ resource.link }}">Visit</a></td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -61,13 +61,14 @@
     <div class="profile-container">
         <div class="profile-header">
             <img src="static/profile.jpg" alt="Profile Picture" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;">
-            <h1>Aqib Ansari</h1>
-            <p>Data Science and ML Enthusiast</p>
+            <h1>{{ student['firstname'] }} {{ student['lastname'] }}</h1>
         </div>
         <div class="profile-details">
-            <p>Email: aqib@example.com</p>
-            <p>Phone: +1 123-456-7890</p>
+            <p>Email: {{ student['email'] }}</p>
+            <p>Phone: +91 {{ student['phoneno'] }}</p>
         </div>
+    </div>
+        
         <div class="profile-actions">
             <button class="action-button2">Change Password</button>
             <button class="action-button2">View Applied Jobs</button>

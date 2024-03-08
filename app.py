@@ -354,7 +354,7 @@ def quiz():
     session['curr_question'] = questions[session['qno']]
     
     return render_template("quiz.html",questions = questions[session['qno']])
-    
+'''  
 @app.route('/submit_answer',methods=["POST"])
 def submit_answer():
     if request.method == "POST":
@@ -1037,33 +1037,6 @@ def companies():
 def training_resources():
     return render_template("training_resources.html")
 
-
-@app.route('/scheduled_interviews')
-def scheduled_interviews():
-    try:
-        with connection.cursor() as cursor:
-            # Fetch all scheduled interviews from the database
-            sql = "SELECT id, student_id, date, time, location FROM interviews"
-            cursor.execute(sql)
-            scheduled_interviews = cursor.fetchall()
-            return render_template('scheduled_interviews.html', interviews=scheduled_interviews)
-    except Exception as e:
-        flash(f'Error fetching scheduled interviews: {e}', 'danger')
-        scheduled_interviews = []
-
-    return render_template('scheduled_interviews.html')
-
-# ------------------------------------------------------- admin -----------------------
-
-
-# ------------------------------------------------------- Company Section job posting -----------------------
-
-@app.route('/ats_system')
-def ats_system():
-    # Your ATS System logic here
-    return render_template('ats_system.html')
-
-# ------------------------------------------------------- ATS_System -----------------------
 
 if __name__ == '__main__':
     app.run(debug=True)
