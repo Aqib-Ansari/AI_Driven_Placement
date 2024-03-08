@@ -7,6 +7,8 @@ import ai_interviewer
 from datetime import datetime, timedelta
 import os
 import ATSmain
+from flask_socketio import SocketIO, emit
+
 
 connection = sql_functions.make_sql_connection()
 
@@ -14,7 +16,7 @@ connection = sql_functions.make_sql_connection()
 app = Flask(__name__)
 #  SEcretkey : 
 app.secret_key = "aidriven"
-
+socketio = SocketIO(app)
 
 cursor = connection.cursor()
 # ----------------------------------------------------------- Landing page ---------------------------------------------------
@@ -669,6 +671,71 @@ def training():
     result = sql_functions.select_training_resources()
     
     return render_template("training.html", training_resources=result)
+# -------------------------------------------- alumni -------------------------------------------------
+# Dummy data storage (replace with a database in a real application)
+alumni_data = [{
+        'name': 'John Doe',
+        'batch': '2020',
+        'placement_status': 'Placed',
+        'company': 'TechCorp Inc',
+        'linkedin': 'https://www.linkedin.com/in/johndoe/',
+        'email': 'johndoe@example.com',
+        'about_alumni': 'John Doe is a computer science graduate from the class of 2020. He is currently working at TechCorp Inc. His expertise includes software development and machine learning.'
+    },
+    
+    {
+        'name': 'Jane Smith',
+        'batch': '2019',
+        'placement_status': 'Not Placed',
+        'company': None,
+        'linkedin': 'https://www.linkedin.com/in/janesmith/',
+        'email': 'jane.smith@example.com',
+        'about_alumni': 'Jane Smith graduated in 2019 and is exploring opportunities in the tech industry. She has a strong background in data analysis and is actively seeking positions in data science.'
+    }]
+
+@app.route('/alumni_list')
+def alumni_list():
+    return render_template('alumni_list.html', alumni_data=alumni_data)
+
+
+@app.route('/add_alumni', methods=['GET', 'POST'])
+def add_alumni():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        batch = request.form.get('batch')
+        placement_status = request.form.get('placement_status')
+        company = request.form.get('company')
+        linkedin = request.form.get('linkedin')
+        email = request.form.get('email')
+        about_alumni = request.form.get('about_alumni')
+
+        alumni_info = {
+            'name': name,
+            'batch': batch,
+            'placement_status': placement_status,
+            'company': company,
+            'linkedin': linkedin,
+            'email': email,
+            'about_alumni': about_alumni
+        }
+
+        alumni_data.append(alumni_info)
+
+        # Redirect to the alumni list page after adding alumni
+        return redirect(url_for('alumni_list'))
+
+    return render_template('add_alumni.html')
+
+# Dummy student list data
+student_list = ["Student 1", "Student 2", "Student 3"]
+
+@app.route('/contact_alumni')
+def contact_alumni():
+    return render_template('contact_alumni.html', alumni_data=alumni_data, student_list=student_list)
+
+@socketio.on('update_alumni_data')
+def handle_update_alumni_data():
+    emit('refresh_alumni_data', alumni_data, broadcast=True)
 
 
 #  --------------------------------------- change password ---------------------------
