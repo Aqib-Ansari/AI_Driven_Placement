@@ -6,12 +6,19 @@
     <title>Placement Analytics Dashboard</title>
     <style>
         body {
+            background-color: #c1d2e3;
+            /* Background color similar to job posting page */
             font-family: Arial, sans-serif;
             margin: 20px;
         }
 
         h1 {
+            color: #007bff;
+            /* Blue heading */
             text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease-in-out;
+            /* Fade in animation for heading */
         }
 
         .dashboard {
@@ -22,12 +29,80 @@
         }
 
         .card {
-            width: 30%;
+            background-color: #ffffff;
+            /* White card background */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Box shadow for depth */
+            width: 45%;
+            /* Adjusted width to fit two cards in a row */
             margin: 10px;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1s ease-in-out;
+            /* Fade in animation for cards */
+        }
+
+        .card:nth-child(odd) {
+            animation: fadeInLeft 1s ease-in-out;
+            /* Fade in from left for odd-indexed cards */
+        }
+
+        .card:nth-child(even) {
+            animation: fadeInRight 1s ease-in-out;
+            /* Fade in from right for even-indexed cards */
+        }
+
+        .card h2 {
+            color: #007bff;
+            /* Blue heading */
+            margin-bottom: 20px;
+        }
+
+        .card p {
+            color: #495057;
+            /* Dark gray text */
+            margin-bottom: 10px;
+        }
+
+        .card ul {
+            margin-top: 0;
+            padding-left: 20px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
     </style>
 </head>

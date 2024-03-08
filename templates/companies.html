@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company List</title>
+    <!-- Include CSS styles -->
+    <style>
+        /* Reset CSS */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4; /* Light gray background color */
+            color: #333; /* Black text color */
+            padding: 40px;
+            text-align: center;
+        }
+
+        /* Dropdown styles */
+        .dropdown {
+            margin-bottom: 20px;
+        }
+
+        .dropdown select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #333; /* Dark gray border color */
+            border-radius: 5px;
+            background-color: #fff; /* White background color */
+            color: #333; /* Black text color */
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #333; /* Dark gray border color */
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #B8D8E3; /* Light blue background color */
+        }
+
+        /* Company section styles */
+        .company-section {
+            display: none;
+        }
+
+        .company-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Dropdown for selecting company section -->
+    <div class="dropdown">
+        <select id="companyDropdown">
+            <option value="company_registration">Company Registration</option>
+            <option value="interviews">Interviews</option>
+            <option value="job_posting">Job Postings</option>
+        </select>
+    </div>
+
+    <!-- Display company registration data -->
+    <div class="company-section active" id="company_registration">
+        <h2>Company Registration</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Registration Number</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Industry Type</th>
+                    <th>Company Description</th>
+                    <th>Logo</th>
+                    <th>Company Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in company_registration %}
+                    <tr>
+                        <td>{{ company.company_name }}</td>
+                        <td>{{ company.registration_number }}</td>
+                        <td>{{ company.address }}</td>
+                        <td>{{ company.phone_number }}</td>
+                        <td>{{ company.email }}</td>
+                        <td>{{ company.industry_type }}</td>
+                        <td>{{ company.company_description }}</td>
+                        <td>{{ company.logo_upload_filename }}</td>
+                        <td>{{ company.company_size }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Display interview data -->
+    <div class="company-section" id="interviews">
+        <h2>Interviews</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Interview Date</th>
+                    <th>Interviewer</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for interview in interviews %}
+                    <tr>
+                        <td>{{ interview.interview_date }}</td>
+                        <td>{{ interview.interviewer }}</td>
+                        <td>{{ interview.location }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Display job posting data -->
+    <div class="company-section" id="job_posting">
+        <h2>Job Postings</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Description</th>
+                    <th>Location</th>
+                    <th>Company ID</th>
+                    <th>Job Role</th>
+                    <th>Job Type</th>
+                    <th>Skills Required</th>
+                    <th>Number of Employees</th>
+                    <th>Number of Openings</th>
+                    <th>Responsibilities</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job_posting in job_posting %}
+                    <tr>
+                        <td>{{ job_posting.job_title }}</td>
+                        <td>{{ job_posting.description }}</td>
+                        <td>{{ job_posting.location }}</td>
+                        <td>{{ job_posting.company_id }}</td>
+                        <td>{{ job_posting.job_role }}</td>
+                        <td>{{ job_posting.job_type }}</td>
+                        <td>{{ job_posting.skills_required }}</td>
+                        <td>{{ job_posting.num_employees }}</td>
+                        <td>{{ job_posting.num_openings }}</td>
+                        <td>{{ job_posting.responsibilities }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // JavaScript to toggle visibility of company sections based on dropdown selection
+        document.getElementById('companyDropdown').addEventListener('change', function() {
+            var selectedSectionId = this.value;
+            var companySections = document.querySelectorAll('.company-section');
+            
+            // Hide all sections
+            companySections.forEach(function(section) {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            var selectedSection = document.getElementById(selectedSectionId);
+            selectedSection.classList.add('active');
+        });
+    </script>
+</body>
+</html>

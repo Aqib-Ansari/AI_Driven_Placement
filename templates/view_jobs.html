@@ -39,7 +39,18 @@
                       <p class="card-text">{{ item['job_type'] }}.</p>
                       <p class="card-text">{{ item['skills_required'] }}.</p>
                       <p class="card-text">{{ item['num_openings'] }}.</p>
-                      <a href="/apply_job/{{item['id']}}" class="btn btn-primary">apply</a>
+                      {% if item["applied"] %}
+                      <!-- <a href="/apply_job/{{item['id']}}" class="btn btn-primary" aria-disabled="true">applied</a> -->
+                      <form action="/apply_job/{{item['id']}}">
+                        <button type="submit" disabled>applied</button>
+                      </form>
+                      {% else %}
+                      <!-- <a href="/apply_job/{{item['id']}}" class="btn btn-primary" >apply</a> -->
+                      <form action="/apply_job/{{item['id']}}">
+                        <button type="submit" >apply</button>
+                      </form>
+                      {% endif%}
+
                     </div>
                   </div>
             {% endfor %}

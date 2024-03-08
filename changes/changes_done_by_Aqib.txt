@@ -104,7 +104,7 @@ change : SQL tables:
                     job_id INT,
                     FOREIGN KEY (student_id) REFERENCES student_details(id),
                     FOREIGN KEY (company_id) REFERENCES company_registration(id),
-                    FOREIGN KEY (job_id) REFERENCES job_postings(id),
+                    FOREIGN KEY (job_id) REFERENCES job_posting(id),
                     PRIMARY KEY (student_id, company_id, job_id));
             9) interviews
                 CREATE TABLE interviews (
@@ -117,3 +117,22 @@ change : SQL tables:
                     UNIQUE (interview_id),
                     FOREIGN KEY (student_id) REFERENCES student_details(id),
                     FOREIGN KEY (job_id) REFERENCES job_postings(id));
+
+            10) admin
+                CREATE TABLE admin (
+                    admin_id INT PRIMARY KEY AUTO_INCREMENT,
+                    admin_name VARCHAR(255) NOT NULL,
+                    admin_email VARCHAR(255) NOT NULL UNIQUE,
+                    password VARCHAR(255) NOT NULL,
+                    college_name VARCHAR(255) NOT NULL,
+                    college_address VARCHAR(255) NOT NULL,
+                    college_id INT UNIQUE);
+            11) notifications
+                CREATE TABLE notification (
+                        noti_id INT PRIMARY KEY AUTO_INCREMENT,
+                        student_id INT,
+                        date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        msg VARCHAR(255),
+                        link VARCHAR(255),
+                        FOREIGN KEY (student_id) REFERENCES student_details(id)
+                    )

@@ -5,6 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Post a Job</title>
+    <style>
+        /* Custom CSS for visual enhancements */
+        body {
+            background-color: #c1d2e3;
+            /* Light gray background */
+        }
+
+        .container {
+            background-color: #f0f0f0;
+            /* Light gray background for the container */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Box shadow for depth */
+            padding: 30px;
+            /* Increased padding for better spacing */
+            max-width: 800px;
+            /* Increase container width */
+            margin: auto;
+            /* Center the container horizontally */
+            animation: fadeIn 1s ease-in-out;
+            /* Add fade-in animation with 1 second duration */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            color: #007bff;
+            /* Blue heading */
+            margin-bottom: 30px;
+            /* Increased margin bottom for better separation */
+        }
+
+        label {
+            color: #495057;
+            /* Dark gray label text */
+            margin-bottom: 0.5rem;
+            /* Add some bottom margin to labels */
+        }
+
+        .form-control {
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            /* Smooth transition for input focus */
+        }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            /* Change border color on focus */
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            /* Add box shadow on focus */
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            /* Red color for error messages */
+            display: none;
+            /* Initially hide error messages */
+            margin-top: 0.25rem;
+            /* Add some top margin to error messages */
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            /* Blue button */
+            border-color: #007bff;
+            /* Blue border for button */
+            width: 100%;
+            /* Make button width 100% for better mobile responsiveness */
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            /* Smooth transition for button hover */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            /* Darker blue on hover */
+            border-color: #0056b3;
+        }
+
+        /* Custom CSS for responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                /* Decreased padding for smaller screens */
+            }
+
+            h2 {
+                font-size: 26px;
+                /* Slightly increased font size for better readability */
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -38,11 +136,69 @@
             <label for="company_description">About the Company:</label>
             <textarea class="form-control" id="company_description" name="company_description" rows="4" required></textarea>
         </div>
+                
+        <div class="form-group">
+            <label for="application_deadline_date">Application Deadline Date:</label>
+            <input type="date" class="form-control" id="application_deadline_date" name="application_deadline_date" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="application_deadline_time">Application Deadline Time:</label>
+            <div class="input-group">
+                <input type="time" class="form-control" id="hours" name="hours" placeholder="Hours" min="1" max="12" required>
+            </div>
+        </div>
+        
+        <!-- Eligibility Criteria for 10th Students -->
+        <div class="form-group">
+            <label for="eligibility_10th_criteria">Select Eligibility Criteria for 10th:</label>
+            <select class="form-select" id="eligibility_10th_criteria" name="eligibility_10th_criteria">
+                <option value="percentage">Percentage</option>
+                <option value="cgpa">CGPA</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="eligibility_10th_value">Eligibility Value for 10th:</label>
+            <textarea class="form-control" id="eligibility_10th_value" name="eligibility_10th_value" rows="4" pattern="[0-9]+(\.[0-9]+)?" title="Numeric value with optional decimal places"></textarea>
+        </div>
+        
+        <!-- Eligibility Criteria for 12th Students -->
+        <div class="form-group">
+            <label for="eligibility_12th_criteria">Select Eligibility Criteria for 12th:</label>
+            <select class="form-select" id="eligibility_12th_criteria" name="eligibility_12th_criteria">
+                <option value="percentage">Percentage</option>
+                <option value="cgpa">CGPA</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="eligibility_12th_value">Eligibility Value for 12th:</label>
+            <textarea class="form-control" id="eligibility_12th_value" name="eligibility_12th_value" rows="4" pattern="[0-9]+(\.[0-9]+)?" title="Numeric value with optional decimal places"></textarea>
+        </div>
+                     
         <div class="form-group">
             <label for="responsibilities">Responsibilities:</label>
-            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="4" required></textarea>
+            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="4"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <!-- Additional Information -->
+        <div class="form-group">
+            <label for="additional_information">Additional Information:</label>
+            <div id="additional_information_container">
+                <textarea class="form-control" name="additional_information" rows="4"></textarea>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="addMoreTextarea()">+</button>
+        </div>
+        <script>
+        function addMoreTextarea() {
+            const container = document.getElementById('additional_information_container');
+            const newTextarea = document.createElement('textarea');
+            newTextarea.classList.add('form-control');
+            newTextarea.setAttribute('rows', '4');
+            container.appendChild(newTextarea);
+            }
+            </script>
+            <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
 

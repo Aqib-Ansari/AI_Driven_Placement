@@ -160,8 +160,8 @@
             <div class="form-group">
                 <label for="student_id">Select Student:</label>
                 <select class="form-control" name="student_id" id="student_id" required>
-                    {% for student in students %}
-                    <option value="{{ student.id }}">{{ student.name }}</option>
+                    {% for job in job_roles %}
+                    <option value="{{ job }}">{{ job }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -189,7 +189,7 @@
             <button type="submit" class="btn btn-primary" onclick="showNotificationAndMessage('Interview scheduled successfully!', 'success', 'Your interview has been scheduled.')">Schedule Interview</button>
         </form>
 
-        <ul class="list-group">
+        <!-- <ul class="list-group">
             {% for interview in interviews %}
             <li class="list-group-item">
                 <strong>Student:</strong> {{ interview.student_name }}<br>
@@ -197,7 +197,7 @@
                 <strong>Location:</strong> {{ interview.location }}
             </li>
             {% endfor %}
-        </ul>
+        </ul> -->
     </div>
 
     <script>

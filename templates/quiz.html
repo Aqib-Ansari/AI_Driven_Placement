@@ -73,26 +73,111 @@
     </style>
 </head>
 <body>
+    <div id="timer">Timer: <span id="timerDisplay"></span></div>
     <h1>{{ questions['question'] }}</h1>
 
     <form action="/submit_answer" method="post">
+        <!-- {{option}} -->
+        
         <label>
-            <input type="radio" name="answer" value="1"> {{ questions["option1"] }}
+            {% if option == "1" %}
+            <input type="radio" name="answer" value="1" checked  > {{ questions["option1"] }}
+            {% else %}
+            <input type="radio" name="answer" value="1"  > {{ questions["option1"] }}
+            {% endif %}
         </label>
         <br>
         <label>
-            <input type="radio" name="answer" value="2"> {{ questions["option2"] }}
+            {% if option == "2" %}
+            <input type="radio" name="answer" value="2" required checked> {{ questions["option2"] }}
+            {% else %}
+            <input type="radio" name="answer" value="2" required> {{ questions["option2"] }}
+            {% endif %}
         </label>
         <br>
         <label>
+            {% if option == "3" %}
+            <input type="radio" name="answer" value="3" checked> {{ questions["option3"] }}
+            {% else %}
             <input type="radio" name="answer" value="3"> {{ questions["option3"] }}
+            {% endif %}
         </label>
         <br>
         <label>
+            {% if option == "4" %}
             <input type="radio" name="answer" value="4"> {{ questions["option4"] }}
+            {% else %}
+            <input type="radio" name="answer" value="4"> {{ questions["option4"] }}
+            {% endif %}
         </label>
         <br>
         <button type="submit">Next</button>
+        <a href="/previous_question">Previous</a>
     </form>
+
+    <!-- <script>
+        var timerDisplay = document.getElementById("timerDisplay");
+        var quizForm = document.getElementById("quizForm");
+        var selectedTime = parseInt(localStorage.getItem("selectedTime")) || 0;
+        var initialMinutes = Math.floor(selectedTime / 60);
+        var initialSeconds = selectedTime % 60;
+        timerDisplay.textContent = initialMinutes + "m " + initialSeconds + "s";
+        var timerInterval;
+    
+        function countdown() {
+            var minutes = Math.floor(selectedTime / 60);
+            var seconds = selectedTime % 60;
+            timerDisplay.textContent = minutes + "m " + seconds + "s";
+            console.log(selectedTime)
+            if (selectedTime > 0) {
+                selectedTime--;
+                localStorage.setItem("selectedTime", selectedTime);
+                timerInterval = setTimeout(countdown, 1000);
+            } else {
+                clearInterval(timerInterval);
+                redirectToResults();
+            }
+        }
+        countdown();
+    
+        function redirectToResults() {
+            window.location.href = "http://127.0.0.1:5000/submit_answer";
+        }
+    
+        document.getElementById("nextButton").addEventListener("click", function() {
+            clearTimeout(timerInterval);
+        });
+    
+        document.getElementById("backButton").addEventListener("click", function() {
+            // Save the selected answer and current question index
+            var currentQuestionIndex = "{{ current_question_index }}";
+            var selectedAnswer = document.querySelector('input[name="answer_option_' + currentQuestionIndex + '"]:checked');
+            if (selectedAnswer) {
+                localStorage.setItem("selectedAnswer_" + currentQuestionIndex, selectedAnswer.value);
+            }
+            localStorage.setItem("currentQuestionIndex", currentQuestionIndex);
+    
+            // Go back to the previous question
+            var prevQuestionIndex = parseInt(localStorage.getItem("currentQuestionIndex")) - 1;
+            if (prevQuestionIndex >= 0) {
+                window.location.href = "/navigate_previous_question?prev_question=" + prevQuestionIndex;
+            } else {
+                // Handle the case where the current question is the first question
+                alert("You are already on the first question.");
+            }
+        });
+    
+        // Set the selected answer when navigating back to this question
+        var currentQuestionIndex = "{{ current_question_index }}";
+        var selectedAnswerValue = localStorage.getItem("selectedAnswer_" + currentQuestionIndex);
+        if (selectedAnswerValue !== null) {
+            var selectedAnswer = document.querySelector('input[value="' + selectedAnswerValue + '"]');
+            if (selectedAnswer) {
+                selectedAnswer.checked = true;
+            }
+        }
+
+    </script> -->
+
 </body>
 </html>

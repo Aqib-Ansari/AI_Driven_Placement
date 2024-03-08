@@ -1,0 +1,63 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Student Information</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>Student Information</h2>
+    <table class="table table-bordered mt-3">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>College</th>
+            <th>Roll Number</th>
+            <th>Program</th>
+            <th>Stream</th>
+            <th>Year</th>
+            <th>Backlog</th>
+            <th>CGPA</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Nationality</th>
+            <th>Address</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for student in students %}
+            <tr>
+                <td>{{ student.id }}</td>
+                <td>{{ student.firstname }} {{ student.middlename }} {{ student.lastname }}</td>
+                <td>{{ student.college }}</td>
+                <td>{{ student.rollno }}</td>
+                <td>{{ student.program }}</td>
+                <td>{{ student.stream }}</td>
+                <td>{{ student.year }}</td>
+                <td>{{ student.backlog }}</td>
+                <td>{{ student.currentcgpa }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.phoneno }}</td>
+                <td>{{ student.gender }}</td>
+                <td>{{ student.dob }}</td>
+                <td>{{ student.nationality }}</td>
+                <td>{{ student.address }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
