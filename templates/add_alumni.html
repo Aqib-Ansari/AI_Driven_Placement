@@ -1,0 +1,99 @@
+<!-- add_alumni.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Alumni</title>
+    <style>
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            padding: 8px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Alumni</h1>
+        <form method="POST" action="{{ url_for('add_alumni') }}">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="batch">Batch:</label>
+            <input type="text" id="batch" name="batch" required><br>
+
+            <label for="placement_status">Placement Status:</label>
+            <select id="placement_status" name="placement_status" required>
+                <option value="Placed">Placed</option>
+                <option value="Not Placed">Not Placed</option>
+            </select><br>
+
+            <label for="company">Company:</label>
+            <input type="text" id="company" name="company" required><br>
+
+            <label for="linkedin">LinkedIn Account:</label>
+            <input type="text" id="linkedin" name="linkedin" required><br>
+
+            <label for="email">Email ID:</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="about_alumni">About Alumni:</label>
+            <textarea id="about_alumni" name="about_alumni" rows="4"></textarea><br>
+
+            <button type="submit">Submit</button>
+        </form>
+        <br>
+        <a href="{{ url_for('alumni_list') }}">Back to Alumni List</a>
+    </div>
+</body>
+</html>

@@ -6,24 +6,52 @@
     <title>Change Password</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 100px;
+            background: linear-gradient(135deg, #2C3E50, #4CA1AF); /* Gradient background */
+            color: #fff;
+            text-align: center;
         }
+
         form {
             max-width: 400px;
             margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
         }
-        label, input {
+
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
             display: block;
-            margin-bottom: 10px;
+            color: #333;
         }
-        button {
+
+        input {
+            width: 100%;
             padding: 10px;
-            background-color: #4CAF50;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #ff4500; /* Tesla red color */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #cc3700; /* Darker red on hover */
         }
     </style>
 </head>
@@ -31,7 +59,7 @@
 
 <form id="changePasswordForm" action="/change_pass" method="post">
     <label for="currentPassword">Current Password:</label>
-    <input type="password" id="currentPassword" name="currentPassword" required>
+    <input type="password" id="currentPassword" name="currentPassword" required >
 
     <label for="newPassword">New Password:</label>
     <input type="password" id="newPassword" name="newPassword" required>
@@ -41,8 +69,6 @@
 
     <button type="submit">Change Password</button>
 </form>
-
-
 
 </body>
 </html>

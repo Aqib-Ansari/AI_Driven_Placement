@@ -713,7 +713,7 @@ if __name__ == "__main__":
     # insert_notification(student_id=1,msg="go to dashboard",link='/student_dashboard1')
     # print(select_notification(student_id=1))
     # print(if_resume_present(email="aqibansari22298@gmail.com"))
-    insert_percent_match(job_id=2,student_id=1,percent_match=80)
+    # insert_percent_match(job_id=2,student_id=1,percent_match=80)
     select_percent_match()
    
     connection.commit()

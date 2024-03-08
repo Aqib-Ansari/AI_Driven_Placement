@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Alumni</title>
+    <style>
+        body {
+            font-family: 'Cormorant Garamond';
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .alumni {
+            padding: 10px 0;
+        }
+
+        .separator {
+            border-bottom: 1px solid #000;  /* Black separator line */
+            margin-bottom: 20px;  /* Adjust the margin as needed */
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // Function to handle real-time update
+        socket.on('refresh_alumni_data', function(data) {
+            location.reload();
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Contact Alumni</h1>
+        {% for alumni in alumni_data %}
+            <div class="alumni">
+                <h3>{{ alumni.name }}</h3>
+                <p>Batch: {{ alumni.batch }}, Status: {{ alumni.placement_status }}, Company: {{ alumni.company }}</p>
+                <p>LinkedIn: <a href="{{ alumni.linkedin }}" target="_blank">{{ alumni.linkedin }}</a></p>
+                <p>Email: {{ alumni.email }}</p>
+                <p>About: {{ alumni.about_alumni }}</p>
+            </div>
+            <div class="separator"></div>
+        {% endfor %}
+    </div>
+</body>
+</html>

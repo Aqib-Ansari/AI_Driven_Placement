@@ -6,22 +6,36 @@
     <title>Dropdown Form</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2C3E50, #4CA1AF);
         }
         form {
             max-width: 400px;
-            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            background-color: #ffffffee;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         label {
             display: block;
             margin-bottom: 8px;
+            color: #333;
         }
         select {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin-bottom: 16px;
             box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #333;
         }
         input[type="submit"] {
             background-color: #4CAF50;
@@ -38,7 +52,7 @@
 </head>
 <body>
 
-    <form action="/start_interview" method="post" >
+    <form action="/start_interview" method="post">
         <label for="dropdown">Select an option:</label>
         <select id="dropdown" name="interview_topic">
             <option value="Software Developer">Software Developer/Engineer</option>
