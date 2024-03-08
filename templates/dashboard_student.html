@@ -9,129 +9,168 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            position: relative;
-            
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            background: url('/static/student_dashboard.jpg') no-repeat center center fixed;
+            background-size: cover;
+
         }
 
-        #notifications {
-            top: 10px;
-            left: 10px;
-            background-color: #ffcc00;
+        .navbar {
+            background-color: #2C3E50;
+            color: white;
             padding: 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            float: right;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            position:absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            transition: width 0.3s;
+            width: 200px; /* Set initial width */
         }
 
-        .button-container {
-            margin: 0px;
+        .navbar.collapsed {
+            width: 50px;
         }
 
-        .action-button {
-            padding: 10px;
-            margin-top: 20px;
-            margin-left: 15px;
-            margin-right: 0px;
-            font-size: 16px;
-            text-align: center;
+        .navbar-brand {
+            font-size: 24px;
             text-decoration: none;
-            display: inline-block;
-            cursor: pointer;
-            
+            font-family: cursive; /* Set font-family to cursive */
+            color: white;
+            font-weight: bold;
+        }
+
+        .navbar-nav {
+            list-style-type: none;
+            margin: 20px 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            width: 100%; /* Ensure full width */
+        }
+
+        .nav-item {
+            margin-bottom: 30px; /* Add space between nav items */
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            padding: 10px;
             border-radius: 5px;
-            color: #222222;
-            background-color: #88cfff;
-            
             transition: background-color 0.3s;
         }
 
-        .action-button:hover {
-            color: rgb(0, 107, 184);
-            background-color: #b8e3ff;
-            border-radius: 0%;
-            box-shadow: 2px 2px 2px rgb(193, 192, 192);
-            transition: 0.4s;
+        .nav-link:hover {
+            background-color: #34495E;
         }
 
-        #upload-resume {
+        .profile-button {
+            margin-top: auto; /* Push profile button to the bottom */
+            margin-bottom: 20px; /* Add space below profile button */
+            height: 50px;
+            padding: 3px;
+            border-radius: 50%;
+            border: 3px solid rgb(140, 206, 250);
+            background-color: #b8e3ff;
+        }
+
+        .profile-button img {
+            padding: 2px;
+            border: 4px solid black;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
+
+        #toggleBtn {
+            background-color: transparent;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-bottom: 20px; /* Add space between the toggle button and the profile button */
+        }
+
+        #toggleBtn:hover {
+            transform: rotate(90deg);
+        }
+
+        .collapsed .navbar-nav {
             display: none;
         }
 
-        .dashboard-heading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #7bbdea; /* Example background color */
-    color: #fff; /* Example text color */
-    padding: 10px;
-    margin-top: 0;
-}
+        .navbar:not(.collapsed) .navbar-nav {
+            display: flex;
+            flex-direction: column;
+        }
 
-.user-list {
-    list-style: none;
-    width:fit-content;
-    border-radius: 3px;
-    margin-left: 2%;
-    padding: 10px;
-    background-color: #f2f2f2; /* Example background color */
-}
+        .navbar-nav a {
+            padding: 8px 20px;
+            border-radius: 0;
+        }
 
-.user-list p {
-    margin: 0;
-}
+        .navbar-nav a.active {
+            background-color: #34495E;
+        }
 
+        .collapsed .profile-button {
+            display: none;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            
+        }
 
+        .dashboard-image {
+            width: 100vw; /* Set width to 100% of viewport width */
+            height: 100vh; /* Set height to 100% of viewport height */
+            object-fit: cover; /* Maintain aspect ratio and cover the entire viewport */
+        }
     </style>
 </head>
-<body style="margin: 0px; padding: 0px;">
-    
-   
-
-    
-
-    <div class="button-container" style="width: 100%; height: 80px; background-color: rgb(148, 235, 255);">
-        <div style="margin-top: 0px; padding-top: 0px; margin-left: 20px; margin-right: 20px; ">
-            <b style="font-size: 20px;">Placed</b>
-        <a href="/" class="action-button"><b>Home</b></a>
-        <a href="/student_details" class="action-button"><b>Details</b></a>
-        <a href="/quiz_details" class="action-button"><b>Give Mock Test</b></a>
-        <a href="/view_jobs" class="action-button"><b>View Jobs</b></a>
-        <a href = "/contact_alumni" class="action-button"><b>Contact Alumni</a>
-        <a href="/upload_resume" class="action-button"><b>upload resume</b></a>
-        <a href="/interview_option" class="action-button"><b>Give Mock Interview</b></a>
-        <a href="/training" class="action-button"><b>Training Resources</b></a>
-        
-            {% if image_pro %}
-            
-            <a href="/profile" class="action-button" style="float: right; margin-right: 20px;height: 50px; padding: 3px; border-radius: 50%; border: 3px solid rgb(140, 206, 250); background-color: #b8e3ff; margin-top: 10px; ">
-            <img src="/static/student/{{ image_pro['filename'] }}" alt="Profile Image" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%; width: 40px; height: 40px;">
+<body>
+    <nav class="navbar">
+        <a href="#" class="navbar-brand">&#9776;</a>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+            <li class="nav-item"><a href="/student_details" class="nav-link">Details</a></li>
+            <li class="nav-item"><a href="/quiz_details" class="nav-link">Give Mock Test</a></li>
+            <li class="nav-item"><a href="/view_jobs" class="nav-link">View Jobs</a></li>
+            <li class="nav-item"><a href="https://kccollege.edu.in/alumni/" class="nav-link">Contact Alumni</a></li>
+            <li class="nav-item"><a href="/upload_resume" class="nav-link">Upload Resume</a></li>
+            <li class="nav-item"><a href="/interview_option" class="nav-link">Give Mock Interview</a></li>
+            <li class="nav-item"><a href="/training" class="nav-link">Training Resources</a></li>
+        </ul>
+        <button id="toggleBtn">&#9776;</button>
+        <a href="/profile" class="profile-button">
+            <img src="/static/student/{{ image_pro['filename'] }}" alt="Profile Image">
         </a>
-    
-{% else %}
-<a href="/profile" class="action-button" style="float: right; margin-right: 20px;height: 50px; padding: 3px; border-radius: 50%; border: 3px solid rgb(140, 206, 250); background-color: #b8e3ff; margin-top: 10px; ">
-    <img src="{{ url_for('static', filename='student/student_icon.jpg') }}" alt="Profile Picture" class="profile-picture" style="margin: top 0; padding-top: 0%; width: 50px;height: auto; border-radius: 50%;">
-
-{% endif %}
-        </a>
-    </div>
-    </div>
-
-    <h1 class="dashboard-heading">Student Dashboard</h1>
-
-    <ul class="user-list">
-        <p> {% for item in student_list %}
-            {{ item }}
-        {% endfor %}</p>
-    </ul>
         
-    </ul>
-    <img src="/static/student2.jpg" alt="Dashboard Image" style="width: 400px; margin-left: 38%;">
+    </nav>
+
+    
+    
+    <!-- <img src="/static/student_dashboard.jpg" alt="Dashboard Image" class="dashboard-image"> -->
 
     {% if msg %}
         <h1>{{ msg }}</h1>
     {% endif %}
-    
-   
-    
+
+    <script>
+        document.getElementById('toggleBtn').addEventListener('click', function() {
+            document.querySelector('.navbar').classList.toggle('collapsed');
+        });
+    </script>
 </body>
 </html>
