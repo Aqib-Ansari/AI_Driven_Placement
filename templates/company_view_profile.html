@@ -1,63 +1,58 @@
+company_view_profile.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Profile</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <style>
-        /* Reset some default styles */
         body {
-            font-family: 'Cormorant Garamond', serif; /* Similar font style as Dashboard */
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            color: #000; /* Black text color */
-            font-size: 16px;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #2C3E50, #4CA1AF); /* Gradient background similar to Dashboard */
-            background-size: cover;
-            background-position: center;
-            transition: background-image 0.3s ease;
+            background-color: #e9ecef;
+            color: #212529;
         }
 
         .container {
             max-width: 800px;
             margin: 20px auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            padding: 40px;
             border-radius: 8px;
-            transition: background-color 0.3s ease;
-            animation: fadeInUp 1.5s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            color: #000; /* Black text color */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Subtle text-shadow for better visibility */
+            color: #007bff;
             margin-bottom: 25px;
             text-align: center;
-            transition: color 0.3s ease;
-            animation: fadeInLeft 1.5s ease;
         }
 
         .profile-item {
             margin-bottom: 20px;
             line-height: 1.5;
-            color: #000; /* Black text color */
         }
 
         .profile-item strong {
             display: block;
-            color: #34495E; /* Dark blue color similar to Dashboard nav */
+            color: #007bff;
             margin-bottom: 10px;
             font-size: 1.1em;
         }
 
+        .back-button {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+        }
+
         .back-button a {
-            background-color: #34495E; /* Dark blue background color */
-            color: #fff; /* White text color */
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
             padding: 10px 20px;
             border-radius: 5px;
             text-decoration: none;
@@ -71,36 +66,12 @@
         footer {
             text-align: center;
             padding: 20px;
-            background-color: #34495E; /* Dark blue background color */
-            color: #fff; /* White text color */
+            background-color: #ffffff;
             border-top: 1px solid #dee2e6;
         }
 
         footer small {
             color: #6c757d;
-        }
-
-        /* Keyframes for animations */
-        @keyframes fadeInUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInLeft {
-            from {
-                transform: translateX(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
         }
     </style>
 </head>

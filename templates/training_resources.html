@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add/Edit Training Resource</title>
+    <title>Add Training Resource</title>
     <style>
         /* Basic styling for the form */
         body {
@@ -66,19 +66,29 @@
     </style>
 </head>
 <body>
-    <h2>Add/Edit Training Resource</h2>
-    <form action="/admin_dashboard" method="post">
+    <h2>Add Training Resource</h2>
+    <form action="/admin_dashboard\" method="post">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" required>
 
         <label for="category">Category:</label>
-        <input type="text" id="category" name="category" required>
+        <select id="category" name="category" required>
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="mysql">MySQL</option>
+            <option value="data_science">Data Science</option>
+            <option value="finance">Finance</option>
+            <option value="frontend_developer">Frontend Developer</option>
+            <option value="DevOps">DevOps</option>
+            <option value="machine_learning">Machine Learning</option>
+            <option value="others">Others</option>
+        </select>
 
         <label for="description">Description:</label>
         <textarea id="description" name="description" rows="4" required></textarea>
 
         <label for="author">Author/Provider:</label>
-        <input type="text" id="author" name="author" required>
+        <input type="text" id="author" name="author">
 
         <label for="format">Format:</label>
         <input type="text" id="format" name="format" required>
@@ -87,7 +97,7 @@
         <input type="number" id="duration" name="duration" required>
 
         <label for="language">Language:</label>
-        <input type="text" id="language" name="language" required>
+        <input type="text" id="language" name="language">
 
         <label for="level">Level:</label>
         <select id="level" name="level" required>
@@ -97,16 +107,17 @@
         </select>
 
         <label for="tags">Tags/Keywords:</label>
-        <input type="text" id="tags" name="tags" placeholder="Separate with commas">
+        <input type="text" id="tags" name="tags" placeholder="Separate with commas" required>
 
         <label for="status">Status:</label>
-        <select id="status" name="status" required>
+        <select id="status" name="status">
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
             <option value="under_review">Under Review</option>
         </select>
-        <label for="youtube_link">YouTube Link:</label>
-        <input type="url" id="youtube_link" name="youtube_link" placeholder="Enter YouTube link">
+        
+        <label for="link">Link:</label>
+        <input type="url" id="link" name="link" placeholder="Enter link" required>
 
         <button type="submit">Save Training Resource</button>
     </form>

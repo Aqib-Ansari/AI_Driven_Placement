@@ -6,6 +6,7 @@ from email.mime.text import MIMEText
 import ai_interviewer
 from datetime import datetime, timedelta
 import os
+import ATSmain
 
 connection = sql_functions.make_sql_connection()
 
@@ -36,7 +37,7 @@ def register_admin():
     return render_template('admin_registration.html')
 
 
-'''
+
 @app.route('/register_data', methods=['POST'])
 def register_data():
     if request.method=="POST":
@@ -59,30 +60,6 @@ def register_data():
         
     
     return redirect(url_for("redirect_to_student_dashboard"))
-'''
-@app.route('/register_data', methods=['POST'])
-def register_data():
-    if request.method=="POST":
-        student = {
-            "name": request.form['username'],
-            "email": request.form['email'],
-            "pass2": request.form['pass2'],
-            "Enrolno": request.form['Enrolno'],
-            "college": request.form['college'],
-            "course": request.form['course'],
-            "year": request.form['year'],
-            "rollno": request.form['rollno']
-        }
-        
-        sql_functions.insert_register_student(username=student['name'],email=student['email'],password=student['pass2'],enrollment_num=student['Enrolno'],college=student['college'],course=student['course'],year=student['year'],rollno=student['rollno'])
-        session["user"] = student["email"]
-        
-        return redirect(url_for("redirect_to_student_dashboard"))
-    else:
-        name = "not found"
-    
-    return redirect(url_for("redirect_to_student_dashboard"))
-
 
 @app.route('/redirect', methods=['POST'])
 def redirect_to_page():
@@ -149,51 +126,24 @@ def student_dashboard():
         else:
             return redirect(url_for('login'))
         
-        
-@app.route('/add_skills', methods=['GET', 'POST'])
-def add_skills():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
-    if request.method == 'POST':
-        # Each of these can be a comma-separated list
-        skill = request.form['skill']
-        soft_skills = request.form['soft_skills']
-        certifications = request.form['certifications']
-        student_email = session['user']
-
-        try:
-            cursor.execute("SELECT id FROM student_register WHERE email = %s", (student_email,))
-            student_id_result = cursor.fetchone()
-
-            if student_id_result:
-                student_id = student_id_result['id']
-
-                # Assuming skills and certifications are entered as comma-separated values
-                # Directly store these CSV strings into the database
-                insert_query = """
-                INSERT INTO student_skills (student_id, skill, soft_skills, certifications) 
-                VALUES (%s, %s, %s, %s)
-                """
-                cursor.execute(insert_query, (student_id, skill, soft_skills, certifications))
-                connection.commit()
-
-                flash('Skills and certifications added successfully!')
-                return redirect(url_for('add_skills'))
-        except Exception as e:
-            print(e)
-            flash('Error adding skills and certifications.')
-
-    return render_template('add_skills.html')
-
-
 
 
 @app.route('/student_dashboard1')
 def redirect_to_student_dashboard():
     if "user" in session:
         
-        return render_template("dashboard_student.html",student_list = [session["user"]] )
+        student_details = sql_functions.get_student_details(session['user'])
+        print(student_details)
+        if student_details != ():
+            student_id = student_details[0]['id']
+            print(student_id)
+            cursor.execute(f"select filename from student_profile_img where student_id = {student_id} ")
+            profile_filename = cursor.fetchone()
+            print(profile_filename)
+            return render_template("dashboard_student.html",student_list = [session["user"]] , image_pro =  profile_filename)
+        
+        return render_template("dashboard_student.html",student_list = [session["user"]] , image_pro =  False , msg = "please Update Your Details")
+
     return redirect(url_for("login"))
 
 # ----------------------------------------- Profile -------------------------------------------
@@ -224,21 +174,50 @@ def profile():
             filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filename)
             return redirect(url_for('profile'))
-        
+    
 
     student_details = sql_functions.get_student_details(session['user'])
+
+    if student_details == ():
+        return redirect(url_for("student_details"))
     student_id = student_details[0]['id']
     cursor.execute(f"select filename from student_profile_img where student_id = {student_id} ")
     profile_filename = cursor.fetchone()
     print(profile_filename)
+    student_details = sql_functions.get_student_details(email=session["user"])
     if profile_filename == None or profile_filename == ():
-        return render_template("profile.html")
 
-    print(profile_filename["filename"])
-    return render_template("profile.html", image_pro=profile_filename["filename"])
+        return render_template("profile.html",student = student_details)
 
+    # print(profile_filename["filename"])
 
-'''
+    return render_template("profile.html", image_pro=profile_filename["filename"],student = student_details )
+
+@app.route('/profile_change_profile',methods= ["POST","GET"])
+def profile_change_profile():
+    if request.method == 'POST':
+        # Check if the POST request has a file part
+        if 'file' not in request.files:
+            return redirect(request.url)
+
+        file = request.files['file']
+
+        # If the user does not select a file, display the file input again
+        if file.filename == '':
+            return render_template('profile.html', image_exists=image_exists)
+
+        # Save the uploaded file to the UPLOAD_FOLDER
+        if file:
+            sql_functions.insert_student_profile_img(email=session["user"],filename=file.filename)
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(filename)
+            connection.commit()
+            return redirect(url_for('profile'))
+        
+    else:
+        return render_template("update_image.html")
+        
+
 @app.route('/notifications')
 def notifications():
     student_details = sql_functions.get_student_details(session['user'])
@@ -246,32 +225,6 @@ def notifications():
     notifications = sql_functions.select_notification(student_id=student_id)
     # print(notifications)
     return render_template('notifications.html',notifications=notifications)
-
-'''
-
-@app.route('/notifications')
-def notifications():
-    student_details = sql_functions.get_student_details(session['user'])
-    student_id = student_details[0]['id']
-    notifications = sql_functions.select_notification(student_id=student_id)
-    
-    # Process notifications to add a priority based on the message content
-    for notification in notifications:
-        if "your result is for subject" in notification["msg"]:
-            notification["priority"] = "exam-result"
-        elif "Succesfully Applied for job" in notification["msg"]:
-            notification["priority"] = "job-success"
-        elif "Password Updated Succesfully" in notification["msg"]:
-            notification["priority"] = "password-update"
-        elif "go to dashboard" in notification['msg']:
-            notification['priority'] = "redirect dashboard"
-        else:
-            notification["priority"] = "general"  # Default category for other notifications
-
-    return render_template('notifications.html', notifications=notifications)
-
-#------------------------------student/appliedjob---------------------------------------------
-#--------------------------------------------------------------------------------------------
 
 @app.route('/view_applied_jobs')
 def view_applied_jobs():
@@ -303,7 +256,10 @@ def view_applied_jobs():
     
     return render_template('student_appliedjob.html', applied_jobs=applied_jobs)
 
-#--------------------------------------------------------------------------------------------
+
+
+
+
 # ------------------------------------------  quiz----------
 
 
@@ -335,12 +291,17 @@ def remaining_time():
 
 @app.route('/quiz_details')
 def quiz_details():
+    student_details = sql_functions.get_student_details(session['user'])
+    if student_details == ():
+        return redirect(url_for("student_details"))
     return render_template("quiz_details.html")
 
 
 
 @app.route('/quiz_details_form',methods = ["POST"])
 def quiz_details_form():
+    
+
     if request.method == "POST":
         session['qno']=-1
         session['correct_answers'] = []
@@ -351,12 +312,14 @@ def quiz_details_form():
         session["qtype"] = qtype
         testtime = request.form["testtime"]
         questions = sql_functions.fetch_quiz_question(qtype=qtype)
-        session["allQuestions"] = questions
+        session["allQuestions"] = questions[0:35]
+        print(session["allQuestions"])
+        print(len(session["allQuestions"]))
 
 
         if testtime =="10" :
             session["no_of_question"] = 8
-            session["option_selected"] = [0]*20
+            session["option_selected"] = [0]*40
            
             app.config['expiration_time'] = datetime.now() + timedelta(minutes=10)
 
@@ -368,7 +331,7 @@ def quiz_details_form():
             
 
         else:
-            session["no_of_question"] = len(session["allQuestions"])
+            session["no_of_question"] = 20
             app.config['expiration_time'] = datetime.now() + timedelta(minutes=30)
             
 
@@ -381,13 +344,15 @@ def quiz_details_form():
 
 @app.route('/quiz')
 def quiz():
-    
-    if session["qno"] >= len(session["allQuestions"]):
+    print(session['qno'])
+    if session['qno'] >= len(session["allQuestions"]):
         return "no more test enjoy"
     
     questions = session["allQuestions"]
     # print(len(session["allQuestions"]))
     session['curr_question'] = questions[session['qno']]
+    print("question  =", questions[session['qno']])
+    print("option = ",session["option_selected"][session["qno"]])
     
     return render_template("quiz.html",questions = questions[session['qno']],option=session["option_selected"][session["qno"]])
     
@@ -398,7 +363,7 @@ def submit_answer():
         if session['qno'] < session["no_of_question"]:
             answer = request.form["answer"]
             session["option_selected"][(session["qno"])-1] = answer  
-            print(int(answer)," - ",int(session['curr_question']['correct']))
+            # print(int(answer)," - ",int(session['curr_question']['correct']))
 
             if int(session['curr_question']['correct'])==int(answer):
                 session['correct_answers'].append(1)
@@ -410,7 +375,9 @@ def submit_answer():
             student_details = sql_functions.get_student_details(session['user'])
             student_id = student_details[0]['id']
             sql_functions.insert_notification(student_id=student_id,msg=f"your result is for subject {session['qtype']}: \n correct answers are {sum(session['correct_answers'])} / {session['no_of_question']} : percentage : {((sum(session['correct_answers'])*100)/10)}%",link="/student_dashboard1") 
-            return render_template("results.html",result = sum(session["correct_answers"]),len = session["no_of_question"],percentage = ((sum(session["correct_answers"])*100)/10))
+            session["option_selected"] = [0]*40
+
+            return render_template("results.html",result = sum(session["correct_answers"]),len = session["no_of_question"],percentage = ((sum(session["correct_answers"])*100)/session["no_of_question"]))
 
 @app.route('/previous_question')
 def previous_question():
@@ -423,11 +390,10 @@ def previous_question():
 
 @app.route("/end_test")
 def end_test():
+    session["option_selected"] = [0]*40
+
     return render_template("results.html",result = sum(session["correct_answers"]),len = session["no_of_question"],percentage = ((sum(session["correct_answers"])*100)/10))
 
-@app.route('/dashboard_student')
-def dashboard_student():
-    return render_template('dashboard_student.html')
 # ------------------------------------------------ Details ----------------------------------------------------------
 
 @app.route('/student_details')
@@ -465,27 +431,6 @@ def student_details():
 @app.route('/edit_student_field/<field>')
 def edit_student_field(field):
     return render_template("student_field_update.html",field=field)
-'''
-@app.route('/update_field/<field>', methods=["POST"])
-def update_field(field):
-    if request.method == "POST":
-        value = request.form.get("value")
-        email = request.form.get("email")  # Assuming email is also submitted in the form
-        if field == "dob":
-            value = datetime.strptime(value, "%Y-%m-%d")
-        try:
-            update_student_details(email=email, field=field, value=value)
-            return redirect(url_for("student_details"))
-        except Exception as e:
-            # Handle database update errors
-            print("Error updating database:", e)
-            return redirect(url_for("student_details"))  # Redirect to appropriate page
-    else:
-        # Handle invalid request method
-        return redirect(url_for("edit_student_details"))
-
-'''
-
 
 @app.route('/update_field/<field>',methods=["POST"])
 def update_field(field):
@@ -550,9 +495,9 @@ def view_pdf():
 # --------------------------------------------------------- view jobs ---------------------------------------
 @app.route('/view_jobs')
 def view_jobs():
-    if "user" not in session:
-        return redirect(url_for("login"))
-    try:
+    # if "user" not in session:
+    #     return redirect(url_for("login"))
+    # try:
 
         
         cursor.execute(f"select id from student_register where email = '{session['user']}'")
@@ -569,18 +514,24 @@ def view_jobs():
         cursor.execute(f"select * from job_posting")
         # applied_array = [x for x in range()]
         jobs = cursor.fetchall()
-        for i,j in zip(jobs,job_applied):
-            i["applied"] = j
+        # for i,j in zip(jobs,job_applied):
+
+        #     if i["id"] == j:
+        #         i["applied"] = True
+        #     else:
+        #         i['applied'] = False
+
+        # for i in range()
 
 
-        cursor.execute("select  ")
+        
 
-        print(jobs)
-    except Exception as e:
-        print(e)
-        # jobs = [1, 2, 3]*20
+        # print(jobs)
+    # except Exception as e:
+    #     print(e)
+    #     # jobs = [1, 2, 3]*20
 
-    return render_template('view_jobs.html', jobs=jobs)
+        return render_template('view_jobs.html', jobs=jobs)
 
 
 
@@ -599,12 +550,26 @@ def job_applied(job_id):
 
         if request.method == "POST":
             print("this is job id",job_id)
-            student_details = sql_functions.get_student_details(session['user'])
+            
             # print(student_dashboard)
+            cursor.execute(f"select id from student_register where email = '{session['user']}'")
+            student_details = cursor.fetchall()
             student_id = student_details[0]['id']
+            
             print(student_id)
             cursor.execute(f'select company_id from job_posting where id = {int(job_id)}')
             company_id = cursor.fetchall()
+
+            cursor.execute(f'select * from job_posting where id = {job_id}')
+            job = cursor.fetchall()
+
+            jd = job[0]["job_role"] +"\n"+ job[0]["skills_required"] +"\n"+ job[0]["responsibilities"]
+            if sql_functions.if_resume_present(session['user']):
+                file_name = sql_functions.if_resume_present(session["user"])
+                file_path = 'static/'+file_name
+            percent_match = ATSmain.ATS(path=file_path,job_description=jd)
+
+            sql_functions.insert_percent_match(student_id=student_id,job_id=job_id,percent_match=percent_match)
 
             sql_functions.insert_applied_student_data(company_id=company_id[0]['company_id'],job_id=int(job_id),student_id=student_id)
             flash("applied successfully")
@@ -621,38 +586,61 @@ def job_applied(job_id):
 
 
 # -------------------------------------------- Ai Interviewer -------------------------------------
+subject = ""
 
-
-
-prompt = """
- You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role data science. 
-  Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate
-"""
-
+prompt2 = '''
+give the result of mock interview in a json format having fields "correct answers" , "any Feedback for technical " 
+'''
 @app.route('/start_interview', methods=['GET', 'POST'])
 def start_interview():
-    global prompt
+    global   subject
+    if request.method == "POST":
+        subject = request.form["interview_topic"]
+        prompt = f"""
+            You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role {subject}. 
+            Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate
+            """
+
     
-    response = ai_interviewer.start_interview(prompt=prompt)
-    session["last_answer"] = False
+        response = ai_interviewer.start_interview(prompt=prompt)
+        session["last_answer"] = False
+
     
-    return render_template('interviewer.html', result=response, inter_pro = False, start = True)
+        return render_template('interviewer.html', result=response, inter_pro = False, start = True)
+    
 
 @app.route('/interview_process',methods= ["POST","GET"])
 def interview_process():
     
-   
+    global subject
     if request.method == "POST":
         answer = request.form["answer"]
         response = ai_interviewer.chat.send_message(answer)
         session["last_answer"] = response.text
         print(response.text)
-        question = ai_interviewer.chat.send_message("Ask me only 1 python interview question")
+        prompt = f"""
+            You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role {subject}. 
+            Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate.
+             
+            """
+        question = ai_interviewer.chat.send_message(["Ask me only 1 interview question" , prompt])
         return render_template('interviewer.html', result=response.text, question = question.text,inter_pro = True)
     else:
-        question = ai_interviewer.chat.send_message("Ask me only 1 easy python interview question")
+        prompt = f"""
+            You are an experienced Technical Human Resource Manager,your task is to ask interview question for job role {subject}. 
+            Please do not provide answer . only ask one question at a time. some time ask about the project done by candidate.
+             
+            """
+        question = ai_interviewer.chat.send_message(["Ask me only 1 interview question" , prompt])
         return render_template('interviewer.html', result=session["last_answer"], question = question.text, inter_pro = True)
-    
+
+
+@app.route('/end_interview')
+def end_interview():
+    end_test_text = ai_interviewer.end_interview()
+    print(end_test_text)
+    return render_template("end_interview.html" ,text = end_test_text)
+
 
 # -------------------------------------------- training resources --------------------------------------------------
 
@@ -694,12 +682,14 @@ def change_pass_page():
     
 
 
-# -------------------------------------------- view student details by company -------------------------------------
+@app.route('/interview_option',methods = ["POST" , "GET"])
+def interview_option():
+    if request.method == "POST":
+        subject = request.form["interview_topic"]
+        return redirect(url_for("start_interview"))
 
-@app.route('/fetch_student_details')
-def fetch_student_details():
-    students = sql_functions.get_student_details()
-    print(students)
+    return render_template("interview_options.html")
+
 
 # --------------------------------------------- company dashboard -------------------------------------
 
@@ -835,6 +825,7 @@ def company_view_profile():
         flash("You need to log in to view this page")
         return redirect(url_for("login"))
 # ------------------------------------------------------- Company Section job posting -----------------------
+
 @app.route('/post_job', methods=['POST', 'GET'])
 def post_job():
     if request.method == 'POST':
@@ -843,34 +834,54 @@ def post_job():
         skills_required = request.form['skills_required']
         num_employees = request.form['num_employees']
         num_openings = request.form['num_openings']
-        company_description = request.form['company_description']
         responsibilities = request.form['responsibilities']
+        eligibility_10th_value = request.form['eligibility_10th_value']
+        eligibility_12th_value = request.form['eligibility_12th_value']
+        additional_information = request.form['additional_information']
 
         try:
-                # SQL query to insert data into the job_postings table
-                cursor.execute(f"select id from company_registration where email = '{session['company']}'")
-                company_id = cursor.fetchall()
-                print(company_id)
+            # SQL query to insert data into the job_postings table
+            cursor = sql_functions.cursor
 
-                sql_functions.insert_job_posting(company_id=company_id[0]['id'],
-                                                 job_role=job_role,
-                                                 job_type=job_type,
-                                                 skills_required=skills_required,
-                                                 num_employees=num_employees,
-                                                 num_openings=num_openings,
-                                                 responsibilities=responsibilities)
+            cursor.execute(f"SELECT id FROM company_registration WHERE email = '{session['company']}'")
+            company_id = cursor.fetchall()
 
-                # Notify all students about the new job posting
-                notify_students_about_job_posting(job_role)
+            # Print or log the values to verify correctness
+            print(f"Company ID: {company_id[0]['id']}")
+            print(f"Job Role: {job_role}")
+            print(f"Job Type: {job_type}")
+            print(f"Skills Required: {skills_required}")
+            print(f"Number of Employees: {num_employees}")
+            print(f"Number of Openings: {num_openings}")
+            print(f"Responsibilities: {responsibilities}")
+            print(f"Eligibility 10th Value:{eligibility_10th_value}")
+            print(f"Eligibility 12th Value:{eligibility_12th_value}")
+            print(f"Additional Information:{additional_information}")
+            # SQL query using parameterized query
+            query = """
+                INSERT INTO job_posting (company_id, job_role, job_type, skills_required, num_employees,
+                                        num_openings, responsibilities, eligibility_10th_value, eligibility_12th_value, additional_information)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
 
-                flash('Job posting added successfully', 'success')
+            cursor.execute(query, (company_id[0]['id'], job_role, job_type, skills_required,
+                                   num_employees, num_openings, responsibilities, eligibility_10th_value, eligibility_12th_value, additional_information))
+
+            # Commit the changes to the database
+            sql_functions.connection.commit()
+
+            # Notify all students about the new job posting
+            notify_students_about_job_posting(job_role)
+
+            flash('Job posting added successfully', 'success')
         except Exception as e:
+            # Print or log the error for debugging
+            print(f'Error: {e}')
             flash(f'Error: {e}', 'danger')
 
         return redirect(url_for('job_listings'))
 
     return render_template('post_job.html')
-
 
 # Function to send notifications to all students about the new job posting
 def notify_students_about_job_posting(job_role):
@@ -887,6 +898,7 @@ def notify_students_about_job_posting(job_role):
         send_email(subject, body, student_emails)
     except Exception as e:
         flash(f'Error notifying students: {e}', 'danger')
+
 
 # Function to send email
 def send_email(subject, body, recipients):
@@ -1050,8 +1062,16 @@ def placement_analytics():
 #             flash('Selected student not found', 'danger')
 
 #     return render_template('schedule_interview.html', students=fetched_students, interviews=interviews)
-@app.route('/schedule_interview', )
+@app.route('/schedule_interview' , methods=['POST',"GET"])
 def schedule_interview():
+
+    if request.method == "POST":
+        job = request.form.get("job")
+        job = request.form.get("date")
+        job = request.form.get("time")
+        job = request.form.get("location")
+
+
     cursor.execute(f"select id from company_registration where email = '{session['company']}'")
     company_id = cursor.fetchall()
     cursor.execute(f"select * from job_posting where company_id = {company_id[0]['id']} ")
@@ -1060,10 +1080,12 @@ def schedule_interview():
     job_role = []
     for job in jobs:
         job_role.append(job["job_role"])
+
     
     return render_template("schedule_interview.html",job_roles = job_role)
 
-@app.route('/schedule_interview', methods=['POST'])
+
+
 def send_interview_notification(student_email, interview_details):
     try:
         smtp_server = 'smtp.gmail.com'  # Assuming you are using Gmail
@@ -1174,6 +1196,30 @@ def students():
      # Fetch data from applied_student table
     cursor.execute("SELECT * FROM applied_student")
     applied_student_data = cursor.fetchall()
+    for i in applied_student_data:
+        print(i["student_id"])
+        print()
+    
+
+    print("student Id is : ",applied_student_data[0]["student_id"])
+    app_student = []
+    for i in applied_student_data:
+        student = {}
+        cursor.execute(f'select firstname,lastname from student_details where id = {i["student_id"]}')
+        result = cursor.fetchone()
+        student["name"] = result["firstname"] 
+
+        cursor.execute(f"select job_role from job_posting where id = {i['job_id']}")
+        result = cursor.fetchone()
+        student["job_role"] = result["job_role"]
+
+        cursor.execute(f"select company_name from company_registration where id = {i['company_id']}")
+        result = cursor.fetchone()
+        student["company_name"] = result["company_name"]
+        app_student.append(student)
+    
+
+
     
     # Fetch data from student_details table
     cursor.execute("SELECT * FROM student_details")
@@ -1187,7 +1233,7 @@ def students():
     cursor.execute("SELECT * FROM student_register")
     student_register_data = cursor.fetchall()
     return render_template('admin_student.html', 
-                           applied_students=applied_student_data, 
+                           applied_students=app_student, 
                            student_details=student_details_data, 
                            student_resume=student_resume_data, 
                            student_register=student_register_data)
@@ -1201,8 +1247,31 @@ def companies():
     # Add logic to fetch company data from database
     return render_template('companies.html', company_registration=company_registration,job_posting=job_posting,interviews=interviews)
 
-@app.route('/training_resources')
+@app.route('/training_resources',methods = ["POST","GET"])
 def training_resources():
+    if request.method == "POST":
+        title = request.form.get('title')
+        category = request.form.get('category')
+        description = request.form.get('description')
+        author = request.form.get('author')
+        format = request.form.get('format')
+        duration = request.form.get('duration')
+        language = request.form.get('language')
+        level = request.form.get('level')
+        tags = request.form.get('tags')
+        status = request.form.get('status')
+        youtube_link = request.form.get('youtube_link')
+        sql_functions.insert_training_resources(title = title,
+                                                category= category,
+                                                description = description,
+                                                author = author,
+                                                format = format,
+                                                duration = duration ,
+                                                language = language,
+                                                level  = level,
+                                                tags = tags,
+                                                status = status,
+                                                link = youtube_link)
     return render_template("training_resources.html")
 
 

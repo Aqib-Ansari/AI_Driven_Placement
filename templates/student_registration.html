@@ -90,7 +90,7 @@
     </div>
     <div class="col-md-4">
         <label for="inputEmail4" class="form-label"><b>User Name</b></label>
-        <input type="text" class="form-control" id="inputEmail4" name="username"  maxlength="10" required />
+        <input type="text" class="form-control" id="inputEmail4" name="username"  maxlength="20" required />
     </div>
     <div class="col-md-4">
         <label for="inputPassword4" class="form-label"><b>Email</b></label>
@@ -146,7 +146,7 @@
     </div>
     <div class="col-md-4">
       <label for="inputZip" class="form-label"><b>Roll Number</b></label>
-      <input type="text" class="form-control" id="inputZip" name="rollno" pattern="[A-Za-z]{6}\d{3}" title="Roll number must have the first 6 letters followed by 3 digits" minlength="9" maxlength="9" required />
+      <input type="text" class="form-control" id="inputZip" name="rollno" pattern="\d{3}" title="Roll number must have the first 6 letters followed by 3 digits" minlength="3" maxlength="3" required placeholder="001"/>
       <div id="rollNumberError" class="error-message"></div>
   </div>
   
@@ -201,8 +201,8 @@
       rollNumberInput.addEventListener('input', function () {
           const rollNumber = rollNumberInput.value;
 
-          if (!/^[A-Za-z]{6}\d{3}$/.test(rollNumber)) {
-              rollNumberError.textContent = "Roll number must have the first 6 letters followed by 3 digits";
+          if (!/^\d{3}$/.test(rollNumber)) {
+              rollNumberError.textContent = "Roll number must have the last 3 digits";
           } else {
               rollNumberError.textContent = "";
           }

@@ -75,12 +75,44 @@
         .student-section.active {
             display: block;
         }
+
+        /* Search bar styles */
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+            margin-right: 10px;
+        }
+
+        .search-btn {
+            padding: 8px 12px;
+            background-color: #02080f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background-color: #B8D8E3;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Student List</h1>
     </header>
+
+    <!-- Search bar -->
+    <div class="search-bar">
+        <input type="text" class="search-box" id="searchInput" placeholder="Search...">
+        <button class="search-btn" id="searchButton">Search</button>
+    </div>
 
     <!-- Dropdown for selecting student section -->
     <div class="dropdown">
@@ -94,23 +126,30 @@
 
     <!-- Display applied student data -->
     <div class="student-section" id="applied_students">
-        <h2>Applied Students</h2>
+
         <table>
             <thead>
                 <tr>
-                    <th>Student ID</th>
-                    <!-- Add other headers as needed -->
+                    <th>Student Name</th>
+                    <th>Jobs Role</th>
+                    <th>Company</th>
+                    
+                    
                 </tr>
             </thead>
             <tbody>
                 {% for student in applied_students %}
                     <tr>
-                        <td>{{ student.student_id }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.job_role }}</td>
+                        <td>{{ student.company_name }}</td>
                         <!-- Add other fields as needed -->
+                        
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
 
     <!-- Display student details data -->
@@ -119,23 +158,41 @@
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
+                    <th>ID</th>
                     <th>First Name</th>
-                    <th>Last Name</th>
                     <th>Middle Name</th>
+                    <th>Last Name</th>
+                    <th>College</th>
+                    <th>Email</th>
+                    <th>program</th>
+                    <th>stream</th>
+                    <th>currentcgpa</th>
+                    <th>Backlog</th>
+                    <th>Year</th>
+                    <th>Phone No.</th>                   
+                    
                     <!-- Add other headers as needed -->
+                   
                 </tr>
             </thead>
             <tbody>
                 {% for student in student_details %}
                     <tr>
-                        <td>{{ student.name }}</td>
-                        <td>{{ student.email }}</td>
+                        <td>{{ student.id }}</td>
                         <td>{{ student.firstname }}</td>
-                        <td>{{ student.lastname }}</td>
                         <td>{{ student.middlename }}</td>
+                        <td>{{ student.lastname }}</td>
+                        <td>{{ student.college }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{student.program}}</td>
+                        <td>{{student.stream}}</td>
+                        <td>{{student.currentcgpa}}</td>
+                        <td>{{ student.backlog }}</td>
+                        <td>{{ student.year }}</td>
+                        <td>{{ student.phoneno }}</td>
+                        
                         <!-- Add other fields as needed -->
+                        
                     </tr>
                 {% endfor %}
             </tbody>
@@ -148,7 +205,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
+                    
                     <th>Filename</th>
                     <!-- Add other headers as needed -->
                 </tr>
@@ -156,7 +213,7 @@
             <tbody>
                 {% for student in student_resume %}
                     <tr>
-                        <td>{{ student.name }}</td>
+                        
                         <td>{{ student.file_name }}</td>
                         <!-- Add other fields as needed -->
                     </tr>
@@ -171,25 +228,31 @@
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>ID</th>
                     <th>Email</th>
                     <th>ID</th>
                     <th>Username</th>
                     <th>Enrollment Number</th>
                     <th>Course</th>
-                    <!-- Add other headers as needed -->
+                    <th>College</th>
+                    <th>Year</th>
+                    <th>Roll no.</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 {% for student in student_register %}
                     <tr>
-                        <td>{{ student.firstname }}</td>
+                        <td>{{ student.id }}</td>
                         <td>{{ student.email }}</td>
                         <td>{{ student.id }}</td>
                         <td>{{ student.username }}</td>
                         <td>{{ student.enrollment_num }}</td>
                         <td>{{ student.course }}</td>
-                        <!-- Add other fields as needed -->
+                        <td>{{ student.college }}</td>
+                        <td>{{ student.year }}</td>
+                        <td>{{ student.rollno }}</td>
+                        
                     </tr>
                 {% endfor %}
             </tbody>
@@ -211,6 +274,44 @@
             var selectedSection = document.getElementById(selectedSectionId);
             selectedSection.classList.add('active');
         });
+
+        // JavaScript for search functionality
+    document.getElementById('searchButton').addEventListener('click', function() {
+        var searchValue = document.getElementById('searchInput').value.toLowerCase();
+        var studentTables = document.querySelectorAll('.student-section.active table');
+
+        // Iterate through each student table
+        studentTables.forEach(function(table) {
+            var rows = table.getElementsByTagName('tr');
+
+            // Toggle header row visibility initially
+            var headerRow = rows[0];
+            headerRow.style.display = '';
+
+            // Iterate through each row of the table starting from index 1 (skipping the header row)
+            for (var i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var cells = row.getElementsByTagName('td');
+                var found = false;
+
+                // Iterate through each cell of the row
+                for (var j = 0; j < cells.length; j++) {
+                    var cell = cells[j];
+                    if (cell.textContent.toLowerCase().includes(searchValue)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                // Toggle row visibility based on search result
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+    });
     </script>
 </body>
 </html>

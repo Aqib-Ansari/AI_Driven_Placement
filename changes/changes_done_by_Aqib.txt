@@ -71,15 +71,23 @@ change : SQL tables:
                     FOREIGN KEY (id) REFERENCES student_register(id));
 
             6) job posting
-                CREATE TABLE job_postings (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
+                CREATE TABLE job_posting (
+                    id INT(11) NOT NULL AUTO_INCREMENT,
+                    company_id INT(11),
                     job_role VARCHAR(255) NOT NULL,
                     job_type VARCHAR(50) NOT NULL,
                     skills_required TEXT NOT NULL,
-                    num_employees INT NOT NULL,
-                    num_openings INT NOT NULL,
-                    company_description TEXT NOT NULL,
-                    responsibilities TEXT NOT NULL);
+                    num_employees INT(11) NOT NULL,
+                    num_openings INT(11) NOT NULL,
+                    responsibilities TEXT NOT NULL,
+                    application_deadline_date DATE,
+                    application_deadline_time TIME,
+                    eligibility_10th_value FLOAT,
+                    eligibility_12th_value FLOAT,
+                    additional_information TEXT,
+                    PRIMARY KEY (id),
+                    INDEX (company_id));
+
 
             7) company registration
                 CREATE TABLE company_registration (
@@ -134,5 +142,37 @@ change : SQL tables:
                         date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         msg VARCHAR(255),
                         link VARCHAR(255),
-                        FOREIGN KEY (student_id) REFERENCES student_details(id)
-                    )
+                        FOREIGN KEY (student_id) REFERENCES student_details(id))
+                        
+            12) Student Profile Image
+                CREATE TABLE student_profile_img (
+                    student_id INT PRIMARY KEY,
+                    filename VARCHAR(255),
+                    FOREIGN KEY (student_id) REFERENCES student_register(id))
+
+            13) Scheduled Interviews
+                CREATE TABLE scheduled_interviews (
+                    interview_id INT AUTO_INCREMENT PRIMARY KEY,
+                    job_id INT,
+                    date DATE NOT NULL,
+                    time TIME NOT NULL,
+                    location VARCHAR(255) NOT NULL,
+                    FOREIGN KEY (job_id) REFERENCES job_posting(id))
+
+            14) Percent MAtch
+                CREATE TABLE student_percent_match (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    student_id INT,
+                    job_id INT,
+                    percent_match DECIMAL(5,2), 
+
+                    FOREIGN KEY (student_id) REFERENCES student_register(id),
+                    FOREIGN KEY (job_id) REFERENCES job_posting(id))
+            15) student_skills
+                CREATE TABLE student_skills (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    skill VARCHAR(255) NOT NULL,
+                    soft_skills VARCHAR(255),
+                    certifications VARCHAR(255),
+                    student_id INT,
+                    FOREIGN KEY (student_id) REFERENCES student_register(id));

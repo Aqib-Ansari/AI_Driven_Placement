@@ -11,6 +11,7 @@
     <div class="container">
         <h1>Applied Jobs</h1>
         <div class="row">
+            {% if applied_jobs %}
             {% for job in applied_jobs %}
             <div class="col-md-6">
                 <div class="card mb-3">
@@ -23,6 +24,11 @@
                 </div>
             </div>
             {% endfor %}
+            {% else %}
+            <br>
+                <h1>You do not have applied to Jobs Please apply one </h1>
+                <a href="/view_jobs"><h3>View Jobs</h3></a>
+            {% endif%}
         </div>
     </div>
 </body>

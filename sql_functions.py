@@ -2,6 +2,8 @@ import pymysql
 import pymysql.cursors
 import os
 import csv
+from datetime import datetime, timedelta , date , time
+
 # import data_class_aidriven
 def make_sql_connection():
     connection = pymysql.connect(host='sql6.freesqldatabase.com',
@@ -118,6 +120,7 @@ def login_student_val(email,password):
         cursor.execute(sql,(email))
         
         result = cursor.fetchone()
+        print("sql_functions : ",result["password"], "\nuser input :",password)
         if result["password"] == password:
             print("Login successfull")
             return True,"correct_password"
@@ -225,7 +228,7 @@ def get_student_details(email):
         cursor.execute("SELECT * FROM student_details where id = %s;",id[0]['id'])
         
         student_details = cursor.fetchall()
-        print(student_details)
+        # print(student_details)
         return student_details
 
     except Exception as err:
@@ -586,6 +589,74 @@ def select_training_resources():
     training_resources = cursor.fetchall()
     return training_resources
 
+def insert_student_profile_img(email,filename):
+            student_details = get_student_details(email)
+            student_id = student_details[0]['id']
+            cursor.execute(f"select filename from student_profile_img where student_id = {student_id}")
+            profile_filename=cursor.fetchall()
+            print(profile_filename)
+            if profile_filename == None or profile_filename == ():
+                 
+                cursor.execute(f"insert into student_profile_img (student_id,filename) values ({student_id} , '{filename}')")
+                connection.commit()
+            else:
+                os.remove(f'./static/student/{profile_filename[0]["filename"]}')
+                cursor.execute(f"update student_profile_img set filename = '{filename}' where student_id = {student_id}" )
+            connection.commit()
+
+def insert_interviews(job,date,time,location):
+    job_id = job # Replace with the actual job_id
+    interview_date = date  # Replace with the actual date
+    interview_time = time  # Replace with the actual time
+    location = location  # Replace with the actual location
+
+        # SQL query to insert a record into the scheduled_interviews table
+    sql = '''INSERT INTO scheduled_interviews (job_id, date, time, location)
+                 VALUES (%s, %s, %s, %s)  '''
+
+        # Execute the SQL query
+    cursor.execute(sql, (job_id, interview_date, interview_time, location))
+
+    # Commit the changes to the database
+    connection.commit()
+
+def insert_percent_match(student_id, job_id, percent_match):
+    try:
+        # SQL query to insert data
+        sql_insert = "INSERT INTO student_percent_match (student_id, job_id, percent_match) VALUES (%s, %s, %s)"
+
+        # Values to be inserted
+        values = (student_id, job_id, percent_match)
+
+        # Execute the query
+        cursor.execute(sql_insert, values)
+
+        # Commit the changes to the database
+        connection.commit()
+
+        print("Data inserted successfully!")
+
+    except Exception as e:
+        print("Error inserting data:", e)
+
+def select_percent_match():
+    try:
+        # SQL query to select data
+        sql_select = "SELECT * FROM student_percent_match"
+
+        # Execute the query
+        cursor.execute(sql_select)
+
+        # Fetch all the rows
+        rows = cursor.fetchall()
+
+        # Display the results
+        for row in rows:
+            print(row)
+
+    except Exception as e:
+        print("Error selecting data:", e)
+
 
 connection.commit()
 if __name__ == "__main__":
@@ -614,33 +685,35 @@ if __name__ == "__main__":
     # insert_applied_student_data(3, 1, 1)
     # print(insert_interview_data( 1, 2, '2024-02-10', '15:30:00', 'Company HQ'))
 #     cursor.execute('''
-# CREATE TABLE notification (
-#     noti_id INT PRIMARY KEY AUTO_INCREMENT,
-#     student_id INT,
-#     date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-#     msg VARCHAR(255),
-#     link VARCHAR(255),
-#     FOREIGN KEY (student_id) REFERENCES student_details(id)
-# )''')
+# CREATE TABLE student_percent_match (
+#                     id INT PRIMARY KEY AUTO_INCREMENT,
+#                     student_id INT,
+#                     job_id INT,
+#                     percent_match DECIMAL(5,2), 
+
+#                     FOREIGN KEY (student_id) REFERENCES student_register(id),
+                    # FOREIGN KEY (job_id) REFERENCES job_posting(id))''')
     # print(insert_job_posting(company_id=1,job_role="a",job_type="b",skills_required="c",num_employees=500,num_openings=4,company_description="abc",responsibilities="response"))
     # insert_resume(email="aqib@gmail.com",filename="aqib.pdf")
     # update_student_details(email="aqibansari22298@gmail.com",field="dob",value="2002-10-12")
     # cursor.execute("UPDATE notification SET date_time = CONVERT_TZ(NOW(), 'UTC', 'Asia/Kolkata')")
     # insert_training_resources(title="Ai ML",category="any",description="Learn how to create a Chatbots",
     #                           author="Nivedita",format="Online",duration=5.30,language="English",level="beginner",tags="Resume,placements",status="active",link="https://youtube.com")
-    cursor.execute("select * from applied_student where company_id = 1")
-    output = cursor.fetchall()
-    print(output)
-    for i in output:
-        print('\n')
-        print(i)
-        print('____'*20)
-        print('\n')
-    print(select_applied_student(1))
+    # insert_interviews(job=19,date=date(2024, 3, 10),time=time(14, 30),location="Mumbai")
+    # cursor.execute("drop table student_percent_match")
+    # output = cursor.fetchall()
+    # for i in output:
+    #     print('\n')
+    #     print(i)
+    #     print('____'*20)
+    #     print('\n')
+    # print(select_applied_student(1))
     # print(output)
     # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
     # insert_notification(student_id=1,msg="go to dashboard",link='/student_dashboard1')
     # print(select_notification(student_id=1))
     # print(if_resume_present(email="aqibansari22298@gmail.com"))
+    insert_percent_match(job_id=2,student_id=1,percent_match=80)
+    select_percent_match()
    
     connection.commit()

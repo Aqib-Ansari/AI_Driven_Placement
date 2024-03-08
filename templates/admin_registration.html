@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,8 +18,8 @@
 <div class="container mt-5">
   <h2 class="mb-4">College Admin Registration</h2>
 
-    <!-- Form Start -->
-    <form method="post" >
+  <!-- Form Start -->
+  <form method="post" action="/register_admin1">
 
     <!-- Admin Name -->
     <div class="mb-3">
@@ -34,7 +37,7 @@
     <div class="mb-3">
       <label for="adminPassword" class="form-label">Admin Password:</label>
       <div class="input-group">
-        <input type="password" class="form-control" id="adminPassword" name="admin_password" pattern="^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,16}$" required>
+        <input type="password" class="form-control" id="adminPassword" name="admin_password" pattern="^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{8,16}$" required placeholder="example123 ">
         <button class="btn btn-outline-secondary" type="button" id="showPassword">Show</button>
       </div>
     </div>
@@ -81,3 +84,5 @@
 
 </body>
 </html>
+
+

@@ -60,19 +60,34 @@
 <body >
     <div class="profile-container">
         <div class="profile-header">
-            <img src="static/profile.jpg" alt="Profile Picture" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;">
-            <h1>Aqib Ansari</h1>
-            <p>Data Science and ML Enthusiast</p>
+            <!-- <img src="static/profile.jpg" alt="Profile Picture" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;"> -->
+            {% if image_pro %}
+            
+                <img src="/static/student/{{ image_pro }}" alt="Profile Image" class="profile-picture" style="padding: 2px; border: 4px solid black; border-radius: 50%;">
+                <br>
+                <a href="/profile_change_profile">Change Image</a>
+        
+    {% else %}
+        <form method="post" enctype="multipart/form-data">
+            <label for="file">Upload Profile Image:</label>
+            <input type="file" name="file" id="file" accept="image/*" required>
+            <button type="submit">Upload</button>
+        </form>
+    {% endif %}
+    
+
+            <h1>{{student[0]["firstname"]}} {{student[0]["lastname"]}}</h1>
+            
         </div>
         <div class="profile-details">
-            <p>Email: aqib@example.com</p>
-            <p>Phone: +1 123-456-7890</p>
+            <p>email : {{ student[0]["email"]}}</p>
+            <p>Phone: {{student[0]["phoneno"]}}</p>
         </div>
         <div class="profile-actions">
-            <button class="action-button2">Change Password</button>
-            <button class="action-button2" onclick="window.location.href='/view_applied_jobs'">View Applied Jobs</button>
+            <button class="action-button2"><i class="fa fa-bell"></i> <a href="/change_pass_page" style="text-decoration: none; color: #ffffff;">Change Password</a></button>
+            <button class="action-button2"><i class="fa fa-bell"></i> <a href="/view_applied_jobs" style="text-decoration: none; color: #ffffff;">View Applied Jobs</a></button>
             <button class="action-button2 notification-button">
-                <i class="fa fa-bell"></i> <a href="/notifications">Notifications</a>
+                <i class="fa fa-bell"></i> <a href="/notifications" style="text-decoration: none; color: #ffffff;">Notifications</a>
             </button>
         </div>
     </div>

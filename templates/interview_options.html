@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <form action="/start_interview" method="post" >
+        <label for="dropdown">Select an option:</label>
+        <select id="dropdown" name="interview_topic">
+            <option value="Software Developer">Software Developer/Engineer</option>
+            <option value="UI UX">UI/UX</option>
+            <option value="Systems Analyst">Systems Analyst</option>
+            <option value="Database Administrator">Database Administrator</option>
+            <option value="Network Engineer">Network Engineer</option>
+            <option value="Cybersecurity Analyst">Cybersecurity Analyst</option>
+            <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+            <option value="Artificial Intelligence Researcher">Artificial Intelligence Researcher</option>
+            <option value="Data Scientist">Data Scientist</option>
+            <option value="Data Analyst">Data Analyst</option>
+        </select>
+
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
+</html>

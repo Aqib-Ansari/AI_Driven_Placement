@@ -171,9 +171,13 @@ nav::after {
     <!-- Add a link to the placement analytics page -->
     <a href="{{ url_for('scheduled_interviews') }}">Scheduled Interviews</a>
     <a href="{{ url_for('placement_analytics') }}">Placement Analytics</a>
-    <div class="nav-right">
+    <a href="{{ url_for('company_view_profile') }}"><i class="fas fa-user-circle"></i> Profile</a>
+
+    <img src="static/company/{{company_logo}}" alt="" style="display: flex; float: right; margin-left: 40%; width: auto; height: 30px ; margin-top: 10px; margin-right: 20px;">
+    <!-- <div class="nav-right">
         <a href="{{ url_for('company_view_profile') }}"><i class="fas fa-user-circle"></i> Profile</a>
-    </div>
+    </div> -->
+
 </nav>
 
 <h1>Welcome to the Company Dashboard</h1>
@@ -210,4 +214,3 @@ nav::after {
 </html>
 
 
-company_dashboard.html
