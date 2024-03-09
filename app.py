@@ -56,6 +56,12 @@ def register_data():
         
         sql_functions.insert_register_student(username=student['name'],email=student['email'],password=student['pass2'],enrollment_num=student['Enrolno'],college=student['college'],course=student['course'],year=student['year'],rollno=student['rollno'])
         session["user"] = student["email"]
+        cursor.execute(f"select id from student_register where email = '{session['user']}'")
+        id =cursor.fetchone()["id"]
+        print(id)
+        cursor.execute(f"insert into student_details (id) values ({id})")
+        connection.commit()
+
         
         
     else:
@@ -134,21 +140,12 @@ def student_dashboard():
 @app.route('/student_dashboard1')
 def redirect_to_student_dashboard():
     if "user" in session:
-        cursor.execute(f"select id from student_details where email = '{session['user']}'")
-        id = cursor.fetchall()
-        
-        if id == ():
-            cursor.execute(f"select id from student_register where email = '{session['user']}'")
-            student_details = cursor.fetchall()
-            student_id = student_details[0]['id']
-            cursor.execute(f"insert into student_details (id) values ({student_id})")
-            connection.commit()
         
         student_details = sql_functions.get_student_details(session['user'])
-        print(student_details)
+        # print(student_details)
         if student_details != ():
             student_id = student_details[0]['id']
-            print(student_id)
+            # print(student_id)
             cursor.execute(f"select filename from student_profile_img where student_id = {student_id} ")
             profile_filename = cursor.fetchone()
             print(profile_filename)
@@ -195,7 +192,7 @@ def profile():
     student_id = student_details[0]['id']
     cursor.execute(f"select filename from student_profile_img where student_id = {student_id} ")
     profile_filename = cursor.fetchone()
-    print(profile_filename)
+    # print(profile_filename)
     student_details = sql_functions.get_student_details(email=session["user"])
     if profile_filename == None or profile_filename == ():
 
@@ -325,8 +322,8 @@ def quiz_details_form():
         testtime = request.form["testtime"]
         questions = sql_functions.fetch_quiz_question(qtype=qtype)
         session["allQuestions"] = questions[0:35]
-        print(session["allQuestions"])
-        print(len(session["allQuestions"]))
+        # print(session["allQuestions"])
+        # print(len(session["allQuestions"]))
 
 
         if testtime =="10" :
@@ -335,7 +332,7 @@ def quiz_details_form():
            
             app.config['expiration_time'] = datetime.now() + timedelta(minutes=10)
 
-            print(session["option_selected"])
+            # print(session["option_selected"])
 
         elif testtime == "20":
             session["no_of_question"] = 14
@@ -350,7 +347,7 @@ def quiz_details_form():
             session["option_selected"] = [0]*40
             
 
-        print(qtype1)
+        # print(qtype1)
         return redirect(url_for("quiz"))
     else:
         return redirect(url_for(quiz_details))
@@ -359,15 +356,15 @@ def quiz_details_form():
 
 @app.route('/quiz')
 def quiz():
-    print(session['qno'])
+    # print(session['qno'])
     if session['qno'] >= len(session["allQuestions"]):
         return "no more test enjoy"
     
     questions = session["allQuestions"]
     # print(len(session["allQuestions"]))
     session['curr_question'] = questions[session['qno']]
-    print("question  =", questions[session['qno']])
-    print("option = ",session["option_selected"][session["qno"]])
+    # print("question  =", questions[session['qno']])
+    # print("option = ",session["option_selected"][session["qno"]])
     
     return render_template("quiz.html",questions = questions[session['qno']],option=session["option_selected"][session["qno"]])
     
@@ -451,7 +448,7 @@ def edit_student_field(field):
 def update_field(field):
     if request.method == "POST":
         value = request.form["value"]
-        print(value)
+        # print(value)
         if field == "dob":
             value = datetime.strptime(value,f"%Y-%m-%d")
             print(value)
@@ -519,22 +516,22 @@ def view_jobs():
         student_details = cursor.fetchall()
         student_id = student_details[0]['id']
         cursor.execute(f"select job_id from applied_student where student_id = {student_id} ")
-        print("\n\n")
+        # print("\n\n")
         job_applied = cursor.fetchall()
-        print(job_applied)
+        # print(job_applied)
         job_applied_array = [i["job_id"] for i in job_applied]
         id_string = ', '.join(map(str, job_applied_array))
-        print(id_string)
+        # print(id_string)
         # cursor.execute(f"select * from job_posting where id not in ({id_string})")
         cursor.execute(f"select * from job_posting")
         # applied_array = [x for x in range()]
         jobs = cursor.fetchall()
-        # for i,j in zip(jobs,job_applied):
+        for i,j in zip(jobs,job_applied_array):
 
-        #     if i["id"] == j:
-        #         i["applied"] = True
-        #     else:
-        #         i['applied'] = False
+            if i["id"] == int(j):
+                i["applied"] = "Applied"
+            else:
+                i['applied'] = False
 
         # for i in range()
 

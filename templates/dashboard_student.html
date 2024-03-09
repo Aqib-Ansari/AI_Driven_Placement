@@ -147,15 +147,21 @@
             <li class="nav-item"><a href="/student_details" class="nav-link">Details</a></li>
             <li class="nav-item"><a href="/quiz_details" class="nav-link">Give Mock Test</a></li>
             <li class="nav-item"><a href="/view_jobs" class="nav-link">View Jobs</a></li>
-            <li class="nav-item"><a href="https://kccollege.edu.in/alumni/" class="nav-link">Contact Alumni</a></li>
+            <li class="nav-item"><a href="/contact_alumni" class="nav-link">Contact Alumni</a></li>
             <li class="nav-item"><a href="/upload_resume" class="nav-link">Upload Resume</a></li>
             <li class="nav-item"><a href="/interview_option" class="nav-link">Give Mock Interview</a></li>
             <li class="nav-item"><a href="/training" class="nav-link">Training Resources</a></li>
         </ul>
         <button id="toggleBtn">&#9776;</button>
+        {% if image_pro %}
         <a href="/profile" class="profile-button">
             <img src="/static/student/{{ image_pro['filename'] }}" alt="Profile Image">
         </a>
+        {%else%}
+        <a href="/profile" class="profile-button">
+            <img src="/static/student/student_icon.jpg" alt="Profile Image">
+        </a>
+        {%endif%}
         
     </nav>
 

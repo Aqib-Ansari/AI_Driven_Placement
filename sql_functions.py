@@ -50,7 +50,7 @@ def insert_register_student(username,email,password,enrollment_num,college,cours
     sql = f"INSERT INTO student_register (username, email, password, enrollment_num, college, course, year, rollno) VALUES ('{username}', '{email}', '{password}', '{enrollment_num}', '{college}', '{course}','{year}', {rollno});"
     cursor.execute(sql)
     result = cursor.fetchall()
-    print(result)
+    # print(result)
     connection.commit()
 
 # def select_register_student()
@@ -113,7 +113,7 @@ def login_student_val(email,password):
         cursor.execute(sql,(email))
         
         result = cursor.fetchone()
-        print("sql_functions : ",result["password"], "\nuser input :",password)
+        # print("sql_functions : ",result["password"], "\nuser input :",password)
         if result["password"] == password:
             print("Login successfull")
             return True,"correct_password"
@@ -239,7 +239,7 @@ def update_student_details(email, field,value):
         id = cursor.fetchall()
         # print(id)
         id= id[0]["id"]
-        print("field : : : : : : : : " ,field)
+        # print("field : : : : : : : : " ,field)
         student_details = get_student_details(email=email)
        
         if student_details != ():
@@ -300,7 +300,7 @@ def if_resume_present(email):
 
     cursor.execute(f"select file_name from student_resume where id = {id}")
     result = cursor.fetchall()
-    print(result)
+    # print(result)
       
     if result == ():
         return False
@@ -361,7 +361,7 @@ def validate_company_login(email, password):
 
         # Fetch the result
         result = cursor.fetchone()
-        print(result)
+        # print(result)
 
         # Close the cursor and connection
 
@@ -498,7 +498,7 @@ def validate_admin_login(email, password):
 
         # Fetch the result
         result = cursor.fetchone()
-        print(result)
+        # print(result)
 
         # Close the cursor and connection
 
@@ -586,7 +586,7 @@ def insert_student_profile_img(email,filename):
             student_id = student_details[0]['id']
             cursor.execute(f"select filename from student_profile_img where student_id = {student_id}")
             profile_filename=cursor.fetchall()
-            print(profile_filename)
+            # print(profile_filename)
             if profile_filename == None or profile_filename == ():
                  
                 cursor.execute(f"insert into student_profile_img (student_id,filename) values ({student_id} , '{filename}')")
@@ -643,9 +643,9 @@ def select_percent_match():
         rows = cursor.fetchall()
 
         # Display the results
-        for row in rows:
-            print(row)
-
+        # for row in rows:
+        #     print(row)
+        return rows
     except Exception as e:
         print("Error selecting data:", e)
 
