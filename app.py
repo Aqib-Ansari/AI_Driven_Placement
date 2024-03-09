@@ -23,6 +23,7 @@ cursor = connection.cursor()
 
 @app.route('/')
 def registration():
+    session.clear()
     return render_template('landing.html')
 
 #  ----------------------------------------- REgistration --------------------------------------------------------------
@@ -94,7 +95,7 @@ def login():
 @app.route('/student_dashboard', methods=['POST'])
 def student_dashboard():
     if "user" in session:
-        return redirect(url_for(redirect_to_student_dashboard(),student_list = [session['user']]))
+        return redirect(url_for("redirect_to_student_dashboard",student_list = [session['user']]))
     
     if request.method == "POST":
         # session.clear()
@@ -182,6 +183,7 @@ def profile():
             sql_functions.insert_student_profile_img(email=session["user"],filename=file.filename)
             filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filename)
+            connection.commit()
             return redirect(url_for('profile'))
     
 
@@ -480,12 +482,14 @@ def upload_resume():
                 sql_functions.insert_resume(email=session["user"],filename=file.filename)
                 file_path = 'static/' + file.filename
                 file.save(file_path)
+                connection.commit()
                 return render_template('upload_resume.html', pdf_path=file_path)
 
             
 
             # Check if the file is a PDF
         if sql_functions.if_resume_present(session['user']):
+                connection.commit()
                 file_name = sql_functions.if_resume_present(session["user"])
                 file_path = 'static/'+file_name
                 return render_template('upload_resume.html', pdf_path=file_path)
@@ -562,6 +566,7 @@ def apply_job(job_id):
             student_details = cursor.fetchall()
             student_id = student_details[0]['id']
             sql_functions.insert_notification(student_id=student_id,msg="First Upload Your resume to Apply a job" , link='/upload_resume')
+            connection.commit()
             return redirect(url_for("upload_resume"))
 
 @app.route("/job_applied/<job_id>",methods=["POST"])
@@ -598,6 +603,7 @@ def job_applied(job_id):
             cursor.execute(f'select job_role from job_posting where id = {int(job_id)}')
             job_name = cursor.fetchall()
             sql_functions.insert_notification(student_id=student_id,msg=f"Succesfully Applied for job role {job_name[0]['job_role']}",link="/view_jobs") 
+            connection.commit()
 
     
 
@@ -753,6 +759,7 @@ def change_pass():
                 student_details = sql_functions.get_student_details(session['user'])
                 student_id = student_details[0]['id']
                 sql_functions.insert_notification(student_id=student_id,msg="Password Updated Succesfully",link="/profile")
+                connection.commit()
                 return redirect(url_for("profile"))
             else:
                 return render_template("change_pass.html",error = "both password should be same")
