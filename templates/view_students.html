@@ -1,76 +1,113 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>View Students</title>
-   <style>
-       body {
-           font-family: Arial, sans-serif;
-           max-width: 1000px;
-           margin: 0 auto;
-           padding: 20px;
-       }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Students</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2C3E50, #4CA1AF);
+            color: white;
+            line-height: 1.6;
+        }
 
-       table {
-           width: 100%;
-           border-collapse: collapse;
-       }
+        .container {
+            max-width: 1200px; /* Increased max-width for more space */
+            margin: 40px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
 
-       th, td {
-           border: 1px solid #ccc;
-           padding: 12px;
-           text-align: left;
-       }
+        table {
+            width: 100%; /* Table width is responsive to container width */
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin-top: 20px;
+            background-color: transparent;
+        }
 
-       th {
-           background-color: #f2f2f2;
-           font-weight: bold;
-       }
+        th, td {
+            background-color: #34495e;
+            padding: 15px; /* Adjust padding as necessary */
+            text-align: left;
+            color: white;
+            border-radius: 5px;
+        }
 
-       a {
-           display: block;
-           background-color: #4CAF50;
-           color: white;
-           padding: 10px 20px;
-           text-align: center;
-           text-decoration: none;
-           margin-top: 20px;
-           border-radius: 4px;
-       }
+        th {
+            background-color: #3498db;
+            font-size: 1em;
+        }
 
-       a:hover {
-           background-color: #45a049;
-       }
-   </style>
+        td:hover {
+            background-color: #2c3e50;
+        }
+
+        a {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        a:hover {
+            background-color: #219653;
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: normal;
+            font-size: 2.2em;
+        }
+    </style>
 </head>
 <body>
-   <h1>View Student Details</h1>
-   <table>
-       <tr>
-           <th>Name</th>
-           <th>ID</th>
-           <th>Email</th>
-           <th>program</th>
-           <th>stream</th>
-           <th>currentcgpa</th>
-           <th>Job Role</th>
-           <th>View Students</th>
-
-       </tr>
-       {% for student in students %}
-           <tr>
-               <td>{{ student.firstname }}</td>
-               <td>{{ student.lastname }}</td>
-               <td>{{student.email}}</td>
-               <td>{{student.program}}</td>
-               <td>{{student.stream}}</td>
-               <td>{{student.currentcgpa}}</td>
-               <td>{{student.job_id}}</td>
-               <td><a href="/view_student_applied_job/{{student.id}}">See Details</a></td>
-           </tr>
-       {% endfor %}
-   </table>
-   <a href="{{ url_for('company_dashboard1') }}" >Back to Home</a>
+    <div class="container">
+        <h1>View Student Details</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Program</th>
+                    <th>Stream</th>
+                    <th>Current CGPA</th>
+                    <th>Job Role</th>
+                    <th style="width: 150px;">View Students</th> <!-- Increased width for the "View Students" column -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.firstname }}</td>
+                        <td>{{ student.lastname }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.program }}</td>
+                        <td>{{ student.stream }}</td>
+                        <td>{{ student.currentcgpa }}</td>
+                        <td>{{ student.job_id }}</td>
+                        <td><a href="/view_student_applied_job/{{ student.id }}">See Details</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br><br>
+        <a href="{{ url_for('company_dashboard1') }}">Back to Home</a>
+    </div>
 </body>
 </html>
