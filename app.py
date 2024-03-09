@@ -57,9 +57,9 @@ def register_data():
         sql_functions.insert_register_student(username=student['name'],email=student['email'],password=student['pass2'],enrollment_num=student['Enrolno'],college=student['college'],course=student['course'],year=student['year'],rollno=student['rollno'])
         session["user"] = student["email"]
         cursor.execute(f"select id from student_register where email = '{session['user']}'")
-        id =cursor.fetchone()["id"]
-        print(id)
-        cursor.execute(f"insert into student_details (id) values ({id})")
+        id =cursor.fetchone()
+        print(id["id"])
+        cursor.execute("INSERT INTO student_details (id) VALUES (%s)", (int(id["id"]),))
         connection.commit()
 
         
@@ -93,8 +93,8 @@ def login():
     
 @app.route('/student_dashboard', methods=['POST'])
 def student_dashboard():
-    # if "user" in session:
-    #     return redirect(url_for(redirect_to_student_dashboard(),student_list = [session['user']]))
+    if "user" in session:
+        return redirect(url_for(redirect_to_student_dashboard(),student_list = [session['user']]))
     
     if request.method == "POST":
         # session.clear()
