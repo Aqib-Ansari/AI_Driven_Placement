@@ -649,6 +649,51 @@ def select_percent_match():
     except Exception as e:
         print("Error selecting data:", e)
 
+def insert_alumni_data( data):
+    try:
+            global connection, cursor
+            # SQL statement for insertion
+            sql = "INSERT INTO alumni (name, batch, placement_status, company, linkedin, email, about_alumni) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+
+            # Data for insertion
+            values = (
+                data['name'],
+                data['batch'],
+                data['placement_status'],
+                data['company'],
+                data['linkedin'],
+                data['email'],
+                data['about_alumni']
+            )
+
+            # Execute the SQL statement
+            cursor.execute(sql, values)
+
+        # Commit the changes to the database
+            connection.commit()
+
+            print("Data inserted successfully!")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+def select_alumni_data():
+    try:
+
+            # SQL statement for selection
+            sql = "SELECT * FROM alumni"
+
+            # Execute the SQL statement
+            cursor.execute(sql)
+
+            # Fetch all the rows
+            result = cursor.fetchall()
+
+            
+            return result
+
+    except Exception as e:
+        print(f"Error: {e}")
 
 connection.commit()
 if __name__ == "__main__":
@@ -657,20 +702,15 @@ if __name__ == "__main__":
     # insert_job_posting('Marketing Specialist', 'Part Time', 'Digital Marketing, Social Media', 20, 3, 'A creative marketing agency', 'Plan and execute marketing campaigns')
     # insert_quiz_question('data/java_questions.tsv')
 #     cursor.execute('''
-# CREATE TABLE training_resources (
-#     id INT AUTO_INCREMENT PRIMARY KEY,
-#     title VARCHAR(255) NOT NULL,
-#     category VARCHAR(255) NOT NULL,
-#     description TEXT NOT NULL,
-#     author VARCHAR(255) NOT NULL,
-#     format VARCHAR(255) NOT NULL,
-#     duration DECIMAL(5, 2) NOT NULL,
-#     language VARCHAR(50) NOT NULL,
-#     level ENUM('beginner', 'intermediate', 'advanced') NOT NULL,
-#     tags VARCHAR(255),
-#     status ENUM('active', 'inactive', 'under_review') NOT NULL,
-#     youtube_link VARCHAR(255),
-#     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+# CREATE TABLE alumni (
+#     id INT PRIMARY KEY AUTO_INCREMENT,
+#     name VARCHAR(255) NOT NULL,
+#     batch VARCHAR(4) NOT NULL,
+#     placement_status VARCHAR(20) NOT NULL,
+#     company VARCHAR(255),
+#     linkedin VARCHAR(255),
+#     email VARCHAR(255),
+#     about_alumni TEXT
 # )
 # ''')
     # print(validate_company_login(email='company2@gmail.com',password="password"))
@@ -693,12 +733,12 @@ if __name__ == "__main__":
     #                           author="Nivedita",format="Online",duration=5.30,language="English",level="beginner",tags="Resume,placements",status="active",link="https://youtube.com")
     # insert_interviews(job=19,date=date(2024, 3, 10),time=time(14, 30),location="Mumbai")
     # cursor.execute("drop table student_percent_match")
-    # output = cursor.fetchall()
-    # for i in output:
-    #     print('\n')
-    #     print(i)
-    #     print('____'*20)
-    #     print('\n')
+    output = cursor.fetchall()
+    for i in output:
+        print('\n')
+        print(i)
+        print('____'*20)
+        print('\n')
     # print(select_applied_student(1))
     # print(output)
     # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
@@ -706,6 +746,6 @@ if __name__ == "__main__":
     # print(select_notification(student_id=1))
     # print(if_resume_present(email="aqibansari22298@gmail.com"))
     # insert_percent_match(job_id=2,student_id=1,percent_match=80)
-    select_percent_match()
+    print(select_percent_match())
    
     connection.commit()

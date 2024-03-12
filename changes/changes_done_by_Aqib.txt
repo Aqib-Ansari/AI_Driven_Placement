@@ -176,3 +176,15 @@ change : SQL tables:
                     certifications VARCHAR(255),
                     student_id INT,
                     FOREIGN KEY (student_id) REFERENCES student_register(id));
+
+            16) Alumni
+
+                CREATE TABLE alumni (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    name VARCHAR(255) NOT NULL,
+                    batch VARCHAR(4) NOT NULL,
+                    placement_status VARCHAR(20) NOT NULL,
+                    company VARCHAR(255),
+                    linkedin VARCHAR(255),
+                    email VARCHAR(255),
+                    about_alumni TEXT);

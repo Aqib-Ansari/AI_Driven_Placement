@@ -460,6 +460,42 @@ def update_field(field):
         return redirect(url_for("student_details"))
     else:
         return redirect(url_for("edit_student_details"))
+
+@app.route('/add_skills', methods=['GET', 'POST'])
+def add_skills():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    if request.method == 'POST':
+        # Each of these can be a comma-separated list
+        skill = request.form['skill']
+        soft_skills = request.form['soft_skills']
+        certifications = request.form['certifications']
+        student_email = session['user']
+
+        try:
+            cursor.execute("SELECT id FROM student_register WHERE email = %s", (student_email,))
+            student_id_result = cursor.fetchone()
+
+            if student_id_result:
+                student_id = student_id_result['id']
+
+                # Assuming skills and certifications are entered as comma-separated values
+                # Directly store these CSV strings into the database
+                insert_query = """
+                INSERT INTO student_skills (student_id, skill, soft_skills, certifications) 
+                VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(insert_query, (student_id, skill, soft_skills, certifications))
+                connection.commit()
+
+                flash('Skills and certifications added successfully!')
+                return redirect(url_for('add_skills'))
+        except Exception as e:
+            print(e)
+            flash('Error adding skills and certifications.')
+
+    return render_template('add_skills.html')
 # ------------------------------------------------ REsume Upload -----------------------------------------------------
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume():
@@ -698,7 +734,8 @@ alumni_data = [{
 
 @app.route('/alumni_list')
 def alumni_list():
-    return render_template('alumni_list.html', alumni_data=alumni_data)
+    alumni_info=sql_functions.select_alumni_data()
+    return render_template('alumni_list.html', alumni_data=alumni_info)
 
 
 @app.route('/add_alumni', methods=['GET', 'POST'])
@@ -721,20 +758,20 @@ def add_alumni():
             'email': email,
             'about_alumni': about_alumni
         }
-
-        alumni_data.append(alumni_info)
+        
+        sql_functions.insert_alumni_data(data=alumni_info)
 
         # Redirect to the alumni list page after adding alumni
         return redirect(url_for('alumni_list'))
 
     return render_template('add_alumni.html')
 
-# Dummy student list data
-student_list = ["Student 1", "Student 2", "Student 3"]
+
 
 @app.route('/contact_alumni')
 def contact_alumni():
-    return render_template('contact_alumni.html', alumni_data=alumni_data, student_list=student_list)
+    alumni_data = sql_functions.select_alumni_data()
+    return render_template('contact_alumni.html', alumni_data=alumni_data)
 
 @socketio.on('update_alumni_data')
 def handle_update_alumni_data():
