@@ -73,7 +73,7 @@
     </style>
 </head>
 <body>
-     <div id="timer">Timer : <span id="remaining_time"></span></div>
+     <div id="timer" style="margin-right:30px; float: right;"><h2>Timer : <span id="remaining_time"></span></h2></div>
     <h1>{{ questions['question'] }}</h1>
 
     <form action="/submit_answer" method="post">
@@ -112,7 +112,10 @@
         </label>
         <br>
         <button type="submit">Next</button>
-        <a href="/previous_question">Previous</a>
+        <br>
+        <button><a href="/previous_question" style="text-decoration: none; color: #fff;" >Previous</a></button>
+        <br>
+        <button><a href="/end_test" style="text-decoration: none; color: #fff;">end test</a></button>
     </form>
 
     <!-- <script>

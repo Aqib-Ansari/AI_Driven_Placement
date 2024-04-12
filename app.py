@@ -117,8 +117,8 @@ def student_dashboard():
                 return render_template("login.html",error_msg=validatiaon[1])
         
         elif login_as=="Admin":
-            validatiaon = sql_functions.validate_admin_login(email,password)
-            if validatiaon:
+            # validatiaon = sql_functions.validate_admin_login(email,password)
+            if email == "geetamaam@gmail.com" and password == "KcAdminPassword":
                 session["admin"] = email
                 
             return redirect(url_for("admin_dashboard",admin_name = [session["admin"]]))
@@ -460,6 +460,42 @@ def update_field(field):
         return redirect(url_for("student_details"))
     else:
         return redirect(url_for("edit_student_details"))
+
+@app.route('/add_skills', methods=['GET', 'POST'])
+def add_skills():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    if request.method == 'POST':
+        # Each of these can be a comma-separated list
+        skill = request.form['skill']
+        soft_skills = request.form['soft_skills']
+        certifications = request.form['certifications']
+        student_email = session['user']
+
+        try:
+            cursor.execute("SELECT id FROM student_register WHERE email = %s", (student_email,))
+            student_id_result = cursor.fetchone()
+
+            if student_id_result:
+                student_id = student_id_result['id']
+
+                # Assuming skills and certifications are entered as comma-separated values
+                # Directly store these CSV strings into the database
+                insert_query = """
+                INSERT INTO student_skills (student_id, skill, soft_skills, certifications) 
+                VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(insert_query, (student_id, skill, soft_skills, certifications))
+                connection.commit()
+
+                flash('Skills and certifications added successfully!')
+                return redirect(url_for('add_skills'))
+        except Exception as e:
+            print(e)
+            flash('Error adding skills and certifications.')
+
+    return render_template('add_skills.html')
 # ------------------------------------------------ REsume Upload -----------------------------------------------------
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume():
@@ -698,7 +734,8 @@ alumni_data = [{
 
 @app.route('/alumni_list')
 def alumni_list():
-    return render_template('alumni_list.html', alumni_data=alumni_data)
+    alumni_info=sql_functions.select_alumni_data()
+    return render_template('alumni_list.html', alumni_data=alumni_info)
 
 
 @app.route('/add_alumni', methods=['GET', 'POST'])
@@ -721,20 +758,20 @@ def add_alumni():
             'email': email,
             'about_alumni': about_alumni
         }
-
-        alumni_data.append(alumni_info)
+        
+        sql_functions.insert_alumni_data(data=alumni_info)
 
         # Redirect to the alumni list page after adding alumni
         return redirect(url_for('alumni_list'))
 
     return render_template('add_alumni.html')
 
-# Dummy student list data
-student_list = ["Student 1", "Student 2", "Student 3"]
+
 
 @app.route('/contact_alumni')
 def contact_alumni():
-    return render_template('contact_alumni.html', alumni_data=alumni_data, student_list=student_list)
+    alumni_data = sql_functions.select_alumni_data()
+    return render_template('contact_alumni.html', alumni_data=alumni_data)
 
 @socketio.on('update_alumni_data')
 def handle_update_alumni_data():
@@ -966,6 +1003,7 @@ def post_job():
             notify_students_about_job_posting(job_role)
 
             flash('Job posting added successfully', 'success')
+            connection.commit()
         except Exception as e:
             # Print or log the error for debugging
             print(f'Error: {e}')
@@ -1023,7 +1061,7 @@ def view_students():
     # try:
         
             # Replace this query with your actual query to fetch all students
-            print(session['company'])
+            print("|",session['company'],"|")
             cursor.execute(f"select id from company_registration where email = '{session['company']}'")
             company_id = cursor.fetchall()
             # print(company_id)
@@ -1183,6 +1221,7 @@ def schedule_interview():
                 details = "Your interview have scheduled for \n "+ "\n Job Role : "+inter_job+ "\nDate :  "+ inter_date+"\nTime : "+ inter_time + "\nLocation : " + inter_location
                 # send_interview_notification(student_email=email["email"],interview_details=details)
                 send_email(subject=f"Your Interview has been scheduled for job role {inter_job}",body=details,recipients=email["email"])
+                connection.commit()
         return redirect(url_for("company_dashboard1"))
 
 
@@ -1194,7 +1233,7 @@ def schedule_interview():
     job_role = []
     for job in jobs:
         job_role.append(job["job_role"])
-
+    connection.commit()
     
     return render_template("schedule_interview.html",job_roles = job_role)
 
@@ -1231,9 +1270,10 @@ def send_interview_notification(student_email, interview_details):
 @app.route('/job_listings')
 def job_listings():
     # Fetch all job postings from the database
-
+            connection.commit()
             cursor.execute(f"select id from company_registration where email = '{session['company']}'")
             company_id = cursor.fetchall()
+            print(company_id)
             sql = f"SELECT * FROM job_posting where company_id = {company_id[0]['id']}"
             cursor.execute(sql)
             job_postings = cursor.fetchall()
@@ -1245,6 +1285,7 @@ def scheduled_interviews():
     # try:
         # with connection.cursor() as cursor:
             # Fetch all scheduled interviews from the database
+            connection.commit()
             cursor.execute(f"select id from company_registration where email = '{session['company']}'  ")
             id = cursor.fetchone()
             print(id["id"])
@@ -1389,7 +1430,7 @@ def training_resources():
         level = request.form.get('level')
         tags = request.form.get('tags')
         status = request.form.get('status')
-        youtube_link = request.form.get('youtube_link')
+        youtube_link = request.form.get('link')
         sql_functions.insert_training_resources(title = title,
                                                 category= category,
                                                 description = description,
@@ -1401,6 +1442,7 @@ def training_resources():
                                                 tags = tags,
                                                 status = status,
                                                 link = youtube_link)
+        return redirect(url_for("admin_dashboard"))
     return render_template("training_resources.html")
 
 

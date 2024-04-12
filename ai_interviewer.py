@@ -8,9 +8,6 @@ GOOGLE_API_KEY="AIzaSyDn3LTVkTF8oI6-3Z40Ax8X_nka6gfhnLg"
 
 genai.configure(api_key=GOOGLE_API_KEY)
 
-
-
-
 model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])
 

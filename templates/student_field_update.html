@@ -5,12 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Update field</title>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #2C3E50, #4CA1AF);
+            color: #fff; /* Set text color to white */
+            height: 42vmax;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for better readability */
+            border-radius: 10px; /* Add rounded corners to the container */
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        .form-group label {
+            color: #fff; /* Set label text color to white */
+        }
+
+        .form-control {
+            background-color: #fff; /* Set input background color to white */
+            color: #2C3E50; /* Set input text color */
+        }
+
+        .btn-primary {
+            background-color: #2C3E50; /* Set primary button background color */
+            border-color: #2C3E50; /* Set primary button border color */
+        }
+
+        .btn-primary:hover {
+            background-color: #4CA1AF; /* Change button background color on hover */
+            border-color: #4CA1AF; /* Change button border color on hover */
+        }
+    </style>
 </head>
 <body>
 
 <div class="container mt-5">
     <form method="POST" action="/update_field/{{field}}">
-        <div class="form-group" >
+        <div class="form-group">
             {% if field in ["year","backlog","currentcgpa","phoneno"] %}
             <label for="inputValue">{{field}}:</label>
             <input type="number" class="form-control" id="inputValue" placeholder="Type something" name="value" step="0.01" required>

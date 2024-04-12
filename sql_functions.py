@@ -7,9 +7,9 @@ from datetime import datetime, timedelta , date , time
 # import data_class_aidriven
 def make_sql_connection():
     connection = pymysql.connect(host='sql6.freesqldatabase.com',
-                                user='sql6682320',
-                                password='zGRcDLE2gC',
-                                database='sql6682320',
+                                user='sql6698006',
+                                password='gBx9Egsmvm',
+                                database='sql6698006',
                                 charset='utf8mb4',
                                 cursorclass=pymysql.cursors.DictCursor)
     return connection
@@ -562,7 +562,7 @@ def insert_training_resources(title,category,description,author,format,duration,
     data = (title,category,description,author,format,duration,language,level,tags,status,link)
 
     insert_query = """
-        INSERT INTO training_resources (title, category, description, author, format, duration, language, level, tags, status, youtube_link)
+        INSERT INTO training_resources (title, category, description, author_provider, format, duration_hours, language, level, tags_keywords, status, link)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
     
@@ -649,28 +649,68 @@ def select_percent_match():
     except Exception as e:
         print("Error selecting data:", e)
 
+def insert_alumni_data( data):
+    try:
+            global connection, cursor
+            # SQL statement for insertion
+            sql = "INSERT INTO alumni (name, batch, placement_status, company, linkedin, email, about_alumni) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+
+            # Data for insertion
+            values = (
+                data['name'],
+                data['batch'],
+                data['placement_status'],
+                data['company'],
+                data['linkedin'],
+                data['email'],
+                data['about_alumni']
+            )
+
+            # Execute the SQL statement
+            cursor.execute(sql, values)
+
+        # Commit the changes to the database
+            connection.commit()
+
+            print("Data inserted successfully!")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+def select_alumni_data():
+    try:
+
+            # SQL statement for selection
+            sql = "SELECT * FROM alumni"
+
+            # Execute the SQL statement
+            cursor.execute(sql)
+
+            # Fetch all the rows
+            result = cursor.fetchall()
+
+            
+            return result
+
+    except Exception as e:
+        print(f"Error: {e}")
 
 connection.commit()
 if __name__ == "__main__":
    
     # insert_job_posting('Software Engineer', 'Full Time', 'Java, Python, SQL', 50, 5, 'A leading tech company', 'Develop and maintain software applications')
     # insert_job_posting('Marketing Specialist', 'Part Time', 'Digital Marketing, Social Media', 20, 3, 'A creative marketing agency', 'Plan and execute marketing campaigns')
-    # insert_quiz_question('data/java_questions.tsv')
+    insert_quiz_question('data/webdev_questions.tsv')
 #     cursor.execute('''
-# CREATE TABLE training_resources (
-#     id INT AUTO_INCREMENT PRIMARY KEY,
-#     title VARCHAR(255) NOT NULL,
-#     category VARCHAR(255) NOT NULL,
-#     description TEXT NOT NULL,
-#     author VARCHAR(255) NOT NULL,
-#     format VARCHAR(255) NOT NULL,
-#     duration DECIMAL(5, 2) NOT NULL,
-#     language VARCHAR(50) NOT NULL,
-#     level ENUM('beginner', 'intermediate', 'advanced') NOT NULL,
-#     tags VARCHAR(255),
-#     status ENUM('active', 'inactive', 'under_review') NOT NULL,
-#     youtube_link VARCHAR(255),
-#     time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+# CREATE TABLE alumni (
+#     id INT PRIMARY KEY AUTO_INCREMENT,
+#     name VARCHAR(255) NOT NULL,
+#     batch VARCHAR(4) NOT NULL,
+#     placement_status VARCHAR(20) NOT NULL,
+#     company VARCHAR(255),
+#     linkedin VARCHAR(255),
+#     email VARCHAR(255),
+#     about_alumni TEXT
 # )
 # ''')
     # print(validate_company_login(email='company2@gmail.com',password="password"))
@@ -706,6 +746,6 @@ if __name__ == "__main__":
     # print(select_notification(student_id=1))
     # print(if_resume_present(email="aqibansari22298@gmail.com"))
     # insert_percent_match(job_id=2,student_id=1,percent_match=80)
-    select_percent_match()
+    # print(select_percent_match())
    
-    connection.commit()
+    # connection.commit()

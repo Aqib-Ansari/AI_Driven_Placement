@@ -124,7 +124,7 @@ change : SQL tables:
                     location VARCHAR(255),
                     UNIQUE (interview_id),
                     FOREIGN KEY (student_id) REFERENCES student_details(id),
-                    FOREIGN KEY (job_id) REFERENCES job_postings(id));
+                    FOREIGN KEY (job_id) REFERENCES job_posting(id));
 
             10) admin
                 CREATE TABLE admin (
@@ -176,3 +176,31 @@ change : SQL tables:
                     certifications VARCHAR(255),
                     student_id INT,
                     FOREIGN KEY (student_id) REFERENCES student_register(id));
+
+            16) Alumni
+
+                CREATE TABLE alumni (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    name VARCHAR(255) NOT NULL,
+                    batch VARCHAR(4) NOT NULL,
+                    placement_status VARCHAR(20) NOT NULL,
+                    company VARCHAR(255),
+                    linkedin VARCHAR(255),
+                    email VARCHAR(255),
+                    about_alumni TEXT);
+            17) Training Resourses
+
+                CREATE TABLE training_resources (
+                    id INT(11) NOT NULL AUTO_INCREMENT,
+                    title VARCHAR(255) NOT NULL,
+                    category VARCHAR(50) NOT NULL,
+                    description TEXT NOT NULL,
+                    author_provider VARCHAR(255),
+                    format VARCHAR(100) NOT NULL,
+                    duration_hours INT(11) NOT NULL,
+                    language VARCHAR(50),
+                    level VARCHAR(50) NOT NULL,
+                    tags_keywords TEXT NOT NULL,
+                    status VARCHAR(50),
+                    link VARCHAR(255) NOT NULL,
+                    PRIMARY KEY (id));

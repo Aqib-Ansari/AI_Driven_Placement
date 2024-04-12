@@ -7,7 +7,7 @@
 
   .navbar_Aqib a {
     float: left;
-    color: #060606;
+    color: #c0fdfc;
     text-align: center;
     padding: 8px 12px;
     text-decoration: none;
@@ -26,7 +26,7 @@
 
   .navbar_Aqib a:hover {
       margin: 4px 2px;
-      color: #287271;
+      color: #52dbd9;
    
   }
 

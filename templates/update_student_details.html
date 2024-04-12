@@ -6,8 +6,44 @@
     <title>Placed | Student details</title>
     <!-- Add Bootstrap CSS link -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #2C3E50, #4CA1AF);
+            color: #222222; /* Set text color to white */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for better readability */
+            border-radius: 10px; /* Add rounded corners to the container */
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        .table {
+            background-color: transparent; /* Make the table background transparent */
+            color: #1b1b1b;
+            font-weight: 500; /* Set text color to white */
+        }
+
+        .btn {
+            color: #2C3E50; /* Set button text color */
+            background-color: #fff; /* Set button background color */
+            border: 2px solid #000000; /* Add white border to the buttons */
+        }
+
+        .btn:hover {
+            background-color: #2C3E50; /* Change button background color on hover */
+            border: 2px solid #2C3E50; /* Maintain border color on hover */
+            color: #fff;
+        }
+
+        h1 {
+            color: #242424; /* Set heading text color to white */
+        }
+    </style>
 </head>
-<body class="bg-light" style="margin-bottom: 10%;">
+<body>
 
     <div class="container mt-5">
         <h1 class="text-center">Update Details</h1>
@@ -16,113 +52,117 @@
             <div class="table-responsive">
                 <table class="table">
                     
-                        <tr>
-                            <td>First Name</td>
+                                
+                                    <tr>
+                                        <td>First Name</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['firstname']}}" aria-label="username" aria-describedby="button-addon2" style="width: 400px;" disabled></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/firstname' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Name</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['lastname']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/lastname' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Middle Name</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['middlename']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/middlename' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>College</td>
+                                        
+                                            <td><input type="number" class="form-control" placeholder="{{student_details[0]['college']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/college' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Roll number</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['rollno']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/rollno' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Program</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['program']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/program' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stream</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['stream']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/stream' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Year</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['year']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/year' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Backlog</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['backlog']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/backlog' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Current CPGA</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['currentcgpa']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/currentcgpa' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>email</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['email']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/email' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone Number</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['phoneno']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/phoneno' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gender</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['gender']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/gender' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date of Birth</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['dob']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/dob' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nationality</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['nationality']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/nationality' >Edit</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>address</td>
+                                        
+                                            <td><input type="text" class="form-control" placeholder="{{student_details[0]['address']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
+                                            <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/address' >Edit</a></td>
+                                    </tr>
+            
+                                    
+                                    
+            
+                                
                             
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['firstname']}}" aria-label="username" aria-describedby="button-addon2" style="width: 400px;" disabled></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/firstname' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Last Name</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['lastname']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/lastname' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Middle Name</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['middlename']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/middlename' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>College</td>
-                            
-                                <td><input type="number" class="form-control" placeholder="{{student_details[0]['college']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/college' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Roll number</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['rollno']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/rollno' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Program</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['program']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/program' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Stream</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['stream']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/stream' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Year</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['year']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/year' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Backlog</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['backlog']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/backlog' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Current CPGA</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['currentcgpa']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/currentcgpa' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>email</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['email']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/email' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Phone Number</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['phoneno']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/phoneno' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Gender</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['gender']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/gender' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Date of Birth</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['dob']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/dob' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>Nationality</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['nationality']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/nationality' >Edit</a></td>
-                        </tr>
-                        <tr>
-                            <td>address</td>
-                            
-                                <td><input type="text" class="form-control" placeholder="{{student_details[0]['address']}}" disabled aria-describedby="button-addon2" style="width: 400px;"></td>
-                                <td><a class="btn btn-outline-secondary" type="button" id="button-addon2" href ='/edit_student_field/address' >Edit</a></td>
-                        </tr>
-
                         
-                        
-
-                    
+                   
                 </table>
             </div>
             
         </form>
-        <a href="/student_dashboard1"><button>Back to Home
-        </button></a>
+        <a href="/add_skills"><button class="btn">Add Skills</button></a>
+        <a href="/student_dashboard1"><button class="btn">Back to Home</button></a>
         <!-- Add Bootstrap JS and Popper.js links if needed -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> 
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
