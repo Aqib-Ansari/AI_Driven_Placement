@@ -7,9 +7,9 @@ from datetime import datetime, timedelta , date , time
 # import data_class_aidriven
 def make_sql_connection():
     connection = pymysql.connect(host='sql6.freesqldatabase.com',
-                                user='sql6682320',
-                                password='zGRcDLE2gC',
-                                database='sql6682320',
+                                user='sql6698006',
+                                password='gBx9Egsmvm',
+                                database='sql6698006',
                                 charset='utf8mb4',
                                 cursorclass=pymysql.cursors.DictCursor)
     return connection
@@ -562,7 +562,7 @@ def insert_training_resources(title,category,description,author,format,duration,
     data = (title,category,description,author,format,duration,language,level,tags,status,link)
 
     insert_query = """
-        INSERT INTO training_resources (title, category, description, author, format, duration, language, level, tags, status, youtube_link)
+        INSERT INTO training_resources (title, category, description, author_provider, format, duration_hours, language, level, tags_keywords, status, link)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
     
@@ -700,7 +700,7 @@ if __name__ == "__main__":
    
     # insert_job_posting('Software Engineer', 'Full Time', 'Java, Python, SQL', 50, 5, 'A leading tech company', 'Develop and maintain software applications')
     # insert_job_posting('Marketing Specialist', 'Part Time', 'Digital Marketing, Social Media', 20, 3, 'A creative marketing agency', 'Plan and execute marketing campaigns')
-    # insert_quiz_question('data/java_questions.tsv')
+    insert_quiz_question('data/webdev_questions.tsv')
 #     cursor.execute('''
 # CREATE TABLE alumni (
 #     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -733,12 +733,12 @@ if __name__ == "__main__":
     #                           author="Nivedita",format="Online",duration=5.30,language="English",level="beginner",tags="Resume,placements",status="active",link="https://youtube.com")
     # insert_interviews(job=19,date=date(2024, 3, 10),time=time(14, 30),location="Mumbai")
     # cursor.execute("drop table student_percent_match")
-    output = cursor.fetchall()
-    for i in output:
-        print('\n')
-        print(i)
-        print('____'*20)
-        print('\n')
+    # output = cursor.fetchall()
+    # for i in output:
+    #     print('\n')
+    #     print(i)
+    #     print('____'*20)
+    #     print('\n')
     # print(select_applied_student(1))
     # print(output)
     # print(validate_company_login('aqibansari22298@gmail.com',password="password"))
@@ -746,6 +746,6 @@ if __name__ == "__main__":
     # print(select_notification(student_id=1))
     # print(if_resume_present(email="aqibansari22298@gmail.com"))
     # insert_percent_match(job_id=2,student_id=1,percent_match=80)
-    print(select_percent_match())
+    # print(select_percent_match())
    
-    connection.commit()
+    # connection.commit()

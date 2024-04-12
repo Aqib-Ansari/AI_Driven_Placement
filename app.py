@@ -117,8 +117,8 @@ def student_dashboard():
                 return render_template("login.html",error_msg=validatiaon[1])
         
         elif login_as=="Admin":
-            validatiaon = sql_functions.validate_admin_login(email,password)
-            if validatiaon:
+            # validatiaon = sql_functions.validate_admin_login(email,password)
+            if email == "geetamaam@gmail.com" and password == "KcAdminPassword":
                 session["admin"] = email
                 
             return redirect(url_for("admin_dashboard",admin_name = [session["admin"]]))
@@ -1003,6 +1003,7 @@ def post_job():
             notify_students_about_job_posting(job_role)
 
             flash('Job posting added successfully', 'success')
+            connection.commit()
         except Exception as e:
             # Print or log the error for debugging
             print(f'Error: {e}')
@@ -1060,7 +1061,7 @@ def view_students():
     # try:
         
             # Replace this query with your actual query to fetch all students
-            print(session['company'])
+            print("|",session['company'],"|")
             cursor.execute(f"select id from company_registration where email = '{session['company']}'")
             company_id = cursor.fetchall()
             # print(company_id)
@@ -1220,6 +1221,7 @@ def schedule_interview():
                 details = "Your interview have scheduled for \n "+ "\n Job Role : "+inter_job+ "\nDate :  "+ inter_date+"\nTime : "+ inter_time + "\nLocation : " + inter_location
                 # send_interview_notification(student_email=email["email"],interview_details=details)
                 send_email(subject=f"Your Interview has been scheduled for job role {inter_job}",body=details,recipients=email["email"])
+                connection.commit()
         return redirect(url_for("company_dashboard1"))
 
 
@@ -1231,7 +1233,7 @@ def schedule_interview():
     job_role = []
     for job in jobs:
         job_role.append(job["job_role"])
-
+    connection.commit()
     
     return render_template("schedule_interview.html",job_roles = job_role)
 
@@ -1268,9 +1270,10 @@ def send_interview_notification(student_email, interview_details):
 @app.route('/job_listings')
 def job_listings():
     # Fetch all job postings from the database
-
+            connection.commit()
             cursor.execute(f"select id from company_registration where email = '{session['company']}'")
             company_id = cursor.fetchall()
+            print(company_id)
             sql = f"SELECT * FROM job_posting where company_id = {company_id[0]['id']}"
             cursor.execute(sql)
             job_postings = cursor.fetchall()
@@ -1282,6 +1285,7 @@ def scheduled_interviews():
     # try:
         # with connection.cursor() as cursor:
             # Fetch all scheduled interviews from the database
+            connection.commit()
             cursor.execute(f"select id from company_registration where email = '{session['company']}'  ")
             id = cursor.fetchone()
             print(id["id"])
@@ -1426,7 +1430,7 @@ def training_resources():
         level = request.form.get('level')
         tags = request.form.get('tags')
         status = request.form.get('status')
-        youtube_link = request.form.get('youtube_link')
+        youtube_link = request.form.get('link')
         sql_functions.insert_training_resources(title = title,
                                                 category= category,
                                                 description = description,
@@ -1438,6 +1442,7 @@ def training_resources():
                                                 tags = tags,
                                                 status = status,
                                                 link = youtube_link)
+        return redirect(url_for("admin_dashboard"))
     return render_template("training_resources.html")
 
 
